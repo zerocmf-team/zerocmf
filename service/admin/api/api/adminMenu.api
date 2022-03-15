@@ -1,0 +1,13 @@
+syntax = "v1"
+
+@server(
+	group: adminMenu
+	prefix: /api/v1/admin
+)
+
+service admin {
+	@server(
+		handler: Get
+	)
+	get /admin_menu returns (Response)
+}

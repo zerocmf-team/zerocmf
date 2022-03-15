@@ -1,0 +1,16 @@
+syntax = "v1"
+
+type (
+	Response {
+		Code int         `json:"code"`
+		Msg  string      `json:"msg"`
+		Data interface{} `json:"data"`
+	}
+)
+
+import (
+	"api/adminMenu.api"
+	"api/assets.api"
+	"api/option.api"
+	"api/staticFS.api"
+)

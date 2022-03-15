@@ -1,0 +1,161 @@
+[
+  {
+    "unique_name": "settings/default",
+    "name": "系统设置",
+    "path": "/settings",
+    "icon": "",
+    "hide_in_menu": 0,
+    "children": [
+      {
+        "unique_name": "settings",
+        "name": "系统设置",
+        "path": "/settings/websites",
+        "icon": "",
+        "hide_in_menu": 0
+      },
+      {
+        "unique_name": "assetsDefault",
+        "name": "素材管理",
+        "path": "/settings/assets",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "unique_name": "assetsList",
+            "name": "素材列表",
+            "path": "",
+            "icon": "",
+            "hide_in_menu": 0,
+            "Parent": "assets"
+          },
+          {
+            "unique_name": "addAssets",
+            "name": "添加素材",
+            "path": "",
+            "icon": "",
+            "hide_in_menu": 0,
+            "Parent": "assets"
+          },
+          {
+            "unique_name": "deleteAssets",
+            "name": "删除素材",
+            "path": "",
+            "icon": "",
+            "hide_in_menu": 0,
+            "Parent": "assets"
+          }
+        ]
+      },
+      {
+        "unique_name": "uploadDefault",
+        "name": "上传设置",
+        "path": "/settings/upload",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "unique_name": "uploadEdit",
+            "name": "查看",
+            "path": "",
+            "icon": "",
+            "hide_in_menu": 0,
+            "Parent": "upload"
+          },
+          {
+            "unique_name": "uploadPost",
+            "name": "提交",
+            "path": "",
+            "icon": "",
+            "hide_in_menu": 0,
+            "Parent": "upload"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "unique_name": "userDefault",
+    "name": "用户管理",
+    "path": "/user_manage",
+    "icon": "",
+    "hide_in_menu": 0,
+    "children": [
+      {
+        "unique_name": "adminGroup",
+        "name": "管理组",
+        "path": "/user_manage/admin_group",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "unique_name": "adminRole",
+            "name": "角色管理",
+            "path": "/user_manage/admin_role",
+            "icon": "",
+            "hide_in_menu": 0,
+            "children": [
+              {
+                "unique_name": "adminRoleList",
+                "name": "角色列表",
+                "path": "",
+                "icon": "",
+                "hide_in_menu": 0
+              },
+              {
+                "unique_name": "adminRoleEdit",
+                "name": "角色编辑",
+                "path": "",
+                "icon": "",
+                "hide_in_menu": 0
+              },
+              {
+                "unique_name": "adminRoleDelete",
+                "name": "角色删除",
+                "path": "",
+                "icon": "",
+                "hide_in_menu": 0
+              },
+              {
+                "unique_name": "roleAuthorizeAdd",
+                "name": "角色权限添加",
+                "path": "/user_manage/authorize/add",
+                "icon": "",
+                "hide_in_menu": 1
+              },
+              {
+                "unique_name": "roleAuthorizeEdit",
+                "name": "角色权限编辑",
+                "path": "/user_manage/authorize/edit/:id",
+                "icon": "",
+                "hide_in_menu": 1
+              }
+            ]
+          },
+          {
+            "unique_name": "adminList",
+            "name": "管理员",
+            "path": "/user_manage/admin_user",
+            "icon": "",
+            "hide_in_menu": 0,
+            "children": [
+              {
+                "unique_name": "user/admin/add",
+                "name": "添加管理员",
+                "path": "/user_manage/admin_user/add",
+                "icon": "",
+                "hide_in_menu": 1
+              },
+              {
+                "unique_name": "user/admin/edit",
+                "name": "编辑管理员",
+                "path": "/user_manage/admin_user/edit/:id",
+                "icon": "",
+                "hide_in_menu": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

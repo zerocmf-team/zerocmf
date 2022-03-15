@@ -1,0 +1,25 @@
+{
+    "app": {
+        "port": "8000",
+        "appName": "",
+        "appDebug": true,
+        "domain": "http://localhost:4000"
+    },
+    "template":{
+        "theme":"default",
+        "themePath":"public/themes",
+        "glob":"**/**/*.html",
+        "Static":"*/public/assets"
+    },
+    "database": {
+        "type": "mysql",
+        "hostname": "127.0.0.1",
+        "database": "gincmf",
+        "username": "root",
+        "password": "123456",
+        "hostport": "3306",
+        "charset": "utf8mb4",
+        "prefix": "cmf_",
+        "authcode" : "KFHlk2ubIlMr5ltqaD"
+    }
+}

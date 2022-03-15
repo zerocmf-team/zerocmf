@@ -1,0 +1,53 @@
+/**
+** @创建时间: 2022/02/24 12:48
+** @作者　　: return
+** @描述　　:
+ */
+
+
+syntax = "proto3";
+package user;
+option go_package = "app/grpc/user";
+
+service User {
+  rpc Get (UserRequest) returns (UserReply) {}
+}
+
+message UserRequest {
+  int32 userId = 1;
+  int64 tenant = 2;
+}
+
+message Data {
+  int32 id = 1;
+  int32 userType = 2;
+  int32 gender = 3;
+  int64 birthday = 4;
+  int32 score = 5;
+  int32 coin = 6;
+  int32 exp = 7;
+  float balance = 8;
+  string userLogin = 9;
+  string userPass = 10;
+  string userNickname = 11;
+  string userRealName = 12;
+  string userEmail = 13;
+  string userUrl = 14;
+  string avatar = 15;
+  string signature = 16;
+  string lastLoginIp = 18;
+  string mobile = 19;
+  int64 lastLoginAt = 20;
+  int64 createAt = 21;
+  int64 updateAt = 22;
+  string lastLoginTime = 23;
+  string createTime = 24;
+  int64 deleteAt = 25;
+  int32 userStatus = 26;
+}
+
+message  UserReply {
+  int32 code = 1;
+  string message = 2;
+  Data data = 3;
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "object": "portal",
+    "name": "门户管理",
+    "path": "/portal",
+    "icon": "",
+    "hide_in_menu": 0,
+    "list_order": 10000,
+    "children": [
+      {
+        "object": "portal/index",
+        "name": "文章管理",
+        "path": "/portal/index",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "object": "portal/index/add",
+            "name": "新增文章",
+            "path": "/portal/index/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "object": "portal/index/edit",
+            "name": "编辑文章",
+            "path": "/portal/index/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "object": "portal/category",
+        "name": "分类管理",
+        "path": "/portal/category",
+        "icon": "",
+        "hide_in_menu": 0
+      },
+      {
+        "object": "portal/page",
+        "name": "页面管理",
+        "path": "/portal/page",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "object": "portal/page/add",
+            "name": "新增页面",
+            "path": "/portal/page/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "object": "portal/page/edit",
+            "name": "编辑页面",
+            "path": "/portal/page/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "object": "portal/tag",
+        "name": "标签管理",
+        "path": "/portal/tag",
+        "icon": "",
+        "hide_in_menu": 0
+      }
+    ]
+  }
+]

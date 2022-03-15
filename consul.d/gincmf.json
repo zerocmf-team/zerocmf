@@ -1,0 +1,22 @@
+{
+    "service": {
+        "name": "gincmf",
+        "tags": [
+            "local"
+        ],
+        "address":"localhost",
+        "port": 4001,
+        "meta":{
+            "grpc":"8801"
+        },
+        "check": {
+            "id": "gincmf", 
+			"name": "gincmf",
+			"http": "http://localhost:4001/ping",
+            "tls_skip_verify": false,
+			"method": "GET", 
+			"interval": "10s",
+            "timeout": "30s" 
+        }
+    }
+}

@@ -1,0 +1,27 @@
+/**
+** @创建时间: 2021/12/17 14:27
+** @作者　　: return
+** @描述　　:
+ */
+
+syntax = "proto3";
+package oauth;
+option go_package = "app/grpc/oauth";
+
+// The greeting service definition.
+service Oauth {
+  // Sends a greeting
+  rpc ValidationBearerToken (OauthRequest) returns (OauthReply) {}
+}
+
+// The request message containing the user's name.
+message OauthRequest {
+  string token = 1;
+}
+
+// The response message containing the greetings
+message OauthReply {
+  int32 code = 1;
+  string message = 2;
+  string userId = 3;
+}

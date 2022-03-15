@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package migrate;
+
+option go_package = "gincmf/app/grpc/migrate";
+
+message MigrateRequest {
+  string tenantId = 1;
+}
+
+message MigrateReply {
+  string code = 1;
+  string message = 2;
+}
+
+service Migrate {
+  // Sends a greeting
+  rpc Migrate (MigrateRequest) returns (MigrateReply) {}
+}

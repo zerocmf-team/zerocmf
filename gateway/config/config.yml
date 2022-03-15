@@ -1,0 +1,17 @@
+app:
+  name: gateway
+  type: single
+  port: 4000
+  debug: true
+grpc:
+  port: 8800
+database:
+  type: mysql
+  host: localhost
+  database: gincmf
+  username: root
+  password: 123456
+  port: 3306
+  charset: utf8mb4
+  prefix: cmf_
+  authcode: KFHlk2ubIlMr5ltqaD

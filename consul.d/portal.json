@@ -1,0 +1,22 @@
+{
+    "service": {
+        "name": "portal",
+        "tags": [
+            "local"
+        ],
+        "port": 4002,
+        "address":"localhost",
+        "meta":{
+            "grpc":"8802"
+        },
+        "check": {
+            "id": "portal", 
+			"name": "portal",
+			"http": "http://localhost:4002/ping",
+            "tls_skip_verify": false,
+			"method": "GET", 
+			"interval": "10s",
+            "timeout": "30s" 
+        }
+    }
+}

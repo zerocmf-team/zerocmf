@@ -1,0 +1,33 @@
+[
+  {
+    "object": "settings",
+    "name": "系统设置",
+    "path": "/settings",
+    "icon": "",
+    "hide_in_menu": 0,
+    "list_order": 10000,
+    "children": [
+      {
+        "object": "settings/websites",
+        "name": "站点设置",
+        "path": "/settings/websites",
+        "icon": "",
+        "hide_in_menu": 0
+      },
+      {
+        "object": "settings/upload",
+        "name": "上传设置",
+        "path": "/settings/upload",
+        "icon": "",
+        "hide_in_menu": 0
+      },
+      {
+        "object": "settings/assets",
+        "name": "素材管理",
+        "path": "/settings/assets",
+        "icon": "",
+        "hide_in_menu": 0
+      }
+    ]
+  }
+]

@@ -8,7 +8,7 @@ package db
 
 import (
 	"database/sql"
-	"github.com/gincmf/bootstrap/config"
+	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -39,21 +39,20 @@ func Database() *database {
 }
 
 func (db *database) Db() (gdb *gorm.DB) {
-	dbName := db.Database
 	db.mu.Lock()
+	dbName := db.Database
 	gdb = db.newConn(dbName)
 	db.mu.Unlock()
 	return
 }
 
 func (db *database) ManualDb(tenantId string) (gdb *gorm.DB) {
+	db.mu.Lock()
 	dbName := "tenant_" + tenantId
 	// 未指定则默认为主库
 	if tenantId == "" {
-		conf := config.Config()
-		dbName = conf.Database.Database
+		dbName = db.Database
 	}
-	db.mu.Lock()
 	gdb = db.newConn(dbName)
 	db.mu.Unlock()
 	return
@@ -64,6 +63,8 @@ func (db *database) newConn(database string) *gorm.DB {
 	if database == "" {
 		panic("database cannot empty")
 	}
+
+	fmt.Println("database",database)
 
 	db.CreateTable(database)
 

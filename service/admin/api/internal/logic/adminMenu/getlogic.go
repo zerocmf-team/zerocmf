@@ -71,8 +71,7 @@ func (l *GetLogic) Get() (resp *types.Response, err error) {
 	e, err := database.NewEnforcer("")
 	//	存入casbin
 	if err != nil {
-		result := c.Error(err.Error(), nil)
-		copier.Copy(&resp, &result)
+		resp.Error(err.Error(), nil)
 		return
 	}
 
@@ -100,8 +99,7 @@ func (l *GetLogic) Get() (resp *types.Response, err error) {
 		results = make([]routers, 0)
 	}
 
-	result := c.Success("获取成功！", results)
-	copier.Copy(&resp,&result)
+	resp.Success("获取成功！", results)
 	return
 }
 

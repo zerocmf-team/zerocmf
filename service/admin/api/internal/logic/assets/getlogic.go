@@ -4,7 +4,6 @@ import (
 	"context"
 	"gincmf/common/bootstrap/data"
 	"gincmf/service/admin/model"
-	"github.com/jinzhu/copier"
 	"strings"
 
 	"gincmf/service/admin/api/internal/svc"
@@ -44,20 +43,17 @@ func (l *GetLogic) Get(req types.AssetsRequest) (resp *types.Response, err error
 	current, pageSize, err := new(data.Paginate).Default(r)
 
 	if err != nil {
-		result := c.Error(err.Error(), nil)
-		copier.Copy(&resp,&result)
+		resp.Error(err.Error(), nil)
 		return
 	}
 
 	data, err := new(model.Assets).Get(db, current, pageSize, queryStr, queryArgs)
 
 	if err != nil {
-		result := c.Error("系统出错", nil)
-		copier.Copy(&resp,&result)
+		resp.Error("系统出错", nil)
 		return
 	}
 
-	result := c.Success("获取成功！", data)
-	copier.Copy(&resp,&result)
+	resp.Success("获取成功！", data)
 	return
 }

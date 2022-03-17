@@ -25,7 +25,7 @@ service admin {
     @server(
         handler: Get
     )
-    get /settings () returns (Response)
+    get /settings returns (Response)
 
     @server(
         handler: Store

@@ -57,8 +57,7 @@ func (l *StoreLogic) Store(req types.AssetsRequest) (resp *types.Response, err e
 	files := r.MultipartForm.File["file"]
 
 	if len(files) <= 0 {
-		result := c.Error("文件不能为空！", nil)
-		copier.Copy(&resp, &result)
+		resp.Error("文件不能为空！", nil)
 		return
 	}
 
@@ -69,8 +68,7 @@ func (l *StoreLogic) Store(req types.AssetsRequest) (resp *types.Response, err e
 	for _, fileItem := range files {
 		fileList, err = handleUpload(c, db, fileItem, fileType)
 		if err != nil {
-			result := c.Error("文件不能为空！", nil)
-			copier.Copy(&resp, &result)
+			resp.Error("文件不能为空！", nil)
 		}
 		assets = append(assets, assetsResult{FileName: fileList["fileName"], FilePath: fileList["filePath"], PrevPath: fileList["prevPath"]})
 	}

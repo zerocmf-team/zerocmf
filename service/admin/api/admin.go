@@ -25,7 +25,6 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
 	r := router.NewRouter()
-
 	r.SetNotFoundHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// 资源映射
 		if strings.HasPrefix(r.URL.Path, "/public") {

@@ -1,0 +1,18 @@
+Name: user.rpc
+ListenOn: 127.0.0.1:9000
+Timeout: 30000
+Etcd:
+  Hosts:
+    - 127.0.0.1:23790
+  Key: user.rpc
+Database:
+  Type: mysql
+  Host: localhost
+  Database: gincmf_user
+  Username: root
+  Password: '123456'
+  Port: 3306
+  Charset: utf8mb4
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD
+

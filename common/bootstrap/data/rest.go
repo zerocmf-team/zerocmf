@@ -12,7 +12,7 @@ type Rest struct {
 	Data interface{} `json:"data"`
 }
 
-func (r Rest) Success(msg string, data interface{}) (res Rest) {
+func (r *Rest) Success(msg string, data interface{}) (res Rest) {
 	res = Rest{
 		Code: 1,
 		Msg:  msg,
@@ -21,7 +21,7 @@ func (r Rest) Success(msg string, data interface{}) (res Rest) {
 	return
 }
 
-func (r Rest) Error(msg string, data interface{}) (res Rest) {
+func (r *Rest) Error(msg string, data interface{}) (res Rest) {
 	res = Rest{
 		Code: 0,
 		Msg:  msg,

@@ -8,8 +8,13 @@ type (
 	}
 )
 
-import (
-	"api/adminMenu.api"
-	"api/assets.api"
-	"api/option.api"
+@server(
+	prefix: /api/v1/user
 )
+
+service user {
+	@server(
+		handler: Get
+	)
+	get /index returns (Response)
+}

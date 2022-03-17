@@ -1,11 +1,11 @@
-package logic
+package user
 
 import (
 	"context"
-	"fmt"
+	"gincmf/service/user/rpc/user"
+
 	"gincmf/service/user/api/internal/svc"
 	"gincmf/service/user/api/internal/types"
-	"gincmf/service/user/rpc/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,16 +24,14 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) GetLogic {
 	}
 }
 
-func (l *GetLogic) Get() (resp *types.Response, err error) {
+func (l *GetLogic) Get(req types.UserReq) (resp *types.Response, err error) {
 	// todo: add your logic here and delete this line
 	resp = &types.Response{}
 	c := l.svcCtx
 	uRpc := c.UserRpc
 
-	fmt.Println("hit Get Get Get",c.Config.Timeout)
-
 	res, err := uRpc.Init(l.ctx, &user.InitRequest{
-		TenantId: "123456",
+		TenantId: "",
 	})
 
 	resp.Error(res.GetMessage(), nil)

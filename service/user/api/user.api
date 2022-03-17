@@ -8,13 +8,6 @@ type (
 	}
 )
 
-@server(
-	prefix: /api/v1/user
+import (
+	"api/user.api"
 )
-
-service user {
-	@server(
-		handler: Get
-	)
-	get /index returns (Response)
-}

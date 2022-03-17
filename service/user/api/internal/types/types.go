@@ -6,3 +6,7 @@ type Response struct {
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }
+
+type UserReq struct {
+	Id string `path:"id"`
+}

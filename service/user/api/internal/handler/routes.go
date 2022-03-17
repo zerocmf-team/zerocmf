@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	user "gincmf/service/user/api/internal/handler/user"
 	"gincmf/service/user/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -14,10 +15,15 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/index",
-				Handler: GetHandler(serverCtx),
+				Path:    "/",
+				Handler: user.IndexHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: user.GetHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/v1/user"),
+		rest.WithPrefix("/api/v1/admin/user"),
 	)
 }

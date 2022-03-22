@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"gincmf/common/bootstrap/data"
+	"net/http"
+	"strings"
 
 	"gincmf/service/user/api/internal/config"
 	"gincmf/service/user/api/internal/handler"
@@ -23,6 +26,30 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
+
+	// 初始化
+	server.Use(func(next http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			// 获取请求头域名
+			scheme := "http://"
+			if r.Header.Get("Scheme") == "https" {
+				scheme = "https://"
+			}
+			host := r.Host
+			domain := scheme + host
+			ctx.Config.App.Domain = domain
+			data.SetDomain(domain)
+			ctx.Request = r
+			// 处理userId
+			r.ParseForm()
+			userId := strings.Join(r.Form["userId"], "")
+
+			if userId != "" {
+				ctx.Set("userId", userId)
+			}
+			next(w, r)
+		}
+	})
 
 	handler.RegisterHandlers(server, ctx)
 

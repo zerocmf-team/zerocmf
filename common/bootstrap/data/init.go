@@ -12,7 +12,6 @@ type iData interface {
 
 type Data struct {
 	*Context
-	Rest
 }
 
 func (rest *Data) InitContext() (c *Context) {

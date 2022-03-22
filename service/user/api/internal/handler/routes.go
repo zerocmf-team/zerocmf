@@ -26,4 +26,20 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		},
 		rest.WithPrefix("/api/v1/admin/user"),
 	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/current_user",
+				Handler: user.CurrentUserHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/save",
+				Handler: user.SaveHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/user"),
+	)
 }

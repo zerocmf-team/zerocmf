@@ -10,3 +10,16 @@ type Response struct {
 type UserReq struct {
 	Id string `path:"id"`
 }
+
+type SaveReq struct {
+	Gender       int    `json:"gender,optional"`
+	BirthdayTime string `json:"birthday_time,optional"`
+	UserPass     string `json:"user_pass,optional"`
+	UserNickname string `json:"user_nickname,optional"`
+	UserRealName string `json:"user_realname,optional"`
+	UserEmail    string `json:"user_email,optional"`
+	UserUrl      string `json:"user_url,optional"`
+	Avatar       string `json:"avatar,optional"`
+	Signature    string `json:"signature,optional"`
+	Mobile       string `json:"mobile,optional"`
+}

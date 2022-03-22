@@ -8,7 +8,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -63,8 +62,6 @@ func (db *database) newConn(database string) *gorm.DB {
 	if database == "" {
 		panic("database cannot empty")
 	}
-
-	fmt.Println("database",database)
 
 	db.CreateTable(database)
 

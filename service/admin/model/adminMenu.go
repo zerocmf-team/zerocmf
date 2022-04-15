@@ -37,10 +37,10 @@ type adminMenu struct {
 
 func (_ *AdminMenu) AutoMigrate(db *gorm.DB) {
 	db.Migrator().AutoMigrate(&AdminMenu{})
-	initMenus(db)
+	InitMenus(db)
 }
 
-func initMenus(db *gorm.DB) {
+func InitMenus(db *gorm.DB) {
 
 	var menus []adminMenu
 

@@ -1,0 +1,21 @@
+syntax = "v1"
+
+type (
+    initReq {
+        Theme string `json:"theme,optional"`
+        Version string `json:"version,optional"`
+        Thumbnail string `json:"thumbnail,optional"`
+        ThemeFile []string `json:"theme_file,optional"`
+    }
+)
+
+@server(
+    group: portal/admin/theme
+    middleware: AuthMiddleware
+    prefix: api/v1/admin/theme
+)
+
+service portal {
+    @handler Init
+    post / (initReq) returns (Response)
+}

@@ -12,6 +12,8 @@ type Rest struct {
 	Data interface{} `json:"data"`
 }
 
+type H map[string]interface{}
+
 func (r *Rest) Success(msg string, data interface{}) (res Rest) {
 	res = Rest{
 		Code: 1,

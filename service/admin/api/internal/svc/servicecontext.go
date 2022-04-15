@@ -18,18 +18,19 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	database := db.Database()
+	database := db.Conf()
 	copier.Copy(&database, &c.Database)
 	// 设置为默认的db
-	db := database.Db() // 初始化
+
 	// 数据库迁移
-	model.Migrate(db)
+	curDb := db.Conf().ManualDb("")
+	model.Migrate("",true)
 	data := new(data.Data)
 	data.Context = data.InitContext()
 
 	return &ServiceContext{
 		Config: c,
-		Db:     db,
+		Db:     curDb,
 		Data:   data,
 	}
 }

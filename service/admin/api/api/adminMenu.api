@@ -2,7 +2,7 @@ syntax = "v1"
 
 @server(
 	group: adminMenu
-	prefix: /api/v1/admin
+	prefix: /api/v1
 )
 
 service admin {
@@ -10,4 +10,9 @@ service admin {
 		handler: Get
 	)
 	get /admin_menu returns (Response)
+
+	@server(
+		handler: Sync
+	)
+	post /admin_menu/sync returns (Response)
 }

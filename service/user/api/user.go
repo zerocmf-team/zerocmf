@@ -23,7 +23,10 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
+	data.SetSalts(c.Database.Prefix)
+
 	ctx := svc.NewServiceContext(c)
+
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
 
@@ -40,13 +43,12 @@ func main() {
 			ctx.Config.App.Domain = domain
 			data.SetDomain(domain)
 			ctx.Request = r
+			ctx.ResponseWriter = w
 			// 处理userId
 			r.ParseForm()
 			userId := strings.Join(r.Form["userId"], "")
+			ctx.Set("userId", userId)
 
-			if userId != "" {
-				ctx.Set("userId", userId)
-			}
 			next(w, r)
 		}
 	})

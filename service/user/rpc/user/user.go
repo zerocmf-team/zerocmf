@@ -6,22 +6,24 @@ package user
 import (
 	"context"
 
-	"gincmf/service/user/rpc/types"
+	"gincmf/service/user/rpc/types/user"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 )
 
 type (
-	Data        = userclient.Data
-	InitReply   = userclient.InitReply
-	InitRequest = userclient.InitRequest
-	UserReply   = userclient.UserReply
-	UserRequest = userclient.UserRequest
+	InitReply    = user.InitReply
+	InitRequest  = user.InitRequest
+	OauthReply   = user.OauthReply
+	OauthRequest = user.OauthRequest
+	UserReply    = user.UserReply
+	UserRequest  = user.UserRequest
 
 	User interface {
 		Get(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserReply, error)
 		Init(ctx context.Context, in *InitRequest, opts ...grpc.CallOption) (*InitReply, error)
+		ValidationJwt(ctx context.Context, in *OauthRequest, opts ...grpc.CallOption) (*OauthReply, error)
 	}
 
 	defaultUser struct {
@@ -36,11 +38,16 @@ func NewUser(cli zrpc.Client) User {
 }
 
 func (m *defaultUser) Get(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserReply, error) {
-	client := userclient.NewUserClient(m.cli.Conn())
+	client := user.NewUserClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
 }
 
 func (m *defaultUser) Init(ctx context.Context, in *InitRequest, opts ...grpc.CallOption) (*InitReply, error) {
-	client := userclient.NewUserClient(m.cli.Conn())
+	client := user.NewUserClient(m.cli.Conn())
 	return client.Init(ctx, in, opts...)
+}
+
+func (m *defaultUser) ValidationJwt(ctx context.Context, in *OauthRequest, opts ...grpc.CallOption) (*OauthReply, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.ValidationJwt(ctx, in, opts...)
 }

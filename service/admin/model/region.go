@@ -18,6 +18,6 @@ type Region struct {
 }
 
 func (_ Region) AutoMigrate() {
-	curDb := db.Database().Db()
+	curDb := db.Conf().Db()
 	curDb.AutoMigrate(&Region{})
 }

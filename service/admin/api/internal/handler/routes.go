@@ -7,6 +7,7 @@ import (
 	adminMenu "gincmf/service/admin/api/internal/handler/adminMenu"
 	assets "gincmf/service/admin/api/internal/handler/assets"
 	option "gincmf/service/admin/api/internal/handler/option"
+	route "gincmf/service/admin/api/internal/handler/route"
 	"gincmf/service/admin/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -17,11 +18,27 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: IndexHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
 				Path:    "/admin_menu",
 				Handler: adminMenu.GetHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/admin_menu/sync",
+				Handler: adminMenu.SyncHandler(serverCtx),
+			},
 		},
-		rest.WithPrefix("/api/v1/admin"),
+		rest.WithPrefix("/api/v1"),
 	)
 
 	server.AddRoutes(
@@ -36,8 +53,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/assets",
 				Handler: assets.StoreHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/assets/:id",
+				Handler: assets.DeleteHandler(serverCtx),
+			},
 		},
-		rest.WithPrefix("/api/v1/admin"),
+		rest.WithPrefix("/api/v1"),
 	)
 
 	server.AddRoutes(
@@ -52,7 +74,28 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/settings",
 				Handler: option.StoreHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/upload",
+				Handler: option.UploadGetHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/upload",
+				Handler: option.UploadStoreHandler(serverCtx),
+			},
 		},
-		rest.WithPrefix("/api/v1/admin"),
+		rest.WithPrefix("/api/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: route.ListHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/route"),
 	)
 }

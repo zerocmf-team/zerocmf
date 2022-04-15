@@ -1,0 +1,23 @@
+syntax = "v1"
+
+type (
+	oneReq {
+		Id int `path:"id,optional"`
+	}
+
+	Response {
+		Code int         `json:"code"`
+		Msg  string      `json:"msg"`
+		Data interface{} `json:"data"`
+	}
+)
+
+import (
+	"api/category.api"
+	"api/article.api"
+	"api/theme.api"
+	"api/themeFile.api"
+	"api/tag.api"
+	"api/route.api"
+	"api/navItem.api"
+)

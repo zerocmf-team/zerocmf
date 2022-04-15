@@ -6,10 +6,42 @@
 
 package data
 
+import (
+	"gincmf/common/bootstrap/db"
+	"github.com/jinzhu/copier"
+)
+
 var (
 	domain string
 	salts  string
 )
+
+type config struct {
+	Database struct {
+		Type     string
+		Host     string
+		Database string
+		Username string
+		Password string
+		Port     int
+		Charset  string
+		Prefix   string
+		AuthCode string
+	}
+}
+
+var conf *config
+
+func InitConfig(c *db.Database) {
+	if conf == nil {
+		conf = new(config)
+	}
+	copier.Copy(&conf.Database,&c)
+}
+
+func Config() *config {
+	return conf
+}
 
 /**
  * @Author return <1140444693@qq.com>

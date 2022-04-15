@@ -7,7 +7,7 @@ import (
 	"gincmf/service/user/rpc/internal/config"
 	"gincmf/service/user/rpc/internal/server"
 	"gincmf/service/user/rpc/internal/svc"
-	"gincmf/service/user/rpc/types"
+	"gincmf/service/user/rpc/types/user"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -24,10 +24,10 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)
-	srv := server.NewUserServer(ctx)
+	svr := server.NewUserServer(ctx)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		userclient.RegisterUserServer(grpcServer, srv)
+		user.RegisterUserServer(grpcServer, svr)
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

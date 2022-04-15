@@ -7,12 +7,17 @@
 package model
 
 import (
-	"gorm.io/gorm"
+	"gincmf/common/bootstrap/db"
+	"gincmf/common/bootstrap/model"
 )
 
-func Migrate(db *gorm.DB) {
-	new(AdminMenu).AutoMigrate(db)
-	new(Option).AutoMigrate(db)
-	new(Assets).AutoMigrate(db)
+func Migrate(tenantId string,api bool) {
+	curDb := db.Conf().ManualDb(tenantId)
+	if api {
+		new(AdminMenu).AutoMigrate(curDb)
+	}
+	new(Option).AutoMigrate(curDb)
+	new(Assets).AutoMigrate(curDb)
+	new(model.Route).AutoMigrate(curDb)
 	//new(Comment).AutoMigrate(db)
 }

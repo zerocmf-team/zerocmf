@@ -1,55 +1,193 @@
 syntax = "v1"
 
 type (
-    UserReq {
-        Id string `path:"id"`
+    ListReq {
+        UserLogin string `json:"user_login,optional"`
+        UserNickname string `json:"userNickname,optional"`
+        UserEmail string `json:"userEmail,optional"`
     }
 
-    SaveReq {
-        Gender       int    `json:"gender,optional"`
+    OneReq {
+        Id string `path:"id,optional"`
+    }
+
+    AdminStoreReq {
+        UserLogin string `json:"user_login,optional"`
+        UserPass string `json:"user_pass,optional"`
+        UserEmail string `json:"user_email,optional"`
+        Mobile string `json:"mobile,optional"`
+        UserRealname string `json:"user_realname,optional"`
+        RoleIds []string `json:"role_ids,optional"`
+    }
+
+    AdminSaveReq {
+        Id string `path:"id,optional"`
+        UserLogin string `json:"user_login,optional"`
+        UserPass string `json:"user_pass,optional"`
+        UserEmail string `json:"user_email,optional"`
+        Mobile string `json:"mobile,optional"`
+        UserRealname string `json:"user_realname,optional"`
+        RoleIds []string `json:"role_ids,optional"`
+    }
+
+    RoleGet {
+        Status string `json:"status,optional"`
+        Name string `json:"name,optional"`
+    }
+
+    RoleDelete {
+        Id string `path:"id,optional"`
+        ids []string `form:"ids,optional"`
+    }
+
+    AccessStore {
+        Name string `json:"name,optional"`
+        Remark string `json:"remark,optional"`
+        RoleAccess []string `json:"role_access,optional"`
+    }
+
+    AccessEdit {
+        Id string `path:"id,optional"`
+        Name string `json:"name"`
+        Remark string `json:"remark"`
+        RoleAccess []string `json:"role_access"`
+    }
+
+    AppSaveReq {
+        Gender int `json:"gender,optional"`
         BirthdayTime string `json:"birthday_time,optional"`
-        UserPass     string `json:"user_pass,optional"`
+        UserPass string `json:"user_pass,optional"`
         UserNickname string `json:"user_nickname,optional"`
         UserRealName string `json:"user_realname,optional"`
-        UserEmail    string `json:"user_email,optional"`
-        UserUrl      string `json:"user_url,optional"`
-        Avatar       string `json:"avatar,optional"`
-        Signature    string `json:"signature,optional"`
-        Mobile       string `json:"mobile,optional"`
+        UserEmail string `json:"user_email,optional"`
+        UserUrl string `json:"user_url,optional"`
+        Avatar string `json:"avatar,optional"`
+        Signature string `json:"signature,optional"`
+        Mobile string `json:"mobile,optional"`
+    }
+
+    TokenReq {
+        Usermame string `json:"username,optional"`
+        Password string `json:"password,optional"`
+    }
+
+    RefreshReq {
+        refreshToken string `json:"refreshToken,optional"`
+    }
+
+    ValidationReq {
+        TenantId string `form:"tenant_id,optional"`
     }
 
 )
 
+// 账号相关
 @server(
-    group: user
-    prefix: /api/v1/admin/user
+    group: user/admin/account
+    prefix: /api/v1/admin/account
+    middleware: AuthMiddleware
 )
 
 service user {
-    @server(
-        handler: Index
-    )
-    get / returns (Response)
+    @handler Get
+    get / (ListReq) returns (Response)
 
-    @server(
-        handler: Get
-    )
-    get /:id (UserReq) returns (Response)
+    @handler Show
+    get /:id (OneReq) returns (Response)
+
+    @handler Store
+    post / (AdminStoreReq) returns (Response)
+
+    @handler Edit
+    post /:id (AdminSaveReq) returns (Response)
+}
+
+// 角色相关
+@server(
+    group: user/admin/role
+    prefix: /api/v1/admin/role
+    middleware: AuthMiddleware
+)
+
+service user {
+    @handler Get
+    get / (RoleGet) returns (Response)
+
+    @handler Show
+    get /:id (OneReq) returns (Response)
+
+    @handler Delete
+    delete /:id (RoleDelete) returns (Response)
+}
+
+// 权限相关
+@server(
+    group: user/admin/authorize
+    prefix: /api/v1/admin/authorize
+    middleware: AuthMiddleware
+)
+
+service user {
+    @handler Get
+    get / returns (Response)
+}
+
+// 权限相关
+
+@server(
+    group: user/admin/authAccess
+    prefix: /api/v1/admin/auth_access
+    middleware: AuthMiddleware
+)
+
+service user {
+    @handler Show
+    get /:id (OneReq) returns (Response)
+
+    @handler Store
+    post / (AccessStore) returns (Response)
+
+    @handler Edit
+    post /:id (AccessEdit) returns (Response)
 }
 
 @server(
-    group: user
-    prefix: /api/v1/app/user
+    group: user/app
+    prefix: /api/v1/app
 )
 
 service user {
-    @server(
-        handler: CurrentUser
-    )
-    get /current_user returns (Response)
+    @handler Index
+    get / returns (Response)
 
-    @server(
-        handler: Save
-    )
-    get /save (SaveReq) returns (Response)
+    @handler Save
+    get /save (AppSaveReq) returns (Response)
+}
+
+@server(
+    group: user/app
+    middleware: AuthMiddleware
+)
+
+service user {
+    @handler CurrentUser
+    get /api/v1/current_user returns (Response)
+}
+
+@server(
+    group: user/oauth
+)
+
+service user {
+    @handler Token
+    post /api/oauth/token (TokenReq) returns (Response)
+
+    @handler Refresh
+    post /api/oauth/refresh (RefreshReq) returns (Response)
+
+    @handler TokenRequest
+    post /token returns (Response)
+
+    @handler Validation
+        post /api/validation/token (ValidationReq) returns (Response)
 }

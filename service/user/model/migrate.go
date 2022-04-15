@@ -9,7 +9,7 @@ package model
 import "gincmf/common/bootstrap/db"
 
 func Migrate(tenantId string) {
-	curDb := db.Database().ManualDb(tenantId)
+	curDb := db.Conf().ManualDb(tenantId)
 	new(User).AutoMigrate(curDb)
 	new(Role).AutoMigrate(curDb)
 }

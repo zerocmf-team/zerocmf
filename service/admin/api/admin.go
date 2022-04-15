@@ -54,9 +54,7 @@ func main() {
 			// 处理userId
 			r.ParseForm()
 			userId := strings.Join(r.Form["userId"], "")
-			if userId != "" {
-				ctx.Set("userId", userId)
-			}
+			ctx.Set("userId", userId)
 			next(w, r)
 		}
 	})

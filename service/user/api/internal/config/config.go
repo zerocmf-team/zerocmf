@@ -11,6 +11,7 @@ type Config struct {
 		Domain string `json:",optional"`
 	}
 	UserRpc zrpc.RpcClientConf
+	AdminRpc zrpc.RpcClientConf
 	Database struct {
 		Type     string
 		Host     string

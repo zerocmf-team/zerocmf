@@ -1,0 +1,49 @@
+syntax = "v1"
+type (
+    listReq {
+        Type string `form:"type,optional"`
+    }
+
+    themeFileSaveReq {
+        Id string `path:"id"`
+        More string `json:"more,optional"`
+    }
+
+    themeFileListReq {
+        Theme string `form:"theme,optional"`
+        IsPublic string `form:"is_public,optional"`
+    }
+
+    themeFileDetailReq {
+        Theme string `form:"theme,optional"`
+        File string `form:"file,optional"`
+    }
+
+)
+
+@server(
+    group: portal/admin/themeFile
+    middleware: AuthMiddleware
+    prefix: api/v1/admin/theme_file
+)
+
+service portal {
+    @handler List
+    get /list (listReq) returns (Response)
+
+    @handler Save
+    post /:id (themeFileSaveReq) returns (Response)
+}
+
+@server(
+    group: portal/app/themeFile
+    prefix: api/v1/app
+)
+
+service portal {
+    @handler List
+    get /theme_files (themeFileListReq) returns (Response)
+
+    @handler Detail
+    get /theme_file (themeFileDetailReq) returns (Response)
+}

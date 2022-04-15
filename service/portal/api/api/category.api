@@ -1,0 +1,87 @@
+syntax = "v1"
+
+
+type (
+    cateGetReq {
+        Name string `form:"name,optional"`
+    }
+
+    cateSaveReq {
+        Id int `path:"id,optional"`
+        Name string `json:"name,optional"`
+        ParentId int `json:"parent_id,optional"`
+        Status int `json:"status,optional"`
+        Alias string `json:"alias,optional"`
+        Description string `json:"description,optional"`
+        Thumbnail string `json:"thumbnail,optional"`
+        SeoTitle string `json:"seo_title,optional"`
+        SeoDescription string `json:"seo_description,optional"`
+        SeoKeywords string `json:"seo_keywords,optional"`
+        ListTpl string `json:"list_tpl,optional"`
+        OneTpl string `json:"one_tpl,optional"`
+    }
+
+    listGetReq {
+
+    }
+)
+
+// 分类相关
+@server(
+    group: portal/admin/category
+    prefix: api/v1/admin/category
+    middleware: AuthMiddleware
+)
+
+service portal {
+    @handler Get
+    get / (cateGetReq) returns (Response)
+
+    @handler List
+    get /list (oneReq) returns (Response)
+
+    @handler Show
+    get /:id (oneReq) returns (Response)
+
+    @handler Store
+    post / (cateSaveReq) returns (Response)
+
+    @handler Edit
+    post /:id (cateSaveReq) returns (Response)
+
+    @handler Options
+    get /options returns (Response)
+}
+
+// 前台门户相关
+@server(
+    group: portal/app/list
+    prefix: api/v1/app/list
+)
+
+service portal {
+    @handler Show
+    get /:id (oneReq) returns (Response)
+}
+
+// 门户面包屑相关
+@server(
+    group: portal/app/breadcrumb
+    prefix: api/v1/app/breadcrumb
+)
+
+service portal {
+    @handler Breadcrumb
+    get /:id (oneReq) returns (Response)
+}
+
+// 门户分类树
+@server(
+    group: portal/app/category
+    prefix: api/v1/app/category/trees
+)
+
+service portal {
+    @handler TreeList
+    get /:id (oneReq) returns (Response)
+}

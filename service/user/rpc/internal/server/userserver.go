@@ -8,12 +8,12 @@ import (
 
 	"gincmf/service/user/rpc/internal/logic"
 	"gincmf/service/user/rpc/internal/svc"
-	"gincmf/service/user/rpc/types"
+	"gincmf/service/user/rpc/types/user"
 )
 
 type UserServer struct {
 	svcCtx *svc.ServiceContext
-	userclient.UnimplementedUserServer
+	user.UnimplementedUserServer
 }
 
 func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
@@ -22,12 +22,17 @@ func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
 	}
 }
 
-func (s *UserServer) Get(ctx context.Context, in *userclient.UserRequest) (*userclient.UserReply, error) {
+func (s *UserServer) Get(ctx context.Context, in *user.UserRequest) (*user.UserReply, error) {
 	l := logic.NewGetLogic(ctx, s.svcCtx)
 	return l.Get(in)
 }
 
-func (s *UserServer) Init(ctx context.Context, in *userclient.InitRequest) (*userclient.InitReply, error) {
+func (s *UserServer) Init(ctx context.Context, in *user.InitRequest) (*user.InitReply, error) {
 	l := logic.NewInitLogic(ctx, s.svcCtx)
 	return l.Init(in)
+}
+
+func (s *UserServer) ValidationJwt(ctx context.Context, in *user.OauthRequest) (*user.OauthReply, error) {
+	l := logic.NewValidationJwtLogic(ctx, s.svcCtx)
+	return l.ValidationJwt(in)
 }

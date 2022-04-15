@@ -6,14 +6,15 @@
 
 
 syntax = "proto3";
-package userclient;
+package user;
+option go_package = "./user";
 
 message UserRequest {
   int64 userId = 1;
   string tenantId = 2;
 }
 
-message Data {
+message  UserReply {
   int32 id = 1;
   int32 userType = 2;
   int32 gender = 3;
@@ -41,12 +42,6 @@ message Data {
   int32 userStatus = 26;
 }
 
-message  UserReply {
-  int32 code = 1;
-  string message = 2;
-  Data data = 3;
-}
-
 //
 
 message InitRequest {
@@ -55,13 +50,24 @@ message InitRequest {
 
 message InitReply {
   int32 code = 1;
-  string message = 2;
 }
 
-service User {
+// The request message containing the user's name.
+message OauthRequest {
+  string token = 1;
+  string tenantId = 2;
+}
+
+// The response message containing the greetings
+message OauthReply {
+  string userId = 1;
+}
+
+service user {
   rpc Get (UserRequest) returns (UserReply) {}
 
   rpc Init (InitRequest) returns (InitReply) {} // 初始化服务调用
 
+  rpc ValidationJwt (OauthRequest) returns (OauthReply) {}
 }
 

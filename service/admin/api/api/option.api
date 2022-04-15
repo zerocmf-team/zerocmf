@@ -1,24 +1,41 @@
 syntax = "v1"
 
 type (
-    OptionRequest {
-        SiteName           string `json:"site_name,optional"`
-        AdminPassword      string `json:"admin_password,optional"`
-        SiteSeoTitle       string `json:"site_seo_title,optional"`
-        SiteSeoKeywords    string `json:"site_seo_keywords,optional"`
+    OptionReq {
+        SiteName string `json:"site_name,optional"`
+        AdminPassword string `json:"admin_password,optional"`
+        SiteSeoTitle string `json:"site_seo_title,optional"`
+        SiteSeoKeywords string `json:"site_seo_keywords,optional"`
         SiteSeoDescription string `json:"site_seo_description,optional"`
-        SiteIcp            string `json:"site_icp,optional"`
-        SiteGwa            string `json:"site_gwa,optional"`
-        SiteAdminEmail     string `json:"site_admin_email,optional"`
-        SiteAnalytics      string `json:"site_analytics,optional"`
-        OpenRegistration   int    `json:"open_registration,optional"`
+        SiteIcp string `json:"site_icp,optional"`
+        SiteGwa string `json:"site_gwa,optional"`
+        SiteAdminEmail string `json:"site_admin_email,optional"`
+        SiteAnalytics string `json:"site_analytics,optional"`
+        OpenRegistration int `json:"open_registration,optional"`
+    }
+
+    Assets {
+        UploadMaxFileSize int `json:"upload_max_file_size,optional"`
+        Extensions string `json:"extensions,optional"`
+    }
+
+    FileTypes {
+        Image Assets `json:"image,optional"`
+        Video Assets `json:"video,optional"`
+        Audio Assets `json:"audio,optional"`
+        File Assets `json:"file,optional"`
+    }
+
+    UploadReq {
+        MaxFiles int `json:"max_files,optional"`
+        ChunkSize int `json:"chunk_size,optional"`
+        FileTypes FileTypes `json:"file_types,optional"`
     }
 )
 
-
 @server(
     group: option
-    prefix: /api/v1/admin
+    prefix: /api/v1
 )
 
 service admin {
@@ -30,5 +47,16 @@ service admin {
     @server(
         handler: Store
     )
-    post /settings (OptionRequest) returns (Response)
+    post /settings (OptionReq) returns (Response)
+
+
+    @server(
+        handler: UploadGet
+    )
+    get /upload returns (Response)
+
+    @server(
+        handler: UploadStore
+    )
+    post /upload (UploadReq) returns (Response)
 }

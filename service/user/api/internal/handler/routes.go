@@ -4,7 +4,12 @@ package handler
 import (
 	"net/http"
 
-	user "gincmf/service/user/api/internal/handler/user"
+	useradminaccount "gincmf/service/user/api/internal/handler/user/admin/account"
+	useradminauthAccess "gincmf/service/user/api/internal/handler/user/admin/authAccess"
+	useradminauthorize "gincmf/service/user/api/internal/handler/user/admin/authorize"
+	useradminrole "gincmf/service/user/api/internal/handler/user/admin/role"
+	userapp "gincmf/service/user/api/internal/handler/user/app"
+	useroauth "gincmf/service/user/api/internal/handler/user/oauth"
 	"gincmf/service/user/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -12,34 +17,147 @@ import (
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/",
-				Handler: user.IndexHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/:id",
-				Handler: user.GetHandler(serverCtx),
-			},
-		},
-		rest.WithPrefix("/api/v1/admin/user"),
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: useradminaccount.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: useradminaccount.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: useradminaccount.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: useradminaccount.EditHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/account"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: useradminrole.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: useradminrole.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: useradminrole.DeleteHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/role"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: useradminauthorize.GetHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/authorize"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: useradminauthAccess.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: useradminauthAccess.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: useradminauthAccess.EditHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/auth_access"),
 	)
 
 	server.AddRoutes(
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/current_user",
-				Handler: user.CurrentUserHandler(serverCtx),
+				Path:    "/",
+				Handler: userapp.IndexHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/save",
-				Handler: user.SaveHandler(serverCtx),
+				Handler: userapp.SaveHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/v1/app/user"),
+		rest.WithPrefix("/api/v1/app"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/api/v1/current_user",
+					Handler: userapp.CurrentUserHandler(serverCtx),
+				},
+			}...,
+		),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/oauth/token",
+				Handler: useroauth.TokenHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/oauth/refresh",
+				Handler: useroauth.RefreshHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/token",
+				Handler: useroauth.TokenRequestHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/api/validation/token",
+				Handler: useroauth.ValidationHandler(serverCtx),
+			},
+		},
 	)
 }

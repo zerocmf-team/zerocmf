@@ -13,7 +13,7 @@ import (
 	"strconv"
 )
 
-func (db *database) NewEnforcer(tenantId string) (e *casbin.Enforcer, err error) {
+func (db *Database) NewEnforcer(tenantId string) (e *casbin.Enforcer, err error) {
 
 	driverName := db.Type
 	username := db.Username

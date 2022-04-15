@@ -1,6 +1,6 @@
 Name: user
 Host: 0.0.0.0
-Port: 8802
+Port: 8801
 Timeout: 30000
 UserRpc:
   Timeout: 30000
@@ -8,6 +8,12 @@ UserRpc:
     Hosts:
       - 127.0.0.1:23790
     Key: user.rpc
+AdminRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:23790
+    Key: admin.rpc
 Database:
   Type: mysql
   Host: localhost

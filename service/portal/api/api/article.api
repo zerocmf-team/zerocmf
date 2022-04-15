@@ -1,0 +1,87 @@
+syntax = "v1"
+
+
+type (
+    articleGetReq {
+        Title string `form:"post_title,optional"`
+        PostType string `form:"post_type,optional"`
+        StartTime string `form:"start_time,optional"`
+        EndTime string `form:"end_time,optional"`
+    }
+
+    Extends {
+        Key string `json:"key,optional"`
+        Value string `json:"value,optional"`
+    }
+
+    Path {
+        RemarkName string `json:"remark_name,optional"`
+        PrevPath string `json:"prev_path,optional"`
+        FilePath string `json:"file_path,optional"`
+    }
+
+
+    articleSaveReq {
+        Id int `path:"id,optional"`
+        CategoryIds []string `json:"category_ids,optional"`
+        PostType int `json:"post_type,optional"`
+        Alias string `json:"alias,optional"`
+        PostTitle string `json:"post_title,optional"`
+        Thumbnail string `json:"thumbnail,optional"`
+        PostKeywords []string `json:"post_keywords,optional"`
+        ListOrder float64 `json:"list_order,optional"`
+        PublishTime string `json:"publish_time,optional"`
+        PostSource string `json:"post_source,optional"`
+        PostExcerpt string `json:"post_excerpt,optional"`
+        PostContent string `json:"post_content,optional"`
+        IsTop int `json:"is_top,optional"`
+        SeoTitle string `json:"seo_title,optional"`
+        SeoKeywords string `json:"seo_keywords,optional"`
+        SeoDescription string `json:"seo_description,optional"`
+        Recommended int `json:"recommended,optional"`
+        PostStatus int `json:"post_status,optional"`
+        Photos []Path `json:"photos,optional"`
+        Files []Path `json:"files,optional"`
+        Audio string `json:"audio,optional"`
+        Video string `json:"video,optional"`
+        Template string `json:"template,optional"`
+        Extends []Extends `json:"extends,optional"`
+    }
+
+    postListReq {
+        Ids []int `form:"ids,optional"`
+        Hot int `form:"hot,optional"` // 根据浏览量和权重排序
+    }
+)
+
+// 分类相关
+@server(
+    group: portal/admin/article
+    middleware: AuthMiddleware
+    prefix: api/v1/admin/article
+)
+
+service portal {
+    @handler Get
+    get / (articleGetReq) returns (Response)
+
+    @handler Show
+    get /:id (oneReq) returns (Response)
+
+    @handler Store
+    post / (articleSaveReq) returns (Response)
+
+    @handler Edit
+    post /:id (articleSaveReq) returns (Response)
+}
+
+// 分类相关
+@server(
+    group: portal/app/list
+    prefix: api/v1/app/list
+)
+
+service portal {
+    @handler Get
+    get / (postListReq) returns (Response)
+}

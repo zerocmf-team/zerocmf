@@ -16,7 +16,7 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	database := db.Database()
+	database := db.Conf()
 	copier.Copy(&database, &c.Database)
 	// 设置为默认的db
 	db := database.Db() // 初始化

@@ -1,0 +1,62 @@
+syntax = "v1"
+
+type (
+    NavItemGetReq {
+        Key string `form:"key,optional"`
+    }
+
+    NavItemSaveReq {
+        Id int `path:"id,optional"`
+        NavId int `json:"nav_id"`
+        ParentId int `json:"parent_id"`
+        Status int `json:"status"`
+        ListOrder float64 `json:"list_order"`
+        Name string `json:"name"`
+        Target string `json:"target"`
+        HrefType int `json:"href_type"`
+        Href string `json:"href"`
+        Icon string `json:"icon"`
+        Path string `json:"path,optional"`
+    }
+
+    NavItemOptionsReq {
+        NavId int `form:"nav_id"`
+    }
+)
+
+@server(
+    group: navItem
+    prefix: api/v1/admin/nav_items
+)
+
+service portal {
+    @server(
+        handler: Get
+    )
+    get / (NavItemGetReq) returns (Response)
+
+    @server(
+        handler: Store
+    )
+    post / (NavItemSaveReq) returns (Response)
+
+    @server(
+        handler: Edit
+    )
+    post /:id (NavItemSaveReq) returns (Response)
+
+    @server(
+        handler: Del
+    )
+    delete /:id (oneReq) returns (Response)
+
+    @server(
+        handler: OptionsUrls
+    )
+    get /urls returns (Response)
+
+    @server(
+        handler: OptionsList
+    )
+    get /options (NavItemOptionsReq) returns (Response)
+}

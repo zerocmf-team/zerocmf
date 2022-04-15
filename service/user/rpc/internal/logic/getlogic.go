@@ -2,9 +2,12 @@ package logic
 
 import (
 	"context"
+	"gincmf/common/bootstrap/util"
+	"gincmf/service/user/model"
+	"github.com/jinzhu/copier"
 
 	"gincmf/service/user/rpc/internal/svc"
-	"gincmf/service/user/rpc/types"
+	"gincmf/service/user/rpc/types/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,8 +26,23 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(in *userclient.UserRequest) (userReply *userclient.UserReply,err error) {
+func (l *GetLogic) Get(in *user.UserRequest) (userReply *user.UserReply,err error) {
 	// todo: add your logic here and delete this line
 
-	return &userclient.UserReply{}, nil
+	c := l.svcCtx
+	db := c.Db
+
+	id := in.GetUserId()
+
+	userModel := model.User{}
+	tx := db.Where("id = ?",id).First(&userModel)
+	if util.IsDbErr(tx) != nil {
+		err = tx.Error
+		return
+	}
+
+	userReply = new(user.UserReply)
+	copier.Copy(&userReply,&userModel)
+
+	return
 }

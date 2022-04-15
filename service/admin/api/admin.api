@@ -13,3 +13,12 @@ import (
 	"api/assets.api"
 	"api/option.api"
 )
+
+@server(
+	prefix: /api/v1
+)
+
+service admin {
+	@handler Index
+	get /  returns (Response)
+}

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package admin;
+
+option go_package = "./admin";
+
+message  AdminMenuReq {
+
+}
+
+message  AdminMenuReply {
+  repeated AdminMenu Data = 1 ;
+}
+
+message AdminMenu {
+  int32 Id = 1;
+  string Object = 2;
+  int32  ParentId = 3;
+  string Name = 4;
+  string Path = 5;
+  string Icon = 6;
+  int32 HideInMenu = 7;
+  float ListOrder = 8;
+}
+
+service admin {
+  rpc getMenus(AdminMenuReq) returns(AdminMenuReply);
+}

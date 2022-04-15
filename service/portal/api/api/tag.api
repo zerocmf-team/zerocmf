@@ -1,0 +1,20 @@
+syntax = "v1"
+type (
+    tagGetReq {
+        Name string `form:"name,optional"`
+    }
+)
+
+@server(
+    group: portal/admin/tag
+    middleware: AuthMiddleware
+    prefix: api/v1/admin/tag
+)
+
+service portal {
+    @handler Get
+    get / (tagGetReq) returns (Response)
+
+    @handler Delete
+    delete /:id (oneReq) returns (Response)
+}

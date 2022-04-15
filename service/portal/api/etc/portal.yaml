@@ -1,0 +1,21 @@
+Name: portal
+Host: 0.0.0.0
+Port: 8802
+
+UserRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:23790
+    Key: user.rpc
+
+Database:
+  Type: mysql
+  Host: localhost
+  Database: gincmf_portal
+  Username: root
+  Password: '123456'
+  Port: 3306
+  Charset: utf8mb4
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD

@@ -15,7 +15,7 @@ import (
 	"sync"
 )
 
-type database struct {
+type Database struct {
 	mu       sync.RWMutex
 	Type     string
 	Host     string
@@ -28,39 +28,41 @@ type database struct {
 	AuthCode string
 }
 
-var curDb *database
+var curDb *Database
 
-func Database() *database {
+func Conf() *Database {
 	if curDb == nil {
-		curDb = new(database)
+		curDb = new(Database)
 	}
 	return curDb
 }
 
-func (db *database) Db() (gdb *gorm.DB) {
+func (db *Database) Db() (outDb *gorm.DB) {
 	db.mu.Lock()
 	dbName := db.Database
-	gdb = db.newConn(dbName)
+	outDb = db.newConn(dbName)
+	outDb.Set("tenantId", "")
 	db.mu.Unlock()
 	return
 }
 
-func (db *database) ManualDb(tenantId string) (gdb *gorm.DB) {
+func (db *Database) ManualDb(tenantId string) (outDb *gorm.DB) {
 	db.mu.Lock()
 	dbName := "tenant_" + tenantId
 	// 未指定则默认为主库
 	if tenantId == "" {
 		dbName = db.Database
 	}
-	gdb = db.newConn(dbName)
+	outDb = db.newConn(dbName)
+	outDb.Set("tenantId", tenantId)
 	db.mu.Unlock()
 	return
 }
 
-func (db *database) newConn(database string) *gorm.DB {
+func (db *Database) newConn(database string) *gorm.DB {
 
 	if database == "" {
-		panic("database cannot empty")
+		panic("Database cannot empty")
 	}
 
 	db.CreateTable(database)
@@ -80,7 +82,7 @@ func (db *database) newConn(database string) *gorm.DB {
 		},
 	})
 	if err != nil {
-		panic("failed to connect database：" + err.Error())
+		panic("failed to connect Database：" + err.Error())
 	}
 	return gDb
 
@@ -94,7 +96,7 @@ func (db *database) newConn(database string) *gorm.DB {
  * @return
  **/
 
-func (db *database) CreateTable(dbName string) {
+func (db *Database) CreateTable(dbName string) {
 	typ := db.Type
 	user := db.Username
 	pwd := db.Password

@@ -6,7 +6,6 @@ import (
 	"gincmf/service/admin/api/internal/svc"
 	"gincmf/service/admin/api/internal/types"
 	"gincmf/service/admin/model"
-	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -59,13 +58,12 @@ func (l *GetLogic) Get() (resp *types.Response, err error) {
 	db := c.Db
 	tx := db.Where("path <> ?", "").Order("list_order, id").Find(&menus)
 	if tx.RowsAffected == 0 {
-		result := c.Error("暂无菜单，请和联系管理员添加！", nil)
-		copier.Copy(&resp, &result)
+		resp.Error("暂无菜单，请和联系管理员添加！", nil)
 		return
 	}
 
 	userId, _ := l.svcCtx.Get("userId")
-	database := bsDb.Database()
+	database := bsDb.Conf()
 
 	//	获取当前用户的全部角色
 	e, err := database.NewEnforcer("")
@@ -83,7 +81,8 @@ func (l *GetLogic) Get() (resp *types.Response, err error) {
 	for _, v := range menus {
 		access, err := e.Enforce(userId, v.Object,"*")
 		if err != nil {
-			panic(err)
+			resp.Error("系统出错",err.Error())
+			// panic(err.Error())
 		}
 		if access {
 			menusResult = append(menusResult, v)

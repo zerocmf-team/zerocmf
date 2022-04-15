@@ -26,7 +26,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req types.AssetsRequest) (resp *types.Response, err error) {
+func (l *GetLogic) Get(req types.AssetsReq) (resp *types.Response, err error) {
 	// todo: add your logic here and delete this line
 	resp = &types.Response{}
 	c := l.svcCtx

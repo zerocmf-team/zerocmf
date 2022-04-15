@@ -10,7 +10,6 @@ import (
 	"gincmf/common/bootstrap/util"
 	"gincmf/service/admin/model"
 	"github.com/gofrs/uuid"
-	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 	"io"
 	"mime/multipart"
@@ -45,7 +44,7 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) StoreLogic {
 	}
 }
 
-func (l *StoreLogic) Store(req types.AssetsRequest) (resp *types.Response, err error) {
+func (l *StoreLogic) Store(req types.AssetsReq) (resp *types.Response, err error) {
 	// todo: add your logic here and delete this line
 
 	resp = new(types.Response)
@@ -73,8 +72,7 @@ func (l *StoreLogic) Store(req types.AssetsRequest) (resp *types.Response, err e
 		assets = append(assets, assetsResult{FileName: fileList["fileName"], FilePath: fileList["filePath"], PrevPath: fileList["prevPath"]})
 	}
 
-	result := c.Success("上传成功！", assets)
-	copier.Copy(&resp, &result)
+	resp.Success("上传成功！", assets)
 	return
 }
 
@@ -168,13 +166,14 @@ func handleUpload(c *svc.ServiceContext, db *gorm.DB, file *multipart.FileHeader
 	realpath := path + "/" + filePath
 
 	_, err = os.Stat(path + "/" + uploadPath)
+
 	if err != nil {
 		os.MkdirAll(path+"/"+uploadPath, os.ModePerm)
 	}
 
 	buf := bytes.NewBuffer(nil)
-	if _, err := io.Copy(buf, mulFile); err != nil {
-		fmt.Println(err)
+	if _, err = io.Copy(buf, mulFile); err != nil {
+		return
 	}
 
 	md5h := md5.New()

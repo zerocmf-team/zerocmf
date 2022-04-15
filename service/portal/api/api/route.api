@@ -1,0 +1,13 @@
+syntax = "v1"
+
+@server(
+    group: route
+    prefix: api/v1/app/route
+)
+
+service portal {
+    @server(
+        handler: List
+    )
+    get / returns (Response)
+}

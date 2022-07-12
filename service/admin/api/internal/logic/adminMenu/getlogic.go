@@ -2,10 +2,10 @@ package adminMenu
 
 import (
 	"context"
-	bsDb "gincmf/common/bootstrap/db"
-	"gincmf/service/admin/api/internal/svc"
-	"gincmf/service/admin/api/internal/types"
-	"gincmf/service/admin/model"
+	"zerocmf/common/bootstrap/database"
+	"zerocmf/service/admin/api/internal/svc"
+	"zerocmf/service/admin/api/internal/types"
+	"zerocmf/service/admin/model"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -63,7 +63,7 @@ func (l *GetLogic) Get() (resp *types.Response, err error) {
 	}
 
 	userId, _ := l.svcCtx.Get("userId")
-	database := bsDb.Conf()
+	database := database.Conf()
 
 	//	获取当前用户的全部角色
 	e, err := database.NewEnforcer("")

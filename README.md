@@ -1,18 +1,24 @@
-# GinCMF完全开发手册
+# ZeroCMF完全开发手册
 
 ## 平台简介
-GinCMF是一款通用开发框架，在保持极致的性能下依然可以帮您快速实现业务
+ZeroCMF是一款通用开发框架，在保持极致的性能下依然可以帮您快速实现业务
 
 * 基于MIT协议，免费开源，可商业使用
 * go-zero + gorm + casbin，享受原滋原味的golang开发
 
+## 环境要求
+> mysql  
+> nginx  
+> apisix // 微服务必须  
+> etcd   // 微服务必须
+
 ## 框架特性
 * MIT协议
-* 基于go-zreo，渐进式开发 [x]
+* 基于go-zero，渐进式开发
 * 前台采用react + umi 框架，支持ssr，对SEO友好
 * 核心化：独立核心代码包
-* 应用化：开发者以应用的形式增加项目模块 [x]
-* 插件化：更强的插件机制，开发者以插件形式扩展功能 [x]
+* 应用化：开发者以应用的形式增加项目模块
+* 插件化：更强的插件机制，开发者以插件形式扩展功能
 * 模板化：模板完全傻瓜式，用户无须改动任何代码即可在后台完成模板设计和配置 [x]
 * 增加URL美化功能，支持别名设置，更简单
 * 统一的资源管理，相同文件只保存一份 [x]
@@ -32,7 +38,7 @@ GinCMF是一款通用开发框架，在保持极致的性能下依然可以帮�
 
 ## 目录介绍
 ```
-gincmf 根目录
+zerocmf 根目录
 ├─common 通用模块
 └─ ...
 ├─service 内置服务
@@ -40,4 +46,16 @@ gincmf 根目录
 │  ├─user  用户模块
 │  ├─portal 门户模块
 │  └─ ...
+```
+
+### 快速开始
+推荐使用docker-compose一键运行脚本
+[zerocmf docker-compose](https://github.com/zerocmf-team/docker-compose/tree/zeroCmf)
+
+```
+cd ~
+git clone git@github.com:zerocmf-team/docker-compose.git
+git checkout zerocmf
+cd workspace
+docker-compose up --build -d
 ```

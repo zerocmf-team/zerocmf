@@ -2,11 +2,13 @@ package oauth
 
 import (
 	"context"
-	"gincmf/service/user/common"
+	"encoding/json"
+	"fmt"
+	"zerocmf/service/user/common"
 	"github.com/jinzhu/copier"
 
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -25,12 +27,16 @@ func NewTokenRequestLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Toke
 	}
 }
 
-func (l *TokenRequestLogic) TokenRequest() (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-	resp = new(types.Response)
+func (l *TokenRequestLogic) TokenRequest() (resp types.Response) {
 	c := l.svcCtx
 	r := c.Request
 	w := c.ResponseWriter
+
+	r.ParseForm()
+
+	f,_ := json.Marshal(r.Form)
+
+	fmt.Println("form", string(f) )
 
 	conf := c.Config
 	inConf := common.Config{}
@@ -40,9 +46,9 @@ func (l *TokenRequestLogic) TokenRequest() (resp *types.Response, err error) {
 	defer oauth.Store.Close()
 	srv := oauth.Srv
 
-	err = srv.HandleTokenRequest(w, r)
+	err := srv.HandleTokenRequest(w, r)
 	if err != nil {
-		return
+		resp.Error(" token error ",err.Error())
 	}
 	return
 }

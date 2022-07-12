@@ -2,8 +2,8 @@ package oauth
 
 import (
 	"context"
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -21,9 +21,6 @@ func NewAuthorizeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Authori
 	}
 }
 
-func (l *AuthorizeLogic) Authorize() (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-
-
+func (l *AuthorizeLogic) Authorize() (resp types.Response) {
 	return
 }

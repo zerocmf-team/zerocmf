@@ -1,0 +1,16 @@
+Name: wechat
+Host: 0.0.0.0
+Port: 8803
+Timeout: 30000
+
+#数据库相关
+Database:
+  Type: mysql
+  Host: localhost
+  Database: zerocmf_wechat
+  Username: root
+  Password: '123456'
+  Port: 3306
+  Charset: utf8mb4
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD

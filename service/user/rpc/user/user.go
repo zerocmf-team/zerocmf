@@ -6,7 +6,7 @@ package user
 import (
 	"context"
 
-	"gincmf/service/user/rpc/types/user"
+	"zerocmf/service/user/rpc/types/user"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

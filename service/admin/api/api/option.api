@@ -35,7 +35,7 @@ type (
 
 @server(
     group: option
-    prefix: /api/v1
+    prefix: api/v1
 )
 
 service admin {

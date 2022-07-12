@@ -2,12 +2,12 @@ package list
 
 import (
 	"context"
-	"gincmf/common/bootstrap/data"
-	"gincmf/service/portal/model"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/service/portal/model"
 	"strings"
 
-	"gincmf/service/portal/api/internal/svc"
-	"gincmf/service/portal/api/internal/types"
+	"zerocmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,7 +30,6 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 
 	c := l.svcCtx
 	db := c.Db
-
 	r := c.Request
 
 	extra := map[string]string{}
@@ -44,7 +43,10 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 	var query []string
 	var queryArgs []interface{}
 
-	for _, v := range req.Ids {
+	ids := req.Ids
+
+	idsArr := strings.Split(ids,",")
+	for _, v := range idsArr {
 		query = append(query, "cp.category_id = ?")
 		queryArgs = append(queryArgs, v)
 	}

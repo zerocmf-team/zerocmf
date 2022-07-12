@@ -3,8 +3,8 @@ package adminMenu
 import (
 	"context"
 
-	"gincmf/service/admin/api/internal/svc"
-	"gincmf/service/admin/api/internal/types"
+	"zerocmf/service/admin/api/internal/svc"
+	"zerocmf/service/admin/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

@@ -2,9 +2,9 @@ package themeFile
 
 import (
 	"context"
-	"gincmf/service/portal/api/internal/svc"
-	"gincmf/service/portal/api/internal/types"
-	"gincmf/service/portal/model"
+	"zerocmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/types"
+	"zerocmf/service/portal/model"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

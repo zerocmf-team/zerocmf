@@ -1,0 +1,52 @@
+syntax = "v1"
+
+type (
+    postCommentGetReq {
+        Id int `path:"id,optional"`
+        Type int `form:"type,optional"`
+    }
+
+    postCommentAddReq {
+        Id int `path:"id,optional"`
+        TopicType int `json:"topic_type,optional"`
+        Content string `json:"content,optional"`
+    }
+
+    postReplyReq {
+        Id int `path:"id,optional"`
+        ReplyId int `json:"reply_id,optional"`
+        ReplyType int `json:"reply_type,optional"`
+        Content string `json:"content,optional"`
+        ToUserId int `json:"to_user_id,optional"`
+    }
+)
+
+@server(
+    group: portal/app/comment
+    prefix: api/v1/app/comment
+)
+
+service portal {
+    @handler Get
+    get /:id (postCommentGetReq) returns (Response)
+}
+
+@server(
+    group: portal/app/comment
+    middleware: AuthMiddleware
+    prefix: api/v1/app/comment
+)
+
+service portal {
+    @handler Comment
+    post /:id (postCommentAddReq) returns (Response)
+
+    @handler Like
+    post /like/:id (oneReq) returns (Response)
+
+    @handler Reply
+    post /reply/:id (postReplyReq) returns (Response)
+
+    @handler ReplyLike
+    post /reply/like/:id (oneReq) returns (Response)
+}

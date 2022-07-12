@@ -2,12 +2,12 @@ package oauth
 
 import (
 	"context"
-	"gincmf/service/user/common"
+	"zerocmf/service/user/common"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 	"golang.org/x/oauth2"
@@ -27,11 +27,7 @@ func NewRefreshLogic(ctx context.Context, svcCtx *svc.ServiceContext) *RefreshLo
 	}
 }
 
-func (l *RefreshLogic) Refresh(req *types.RefreshReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-
-	resp = new(types.Response)
-
+func (l *RefreshLogic) Refresh(req *types.RefreshReq) (resp types.Response) {
 	refreshToken := req.RefreshToken
 	if refreshToken == "" {
 		resp.Error("refresh_token不能为空！", nil)

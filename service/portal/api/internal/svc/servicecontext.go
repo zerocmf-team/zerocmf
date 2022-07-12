@@ -1,12 +1,12 @@
 package svc
 
 import (
-	"gincmf/common/bootstrap/data"
-	"gincmf/common/bootstrap/db"
-	"gincmf/service/portal/api/internal/config"
-	"gincmf/service/portal/api/internal/middleware"
-	"gincmf/service/portal/model"
-	"gincmf/service/user/rpc/user"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/database"
+	"zerocmf/service/portal/api/internal/config"
+	"zerocmf/service/portal/api/internal/middleware"
+	"zerocmf/service/portal/model"
+	"zerocmf/service/user/rpc/user"
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -25,22 +25,19 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	database := db.Conf()
+	database := database.Conf()
 	copier.Copy(&database, &c.Database)
-	data.InitConfig(database)
 
 	// 设置为默认的db
 	db := database.Db() // 初始化
 
 	// 数据库迁移
 	model.Migrate("")
-	data := new(data.Data)
-	data.Context = data.InitContext()
 
 	return &ServiceContext{
 		Config:         c,
 		Db:             db,
-		Data:           data,
+		Data:           new(data.Data).InitContext(),
 		UserRpc:        user.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		AuthMiddleware: middleware.NewAuthMiddleware().Handle,
 	}

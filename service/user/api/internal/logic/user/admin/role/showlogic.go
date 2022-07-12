@@ -2,9 +2,9 @@ package role
 
 import (
 	"context"
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
-	"gincmf/service/user/model"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
+	"zerocmf/service/user/model"
 	"strings"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -24,9 +24,7 @@ func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
 	}
 }
 
-func (l *ShowLogic) Show(req *types.OneReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-	resp = new(types.Response)
+func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 	c := l.svcCtx
 	db := c.Db
 
@@ -40,7 +38,7 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp *types.Response, err error) {
 	query := []string{"id = ?", "status = 1"}
 	queryStr := strings.Join(query, " AND ")
 	queryArgs := []interface{}{id}
-	err = role.Show(db, queryStr, queryArgs)
+	err := role.Show(db, queryStr, queryArgs)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

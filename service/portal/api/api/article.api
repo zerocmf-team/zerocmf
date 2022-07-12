@@ -9,6 +9,10 @@ type (
         EndTime string `form:"end_time,optional"`
     }
 
+    articleSearchReq {
+        Keywords string `form:"keywords,optional"`
+    }
+
     Extends {
         Key string `json:"key,optional"`
         Value string `json:"value,optional"`
@@ -49,8 +53,13 @@ type (
     }
 
     postListReq {
-        Ids []int `form:"ids,optional"`
+        Ids string `form:"ids,optional"`
         Hot int `form:"hot,optional"` // 根据浏览量和权重排序
+    }
+
+    postShowReq {
+        Id int `path:"id,optional"`
+        Type int `form:"type,optional"`
     }
 )
 
@@ -84,4 +93,39 @@ service portal {
 service portal {
     @handler Get
     get / (postListReq) returns (Response)
+
+    @handler Search
+    get /search (articleSearchReq) returns (Response)
+}
+
+
+// 文章详情
+@server(
+    group: portal/app/post
+    prefix: api/v1/app/post
+)
+
+service portal {
+    @handler Show
+    get /:id (postShowReq) returns (Response)
+}
+
+// 点赞收藏相关
+@server(
+    group: portal/app/post
+    prefix: api/v1/app/post
+)
+
+service portal {
+    @handler Like
+    get /like/:id (oneReq) returns (Response)
+
+    @handler IsLike
+    get /is_like/:id (oneReq) returns (Response)
+
+    @handler Favorite
+    get /favorite/:id (oneReq) returns (Response)
+
+    @handler IsFavorite
+    get /is_favorite/:id (oneReq) returns (Response)
 }

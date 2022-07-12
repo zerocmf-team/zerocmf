@@ -4,19 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"gincmf/common/bootstrap/data"
-	comModel "gincmf/common/bootstrap/model"
-	"gincmf/service/portal/model"
-	"gincmf/service/user/rpc/user"
+	"zerocmf/common/bootstrap/data"
+	comModel "zerocmf/common/bootstrap/model"
+	"zerocmf/service/portal/model"
+	"zerocmf/service/user/rpc/user"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
-	"gincmf/service/portal/api/internal/svc"
-	"gincmf/service/portal/api/internal/types"
+	"zerocmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -67,13 +66,15 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	var more model.More
 	copier.Copy(&more, &req)
 
-	re, _ := regexp.Compile("[^a-zA-Z0-9]+")
-	slug := re.ReplaceAllString(req.PostTitle, "-")
-	more.Slug = strings.ToLower(slug)
-
 	if req.Template != "" {
 		more.Template = req.Template
 	}
+
+	//re, _ := regexp.Compile("[^a-zA-Z0-9]+")
+	//slug := re.ReplaceAllString(req.PostTitle, "-")
+	//more.Slug = strings.ToLower(slug)
+
+	more.Alias = req.Alias
 
 	moreJson, err := json.Marshal(more)
 
@@ -83,10 +84,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	}
 
 	userId, _ := c.Get("userId")
-	if err != nil {
-		resp.Error(err.Error(), nil)
-		return
-	}
+
 	userIdInt, _ := strconv.Atoi(userId.(string))
 
 	portal := model.NewPost(userRpc)

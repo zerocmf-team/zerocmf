@@ -8,8 +8,8 @@ package model
 
 import (
 	"errors"
-	"gincmf/common/bootstrap/data"
-	"gincmf/common/bootstrap/util"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 	"strings"
 )

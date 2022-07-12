@@ -1,11 +1,10 @@
 package svc
 
 import (
-	"gincmf/common/bootstrap/data"
-	"gincmf/common/bootstrap/db"
-	"gincmf/service/user/model"
-	"gincmf/service/user/rpc/internal/config"
-	"github.com/jinzhu/copier"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/database"
+	"zerocmf/service/user/model"
+	"zerocmf/service/user/rpc/internal/config"
 	"gorm.io/gorm"
 )
 
@@ -16,10 +15,9 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	database := db.Conf()
-	copier.Copy(&database, &c.Database)
+	curDb := database.NewDb(c.Database)
 	// 设置为默认的db
-	db := database.Db() // 初始化
+	db := curDb.Db() // 初始化
 	model.Migrate("")
 
 	return &ServiceContext{

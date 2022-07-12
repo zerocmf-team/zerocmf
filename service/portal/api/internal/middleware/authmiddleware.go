@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"gincmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/data"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 	"strings"

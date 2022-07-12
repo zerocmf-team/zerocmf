@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"gincmf/service/admin/api/internal/svc"
-	"gincmf/service/admin/api/internal/types"
-	"gincmf/service/admin/model"
+	"zerocmf/service/admin/api/internal/svc"
+	"zerocmf/service/admin/api/internal/types"
+	"zerocmf/service/admin/model"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

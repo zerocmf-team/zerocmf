@@ -7,7 +7,7 @@
 package model
 
 import (
-	"gincmf/common/bootstrap/db"
+	"zerocmf/common/bootstrap/database"
 )
 
 type Region struct {
@@ -18,6 +18,6 @@ type Region struct {
 }
 
 func (_ Region) AutoMigrate() {
-	curDb := db.Conf().Db()
+	curDb := database.Conf().Db()
 	curDb.AutoMigrate(&Region{})
 }

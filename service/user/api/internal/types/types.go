@@ -2,7 +2,7 @@
 package types
 
 import (
-	bsData "gincmf/common/bootstrap/data"
+	bsData "zerocmf/common/bootstrap/data"
 	"github.com/jinzhu/copier"
 )
 

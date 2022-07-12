@@ -9,7 +9,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"gincmf/common/bootstrap/util"
+	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 )
 

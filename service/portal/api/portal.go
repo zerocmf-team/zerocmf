@@ -3,13 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"gincmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/data"
 	"net/http"
 	"strings"
 
-	"gincmf/service/portal/api/internal/config"
-	"gincmf/service/portal/api/internal/handler"
-	"gincmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/config"
+	"zerocmf/service/portal/api/internal/handler"
+	"zerocmf/service/portal/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"

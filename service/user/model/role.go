@@ -7,8 +7,8 @@
 package model
 
 import (
-	"gincmf/common/bootstrap/paginate"
-	"gincmf/common/bootstrap/util"
+	"zerocmf/common/bootstrap/paginate"
+	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 	"time"
 )

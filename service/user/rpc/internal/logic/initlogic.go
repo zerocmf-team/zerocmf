@@ -2,9 +2,9 @@ package logic
 
 import (
 	"context"
-	"gincmf/service/user/model"
-	"gincmf/service/user/rpc/internal/svc"
-	"gincmf/service/user/rpc/types/user"
+	"zerocmf/service/user/model"
+	"zerocmf/service/user/rpc/internal/svc"
+	"zerocmf/service/user/rpc/types/user"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"

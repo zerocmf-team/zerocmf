@@ -3,15 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
-	"gincmf/common/bootstrap/data"
-	"github.com/zeromicro/go-zero/core/logx"
+	"zerocmf/common/bootstrap/data"
 	"github.com/zeromicro/go-zero/rest/router"
 	"net/http"
 	"strings"
 
-	"gincmf/service/admin/api/internal/config"
-	"gincmf/service/admin/api/internal/handler"
-	"gincmf/service/admin/api/internal/svc"
+	"zerocmf/service/admin/api/internal/config"
+	"zerocmf/service/admin/api/internal/handler"
+	"zerocmf/service/admin/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
@@ -40,7 +39,6 @@ func main() {
 	// 初始化
 	server.Use(func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			logx.Info("init")
 			// 获取请求头域名
 			scheme := "http://"
 			if r.Header.Get("Scheme") == "https" {

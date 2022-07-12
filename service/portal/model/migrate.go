@@ -6,10 +6,12 @@
 
 package model
 
-import "gincmf/common/bootstrap/db"
+import (
+	"zerocmf/common/bootstrap/database"
+)
 
 func Migrate(tenantId string) {
-	curDb := db.Conf().ManualDb(tenantId)
+	curDb := database.Conf().ManualDb(tenantId)
 	new(Option).AutoMigrate(curDb)
 	new(PortalPost).AutoMigrate(curDb)
 	new(PortalCategory).AutoMigrate(curDb)
@@ -17,4 +19,7 @@ func Migrate(tenantId string) {
 	new(Theme).AutoMigrate(curDb)
 	new(Route).AutoMigrate(curDb)
 	new(Nav).AutoMigrate(curDb)
+
+	// 评论数据库迁移
+	new(Comment).AutoMigrate(curDb)
 }

@@ -8,7 +8,7 @@ Etcd:
 Database:
   Type: mysql
   Host: localhost
-  Database: gincmf_user
+  Database: zerocmf_user
   Username: root
   Password: '123456'
   Port: 3306

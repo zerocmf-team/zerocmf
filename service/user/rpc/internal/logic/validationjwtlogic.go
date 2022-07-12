@@ -2,11 +2,11 @@ package logic
 
 import (
 	"context"
-	"gincmf/service/user/common"
+	"zerocmf/service/user/common"
 	"github.com/jinzhu/copier"
 
-	"gincmf/service/user/rpc/internal/svc"
-	"gincmf/service/user/rpc/types/user"
+	"zerocmf/service/user/rpc/internal/svc"
+	"zerocmf/service/user/rpc/types/user"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

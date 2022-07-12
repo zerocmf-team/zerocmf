@@ -2,11 +2,11 @@ package account
 
 import (
 	"context"
-	"gincmf/common/bootstrap/casbin"
-	"gincmf/common/bootstrap/util"
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
-	"gincmf/service/user/model"
+	"zerocmf/common/bootstrap/casbin"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
+	"zerocmf/service/user/model"
 	"strconv"
 	"time"
 
@@ -27,13 +27,11 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 	}
 }
 
-func (l *StoreLogic) Store(req *types.AdminStoreReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
+func (l *StoreLogic) Store(req *types.AdminStoreReq) (resp types.Response) {
 
 	c := l.svcCtx
 	db := c.Db
 
-	resp = new(types.Response)
 	form := req
 	if len(form.RoleIds) <= 0 {
 		resp.Error("至少选择一项角色！", nil)

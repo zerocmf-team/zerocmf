@@ -4,13 +4,13 @@ package handler
 import (
 	"net/http"
 
-	useradminaccount "gincmf/service/user/api/internal/handler/user/admin/account"
-	useradminauthAccess "gincmf/service/user/api/internal/handler/user/admin/authAccess"
-	useradminauthorize "gincmf/service/user/api/internal/handler/user/admin/authorize"
-	useradminrole "gincmf/service/user/api/internal/handler/user/admin/role"
-	userapp "gincmf/service/user/api/internal/handler/user/app"
-	useroauth "gincmf/service/user/api/internal/handler/user/oauth"
-	"gincmf/service/user/api/internal/svc"
+	useradminaccount "zerocmf/service/user/api/internal/handler/user/admin/account"
+	useradminauthAccess "zerocmf/service/user/api/internal/handler/user/admin/authAccess"
+	useradminauthorize "zerocmf/service/user/api/internal/handler/user/admin/authorize"
+	useradminrole "zerocmf/service/user/api/internal/handler/user/admin/role"
+	userapp "zerocmf/service/user/api/internal/handler/user/app"
+	useroauth "zerocmf/service/user/api/internal/handler/user/oauth"
+	"zerocmf/service/user/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

@@ -4,7 +4,7 @@
 ** @描述　　:
  */
 
-package db
+package database
 
 import (
 	"github.com/casbin/casbin/v2"

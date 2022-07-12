@@ -2,10 +2,10 @@ package app
 
 import (
 	"context"
-	"gincmf/common/bootstrap/util"
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
-	"gincmf/service/user/model"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
+	"zerocmf/service/user/model"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 	"time"
@@ -35,15 +35,12 @@ func NewSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveLogic {
  * @return
  **/
 
-func (l *SaveLogic) Save(req *types.AppSaveReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-
-	resp = new(types.Response)
+func (l *SaveLogic) Save(req *types.AppSaveReq) (resp types.Response) {
 	c := l.svcCtx
 	userId, _ := c.Get("userId")
 	db := c.Db
 	user := model.User{}
-	err = user.Show(db, "id = ?", []interface{}{userId})
+	err := user.Show(db, "id = ?", []interface{}{userId})
 	if err != nil {
 		msg := "系统错误：" + err.Error()
 		if err == gorm.ErrRecordNotFound {
@@ -70,6 +67,5 @@ func (l *SaveLogic) Save(req *types.AppSaveReq) (resp *types.Response, err error
 
 	user.AvatarPrev = util.FileUrl(user.Avatar)
 	resp.Success("操作成功！", user)
-
 	return
 }

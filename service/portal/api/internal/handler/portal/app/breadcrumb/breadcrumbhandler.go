@@ -3,9 +3,9 @@ package breadcrumb
 import (
 	"net/http"
 
-	"gincmf/service/portal/api/internal/logic/portal/app/breadcrumb"
-	"gincmf/service/portal/api/internal/svc"
-	"gincmf/service/portal/api/internal/types"
+	"zerocmf/service/portal/api/internal/logic/portal/app/breadcrumb"
+	"zerocmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

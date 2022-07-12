@@ -2,11 +2,11 @@ package account
 
 import (
 	"context"
-	"gincmf/common/bootstrap/casbin"
-	"gincmf/common/bootstrap/util"
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
-	"gincmf/service/user/model"
+	"zerocmf/common/bootstrap/casbin"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
+	"zerocmf/service/user/model"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -26,13 +26,11 @@ func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
 	}
 }
 
-func (l *ShowLogic) Show(req *types.OneReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
+func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	db := c.Db
 
-	resp = new(types.Response)
 	id := req.Id
 	if id == "" {
 		resp.Error("id不能为空！", nil)
@@ -77,7 +75,5 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp *types.Response, err error) {
 	result.Roles = roles
 
 	resp.Success("获取成功！", result)
-
-
 	return
 }

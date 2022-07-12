@@ -3,8 +3,8 @@ package adminMenu
 import (
 	"net/http"
 
-	"gincmf/service/admin/api/internal/logic/adminMenu"
-	"gincmf/service/admin/api/internal/svc"
+	"zerocmf/service/admin/api/internal/logic/adminMenu"
+	"zerocmf/service/admin/api/internal/svc"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

@@ -2,7 +2,7 @@
 package types
 
 import (
-	bsData "gincmf/common/bootstrap/data"
+	bsData "zerocmf/common/bootstrap/data"
 	"github.com/jinzhu/copier"
 )
 
@@ -45,6 +45,10 @@ type ArticleGetReq struct {
 	EndTime   string `form:"end_time,optional"`
 }
 
+type ArticleSearchReq struct {
+	Keywords string `form:"keywords,optional"`
+}
+
 type Extends struct {
 	Key   string `json:"key,optional"`
 	Value string `json:"value,optional"`
@@ -84,8 +88,13 @@ type ArticleSaveReq struct {
 }
 
 type PostListReq struct {
-	Ids []int `form:"ids,optional"`
-	Hot int   `form:"hot,optional"` // 根据浏览量和权重排序
+	Ids string `form:"ids,optional"`
+	Hot int    `form:"hot,optional"` // 根据浏览量和权重排序
+}
+
+type PostShowReq struct {
+	Id   int `path:"id,optional"`
+	Type int `form:"type,optional"`
 }
 
 type InitReq struct {
@@ -138,6 +147,25 @@ type NavItemSaveReq struct {
 
 type NavItemOptionsReq struct {
 	NavId int `form:"nav_id"`
+}
+
+type PostCommentGetReq struct {
+	Id   int `path:"id,optional"`
+	Type int `form:"type,optional"`
+}
+
+type PostCommentAddReq struct {
+	Id        int    `path:"id,optional"`
+	TopicType int    `json:"topic_type,optional"`
+	Content   string `json:"content,optional"`
+}
+
+type PostReplyReq struct {
+	Id        int    `path:"id,optional"`
+	ReplyId   int    `json:"reply_id,optional"`
+	ReplyType int    `json:"reply_type,optional"`
+	Content   string `json:"content,optional"`
+	ToUserId  int    `json:"to_user_id,optional"`
 }
 
 func (r *Response) Success(msg string, data interface{}) {

@@ -2,12 +2,12 @@ package category
 
 import (
 	"context"
-	"gincmf/common/bootstrap/data"
-	"gincmf/service/portal/model"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/service/portal/model"
 	"strings"
 
-	"gincmf/service/portal/api/internal/svc"
-	"gincmf/service/portal/api/internal/types"
+	"zerocmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

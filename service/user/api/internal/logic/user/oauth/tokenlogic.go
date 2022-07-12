@@ -2,18 +2,17 @@ package oauth
 
 import (
 	"context"
-	"gincmf/common/bootstrap/util"
-	"gincmf/service/user/common"
-	"gincmf/service/user/model"
-
-	"github.com/jinzhu/copier"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/user/common"
+	"zerocmf/service/user/model"
 	"gorm.io/gorm"
 
+	"github.com/jinzhu/copier"
 	"strconv"
 	"time"
 
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 
@@ -34,12 +33,20 @@ func NewTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *TokenLogic 
 	}
 }
 
-func (l *TokenLogic) Token(req *types.TokenReq) (resp *types.Response, err error) {
-
-	resp = new(types.Response)
+func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 
 	username := req.Usermame
 	password := req.Password
+
+	if username == "" {
+		resp.Error("用户名不能为空", nil)
+		return
+	}
+
+	if password == "" {
+		resp.Error("密码不能为空", nil)
+		return
+	}
 
 	c := l.svcCtx
 	r := c.Request
@@ -48,8 +55,12 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp *types.Response, err error
 	// 验证用户账号密码
 	user := model.User{}
 	tx := db.Where("user_login = ?", username).First(&user)
-	if tx.Error != nil && tx.Error != gorm.ErrRecordNotFound {
-		resp.Error("查询用户失败", nil)
+	if tx.Error != nil {
+		if tx.Error != gorm.ErrRecordNotFound {
+			resp.Error("查询用户失败", nil)
+			return
+		}
+		resp.Error("数据库出错", tx.Error.Error())
 		return
 	}
 
@@ -94,7 +105,7 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp *types.Response, err error
 		Scope:          "all",
 		UserID:         strconv.Itoa(user.Id),
 		AccessTokenExp: duration,
-		Request:        c.Request,
+		Request:        r,
 	}
 
 	ti, err := srv.GetAuthorizeToken(l.ctx, authReq)
@@ -105,7 +116,6 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp *types.Response, err error
 	}
 
 	code := ti.GetCode()
-
 	token, err := oauthConfig.Exchange(context.Background(), code)
 
 	if err != nil {

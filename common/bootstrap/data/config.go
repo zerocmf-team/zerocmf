@@ -7,41 +7,15 @@
 package data
 
 import (
-	"gincmf/common/bootstrap/db"
-	"github.com/jinzhu/copier"
+	"fmt"
+	"sync"
 )
 
 var (
+	mu     sync.RWMutex
 	domain string
 	salts  string
 )
-
-type config struct {
-	Database struct {
-		Type     string
-		Host     string
-		Database string
-		Username string
-		Password string
-		Port     int
-		Charset  string
-		Prefix   string
-		AuthCode string
-	}
-}
-
-var conf *config
-
-func InitConfig(c *db.Database) {
-	if conf == nil {
-		conf = new(config)
-	}
-	copier.Copy(&conf.Database,&c)
-}
-
-func Config() *config {
-	return conf
-}
 
 /**
  * @Author return <1140444693@qq.com>
@@ -52,7 +26,9 @@ func Config() *config {
  **/
 
 func SetDomain(value string) {
+	mu.Lock()
 	domain = value
+	mu.Unlock()
 }
 
 /**
@@ -68,9 +44,13 @@ func Domain() string {
 }
 
 func SetSalts(value string) {
+	mu.Lock()
 	salts = value
+	mu.Unlock()
 }
 
 func Salts() string {
+	fmt.Println("salts",salts)
+	fmt.Println("domain",domain)
 	return salts
 }

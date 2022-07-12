@@ -2,11 +2,11 @@ package navItem
 
 import (
 	"context"
-	"gincmf/service/portal/model"
+	"zerocmf/service/portal/model"
 	"strconv"
 
-	"gincmf/service/portal/api/internal/svc"
-	"gincmf/service/portal/api/internal/types"
+	"zerocmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -62,14 +62,24 @@ func (l *OptionsUrlsLogic) OptionsUrls() (resp types.Response) {
 
 	}
 
-	pages, err := model.PortalPost{PostType: 2}.PortalList(db, "", nil)
+	query := "post_type = ?"
+	queryArgs := []interface{}{"2"}
+
+	pages, err := model.PortalPost{}.PortalList(db, query, queryArgs)
 
 	pageOptions := make([]Options, 0)
 
 	for _, v := range pages {
+
+		value := "/page/" + strconv.Itoa(v.Id)
+
+		if v.MoreJson.Alias != "" {
+			value = v.MoreJson.Alias
+		}
+
 		pageOptions = append(pageOptions, Options{
 			Label: v.PostTitle,
-			Value: "/page/" + strconv.Itoa(v.Id),
+			Value: value,
 		})
 
 	}

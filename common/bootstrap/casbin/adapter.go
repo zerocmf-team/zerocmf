@@ -7,7 +7,7 @@
 package casbin
 
 import (
-	"gincmf/common/bootstrap/db"
+	"zerocmf/common/bootstrap/database"
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
@@ -15,7 +15,7 @@ import (
 )
 
 func NewEnforcer(tenantId string) (e *casbin.Enforcer, err error) {
-	curDb := db.Conf()
+	curDb := database.Conf()
 	driverName := curDb.Type
 	username := curDb.Username
 	password := curDb.Password

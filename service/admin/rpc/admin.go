@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"gincmf/service/admin/rpc/internal/config"
-	"gincmf/service/admin/rpc/internal/server"
-	"gincmf/service/admin/rpc/internal/svc"
-	"gincmf/service/admin/rpc/types/admin"
+	"zerocmf/service/admin/rpc/internal/config"
+	"zerocmf/service/admin/rpc/internal/server"
+	"zerocmf/service/admin/rpc/internal/svc"
+	"zerocmf/service/admin/rpc/types/admin"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"

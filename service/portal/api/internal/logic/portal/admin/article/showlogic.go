@@ -2,14 +2,14 @@ package article
 
 import (
 	"context"
-	comModel "gincmf/common/bootstrap/model"
-	"gincmf/common/bootstrap/util"
-	"gincmf/service/portal/model"
+	comModel "zerocmf/common/bootstrap/model"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/portal/model"
 	"strconv"
 	"strings"
 
-	"gincmf/service/portal/api/internal/svc"
-	"gincmf/service/portal/api/internal/types"
+	"zerocmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

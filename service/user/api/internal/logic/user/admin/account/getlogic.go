@@ -2,12 +2,12 @@ package account
 
 import (
 	"context"
-	"gincmf/common/bootstrap/data"
-	"gincmf/service/user/model"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/service/user/model"
 	"strings"
 
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,10 +26,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req *types.ListReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-
-	resp = new(types.Response)
+func (l *GetLogic) Get(req *types.ListReq) (resp types.Response) {
 
 	c := l.svcCtx
 	db := c.Db

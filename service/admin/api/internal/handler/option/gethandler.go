@@ -3,8 +3,8 @@ package option
 import (
 	"net/http"
 
-	"gincmf/service/admin/api/internal/logic/option"
-	"gincmf/service/admin/api/internal/svc"
+	"zerocmf/service/admin/api/internal/logic/option"
+	"zerocmf/service/admin/api/internal/svc"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

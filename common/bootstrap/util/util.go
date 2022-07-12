@@ -9,7 +9,7 @@ package util
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"gincmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/data"
 	"gorm.io/gorm"
 	"strings"
 )

@@ -62,6 +62,7 @@ func NewConf(conf Config, tenantId string) (oauthConfig oauth2.Config) {
 }
 
 func NewServer(conf Config, tenantId string) *oauth {
+
 	database := conf.Database.Database
 	if tenantId != "" {
 		database = "tenant_" + tenantId

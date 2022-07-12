@@ -7,12 +7,12 @@
 package model
 
 import (
-	"gincmf/common/bootstrap/db"
-	"gincmf/common/bootstrap/model"
+	"zerocmf/common/bootstrap/database"
+	"zerocmf/common/bootstrap/model"
 )
 
 func Migrate(tenantId string,api bool) {
-	curDb := db.Conf().ManualDb(tenantId)
+	curDb := database.Conf().ManualDb(tenantId)
 	if api {
 		new(AdminMenu).AutoMigrate(curDb)
 	}

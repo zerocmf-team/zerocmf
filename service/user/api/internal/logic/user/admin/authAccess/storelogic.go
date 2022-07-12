@@ -3,16 +3,16 @@ package authAccess
 import (
 	"context"
 	"errors"
-	"gincmf/common/bootstrap/casbin"
-	"gincmf/common/bootstrap/util"
-	"gincmf/service/user/model"
+	"zerocmf/common/bootstrap/casbin"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/user/model"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 	"strconv"
 	"time"
 
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -31,9 +31,7 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 	}
 }
 
-func (l *StoreLogic) Store(req *types.AccessStore) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-	resp = new(types.Response)
+func (l *StoreLogic) Store(req *types.AccessStore) (resp types.Response) {
 	form := access{}
 	copier.Copy(&form, &req)
 	role, err := save(form, l.svcCtx)

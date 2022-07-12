@@ -3,8 +3,8 @@ package category
 import (
 	"net/http"
 
-	"gincmf/service/portal/api/internal/logic/portal/admin/category"
-	"gincmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/logic/portal/admin/category"
+	"zerocmf/service/portal/api/internal/svc"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

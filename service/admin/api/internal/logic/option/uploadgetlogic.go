@@ -3,11 +3,11 @@ package option
 import (
 	"context"
 	"encoding/json"
-	"gincmf/service/admin/model"
+	"zerocmf/service/admin/model"
 	"gorm.io/gorm"
 
-	"gincmf/service/admin/api/internal/svc"
-	"gincmf/service/admin/api/internal/types"
+	"zerocmf/service/admin/api/internal/svc"
+	"zerocmf/service/admin/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

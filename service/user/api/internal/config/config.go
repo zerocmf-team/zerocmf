@@ -1,6 +1,7 @@
 package config
 
 import (
+	"zerocmf/common/bootstrap/database"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -12,15 +13,5 @@ type Config struct {
 	}
 	UserRpc zrpc.RpcClientConf
 	AdminRpc zrpc.RpcClientConf
-	Database struct {
-		Type     string
-		Host     string
-		Database string
-		Username string
-		Password string
-		Port     int
-		Charset  string
-		Prefix   string
-		AuthCode string
-	}
+	Database database.Database
 }

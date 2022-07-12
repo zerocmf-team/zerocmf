@@ -7,8 +7,8 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
-	"gincmf/common/bootstrap/util"
-	"gincmf/service/admin/model"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/admin/model"
 	"github.com/gofrs/uuid"
 	"gorm.io/gorm"
 	"io"
@@ -18,8 +18,8 @@ import (
 	"strings"
 	"time"
 
-	"gincmf/service/admin/api/internal/svc"
-	"gincmf/service/admin/api/internal/types"
+	"zerocmf/service/admin/api/internal/svc"
+	"zerocmf/service/admin/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

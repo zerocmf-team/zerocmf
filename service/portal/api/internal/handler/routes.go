@@ -4,18 +4,20 @@ package handler
 import (
 	"net/http"
 
-	navItem "gincmf/service/portal/api/internal/handler/navItem"
-	portaladminarticle "gincmf/service/portal/api/internal/handler/portal/admin/article"
-	portaladmincategory "gincmf/service/portal/api/internal/handler/portal/admin/category"
-	portaladmintag "gincmf/service/portal/api/internal/handler/portal/admin/tag"
-	portaladmintheme "gincmf/service/portal/api/internal/handler/portal/admin/theme"
-	portaladminthemeFile "gincmf/service/portal/api/internal/handler/portal/admin/themeFile"
-	portalappbreadcrumb "gincmf/service/portal/api/internal/handler/portal/app/breadcrumb"
-	portalappcategory "gincmf/service/portal/api/internal/handler/portal/app/category"
-	portalapplist "gincmf/service/portal/api/internal/handler/portal/app/list"
-	portalappthemeFile "gincmf/service/portal/api/internal/handler/portal/app/themeFile"
-	route "gincmf/service/portal/api/internal/handler/route"
-	"gincmf/service/portal/api/internal/svc"
+	navItem "zerocmf/service/portal/api/internal/handler/navItem"
+	portaladminarticle "zerocmf/service/portal/api/internal/handler/portal/admin/article"
+	portaladmincategory "zerocmf/service/portal/api/internal/handler/portal/admin/category"
+	portaladmintag "zerocmf/service/portal/api/internal/handler/portal/admin/tag"
+	portaladmintheme "zerocmf/service/portal/api/internal/handler/portal/admin/theme"
+	portaladminthemeFile "zerocmf/service/portal/api/internal/handler/portal/admin/themeFile"
+	portalappbreadcrumb "zerocmf/service/portal/api/internal/handler/portal/app/breadcrumb"
+	portalappcategory "zerocmf/service/portal/api/internal/handler/portal/app/category"
+	portalappcomment "zerocmf/service/portal/api/internal/handler/portal/app/comment"
+	portalapplist "zerocmf/service/portal/api/internal/handler/portal/app/list"
+	portalapppost "zerocmf/service/portal/api/internal/handler/portal/app/post"
+	portalappthemeFile "zerocmf/service/portal/api/internal/handler/portal/app/themeFile"
+	route "zerocmf/service/portal/api/internal/handler/route"
+	"zerocmf/service/portal/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -129,8 +131,50 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/",
 				Handler: portalapplist.GetHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/search",
+				Handler: portalapplist.SearchHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/v1/app/list"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: portalapppost.ShowHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/post"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/like/:id",
+				Handler: portalapppost.LikeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/is_like/:id",
+				Handler: portalapppost.IsLikeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/favorite/:id",
+				Handler: portalapppost.FavoriteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/is_favorite/:id",
+				Handler: portalapppost.IsFavoriteHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/post"),
 	)
 
 	server.AddRoutes(
@@ -246,5 +290,45 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/admin/nav_items"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: portalappcomment.GetHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/comment"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: portalappcomment.CommentHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/like/:id",
+					Handler: portalappcomment.LikeHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/reply/:id",
+					Handler: portalappcomment.ReplyHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/reply/like/:id",
+					Handler: portalappcomment.ReplyLikeHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/app/comment"),
 	)
 }

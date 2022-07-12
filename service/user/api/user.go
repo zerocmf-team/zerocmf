@@ -3,13 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"gincmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/data"
 	"net/http"
 	"strings"
 
-	"gincmf/service/user/api/internal/config"
-	"gincmf/service/user/api/internal/handler"
-	"gincmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/config"
+	"zerocmf/service/user/api/internal/handler"
+	"zerocmf/service/user/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
@@ -23,7 +23,7 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	data.SetSalts(c.Database.Prefix)
+	data.SetSalts(c.Database.AuthCode)
 
 	ctx := svc.NewServiceContext(c)
 

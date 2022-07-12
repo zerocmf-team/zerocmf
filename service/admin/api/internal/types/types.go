@@ -2,7 +2,7 @@
 package types
 
 import (
-	bsData "gincmf/common/bootstrap/data"
+	bsData "zerocmf/common/bootstrap/data"
 	"github.com/jinzhu/copier"
 )
 
@@ -50,10 +50,6 @@ type UploadReq struct {
 	MaxFiles  int       `json:"max_files,optional"`
 	ChunkSize int       `json:"chunk_size,optional"`
 	FileTypes FileTypes `json:"file_types,optional"`
-}
-
-type OneReq struct {
-	Id int `path:"id,optional"`
 }
 
 func (r *Response) Success(msg string, data interface{}) {

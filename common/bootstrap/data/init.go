@@ -14,6 +14,8 @@ type Data struct {
 	*Context
 }
 
-func (rest *Data) InitContext() (c *Context) {
-	return new(Context)
+func (rest *Data) InitContext() (data *Data) {
+	return &Data{
+		Context: new(Context),
+	}
 }

@@ -2,9 +2,9 @@ package app
 
 import (
 	"context"
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
-	"gincmf/service/user/model"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
+	"zerocmf/service/user/model"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
 )
@@ -31,9 +31,7 @@ func NewCurrentUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Curre
  * @return
  **/
 
-func (l *CurrentUserLogic) CurrentUser() (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-	resp = new(types.Response)
+func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 	c := l.svcCtx
 	userId, _ := c.Get("userId")
 

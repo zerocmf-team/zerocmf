@@ -9,10 +9,10 @@ package model
 import (
 	"errors"
 	"fmt"
-	"gincmf/common/bootstrap/data"
-	"gincmf/common/bootstrap/model"
-	"gincmf/common/bootstrap/paginate"
-	"gincmf/common/bootstrap/util"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/model"
+	"zerocmf/common/bootstrap/paginate"
+	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 	"time"
 )
@@ -47,6 +47,16 @@ type User struct {
 	DeleteAt      int64   `gorm:"type:bigint(20);comment:删除时间" json:"delete_at"`
 	UserStatus    int     `gorm:"type:tinyint(3);not null;default:1;comment:用户状态" json:"user_status"`
 	model.Time
+}
+
+type ThirdPart struct {
+	Id         int    `json:"id"`
+	Type       string `gorm:"type:varchar(10);not null" json:"type"`
+	UserId     int    `gorm:"type:int(11);not null" json:"user_id"`
+	AppId      string `gorm:"type:varchar(64);not null" json:"app_id"`
+	OpenId     string `gorm:"type:varchar(20);not null" json:"open_id"`
+	SessionKey string `gorm:"-" json:"session_key"`
+	Status     int    `gorm:"type:tinyint(3);not null;default:1;comment:状态;1:正常;0:禁用" json:"status"`
 }
 
 func (u *User) AfterFind(tx *gorm.DB) (err error) {

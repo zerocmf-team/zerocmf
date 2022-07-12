@@ -3,9 +3,9 @@ package role
 import (
 	"net/http"
 
-	"gincmf/service/user/api/internal/logic/user/admin/role"
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/logic/user/admin/role"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -18,7 +18,7 @@ func ShowHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := role.NewShowLogic(r.Context(), svcCtx)
-		resp, _ := l.Show(&req)
+		resp := l.Show(&req)
 		httpx.OkJson(w, resp)
 	}
 }

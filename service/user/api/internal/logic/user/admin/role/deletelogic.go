@@ -2,13 +2,13 @@ package role
 
 import (
 	"context"
-	"gincmf/common/bootstrap/casbin"
-	"gincmf/common/bootstrap/util"
-	"gincmf/service/user/model"
+	"zerocmf/common/bootstrap/casbin"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/user/model"
 	"strconv"
 
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,9 +27,8 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 	}
 }
 
-func (l *DeleteLogic) Delete(req *types.RoleDelete) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-	resp = new(types.Response)
+func (l *DeleteLogic) Delete(req *types.RoleDelete) (resp types.Response) {
+
 	c := l.svcCtx
 	ids := req.Ids
 	db := c.Db
@@ -72,6 +71,5 @@ func (l *DeleteLogic) Delete(req *types.RoleDelete) (resp *types.Response, err e
 	}
 
 	resp.Success( "删除成功！", nil)
-
 	return
 }

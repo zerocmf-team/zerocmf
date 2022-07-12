@@ -2,14 +2,14 @@ package account
 
 import (
 	"context"
-	"gincmf/common/bootstrap/casbin"
-	"gincmf/common/bootstrap/util"
-	"gincmf/service/user/model"
+	"zerocmf/common/bootstrap/casbin"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/user/model"
 	"strconv"
 	"time"
 
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -28,7 +28,7 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 	}
 }
 
-func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response, err error) {
+func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 
 	editId := req.Id
 	userId, _ := strconv.Atoi(req.Id)

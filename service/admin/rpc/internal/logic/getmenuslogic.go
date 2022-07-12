@@ -3,12 +3,12 @@ package logic
 import (
 	"context"
 	"errors"
-	"gincmf/service/admin/model"
+	"zerocmf/service/admin/model"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 
-	"gincmf/service/admin/rpc/internal/svc"
-	"gincmf/service/admin/rpc/types/admin"
+	"zerocmf/service/admin/rpc/internal/svc"
+	"zerocmf/service/admin/rpc/types/admin"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

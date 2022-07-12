@@ -20,4 +20,5 @@ import (
 	"api/tag.api"
 	"api/route.api"
 	"api/navItem.api"
+	"api/comment.api"
 )

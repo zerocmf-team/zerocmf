@@ -7,7 +7,7 @@
 package model
 
 import (
-	"gincmf/common/bootstrap/util"
+	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 	"time"
 )
@@ -127,7 +127,7 @@ func (model *LikePost) Show(db *gorm.DB, query string, queryArgs []interface{}) 
  * @return
  **/
 
-func (model *LikePost) IsLike(db *gorm.DB, postId string, userId string) (err error) {
+func (model *LikePost) IsLike(db *gorm.DB, postId int, userId string) (err error) {
 	query := "post_id = ? AND user_id = ?"
 	queryArgs := []interface{}{postId, userId}
 	err = model.Show(db, query, queryArgs)

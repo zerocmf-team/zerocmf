@@ -8,8 +8,8 @@ package model
 
 import (
 	"errors"
-	"gincmf/common/bootstrap/data"
-	"gincmf/common/bootstrap/util"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 	"strconv"
 	"strings"
@@ -34,7 +34,7 @@ type PortalCategory struct {
 	OneTpl         string  `gorm:"type:varchar(50);comment:分类文章页模板;not null" json:"one_tpl"`
 	More           string  `gorm:"type:longtext;comment:扩展属性" json:"more"`
 	PrevPath       string  `gorm:"-" json:"prev_path"`
-	TopSlug        string  `gorm:"-" json:"top_slug"`
+	TopAlias        string  `gorm:"-" json:"top_alias"`
 }
 
 type portalTree struct {
@@ -131,7 +131,7 @@ func (model *PortalCategory) List(db *gorm.DB) ([]PortalCategory, error) {
 
 	for k, v := range category {
 		topCategory, _ := new(PortalCategory).GetTopCategory(db, v.Id)
-		category[k].TopSlug = topCategory.Alias
+		category[k].TopAlias = topCategory.Alias
 		category[k].PrevPath = util.FileUrl(v.Thumbnail)
 	}
 
@@ -182,7 +182,7 @@ func (model *PortalCategory) GetTopId(db *gorm.DB, id int) (int, error) {
  **/
 
 func (model *PortalCategory) GetAlias() (url string) {
-	alias := model.Alias
+	alias := "/" + model.Alias
 	if model.Alias == "" {
 		alias = "/list/" + strconv.Itoa(model.Id)
 	}
@@ -255,7 +255,7 @@ func (model *PortalCategory) Show(db *gorm.DB, query string, queryArgs []interfa
 		category.PrevPath = util.FileUrl(category.Thumbnail)
 	}
 
-	category.Alias = category.GetAlias()
+	//category.Alias = category.GetAlias()
 
 	return category, nil
 }

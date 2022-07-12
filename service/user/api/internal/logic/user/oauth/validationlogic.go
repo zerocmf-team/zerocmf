@@ -2,12 +2,12 @@ package oauth
 
 import (
 	"context"
-	"gincmf/common/bootstrap/data"
-	"gincmf/service/user/rpc/types/user"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/service/user/rpc/types/user"
 	"strings"
 
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,9 +26,7 @@ func NewValidationLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Valida
 	}
 }
 
-func (l *ValidationLogic) Validation(req *types.ValidationReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-	resp = new(types.Response)
+func (l *ValidationLogic) Validation(req *types.ValidationReq) (resp types.Response) {
 
 	c := l.svcCtx
 	r := c.Request

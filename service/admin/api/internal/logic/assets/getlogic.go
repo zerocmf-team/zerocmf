@@ -2,12 +2,12 @@ package assets
 
 import (
 	"context"
-	"gincmf/common/bootstrap/data"
-	"gincmf/service/admin/model"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/service/admin/model"
 	"strings"
 
-	"gincmf/service/admin/api/internal/svc"
-	"gincmf/service/admin/api/internal/types"
+	"zerocmf/service/admin/api/internal/svc"
+	"zerocmf/service/admin/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

@@ -7,7 +7,7 @@
 package model
 
 import (
-	bspModel "gincmf/common/bootstrap/model"
+	bspModel "zerocmf/common/bootstrap/model"
 	"gorm.io/gorm"
 )
 

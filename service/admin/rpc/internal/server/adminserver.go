@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
-	"gincmf/service/admin/rpc/internal/logic"
-	"gincmf/service/admin/rpc/internal/svc"
-	"gincmf/service/admin/rpc/types/admin"
+	"zerocmf/service/admin/rpc/internal/logic"
+	"zerocmf/service/admin/rpc/internal/svc"
+	"zerocmf/service/admin/rpc/types/admin"
 )
 
 type AdminServer struct {

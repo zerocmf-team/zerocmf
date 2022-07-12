@@ -2,10 +2,10 @@ package authorize
 
 import (
 	"context"
-	"gincmf/service/admin/model"
-	"gincmf/service/admin/rpc/types/admin"
-	"gincmf/service/user/api/internal/svc"
-	"gincmf/service/user/api/internal/types"
+	"zerocmf/service/admin/model"
+	"zerocmf/service/admin/rpc/types/admin"
+	"zerocmf/service/user/api/internal/svc"
+	"zerocmf/service/user/api/internal/types"
 	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -33,10 +33,9 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get() (resp *types.Response, err error) {
-	resp = new(types.Response)
-	c := l.svcCtx
+func (l *GetLogic) Get() (resp types.Response) {
 
+	c := l.svcCtx
 	adminRpc := c.AdminRpc
 	getMenus, err := adminRpc.GetMenus(l.ctx,&admin.AdminMenuReq{})
 	if err != nil {

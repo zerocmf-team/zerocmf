@@ -6,10 +6,10 @@
 
 package model
 
-import "gincmf/common/bootstrap/db"
+import "zerocmf/common/bootstrap/database"
 
 func Migrate(tenantId string) {
-	curDb := db.Conf().ManualDb(tenantId)
+	curDb := database.Conf().ManualDb(tenantId)
 	new(User).AutoMigrate(curDb)
 	new(Role).AutoMigrate(curDb)
 }

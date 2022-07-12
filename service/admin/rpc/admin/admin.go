@@ -6,7 +6,7 @@ package admin
 import (
 	"context"
 
-	"gincmf/service/admin/rpc/types/admin"
+	"zerocmf/service/admin/rpc/types/admin"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

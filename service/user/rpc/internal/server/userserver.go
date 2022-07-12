@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
-	"gincmf/service/user/rpc/internal/logic"
-	"gincmf/service/user/rpc/internal/svc"
-	"gincmf/service/user/rpc/types/user"
+	"zerocmf/service/user/rpc/internal/logic"
+	"zerocmf/service/user/rpc/internal/svc"
+	"zerocmf/service/user/rpc/types/user"
 )
 
 type UserServer struct {

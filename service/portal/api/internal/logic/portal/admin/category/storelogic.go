@@ -2,15 +2,15 @@ package category
 
 import (
 	"context"
-	comModel "gincmf/common/bootstrap/model"
-	"gincmf/service/portal/model"
+	comModel "zerocmf/common/bootstrap/model"
+	"zerocmf/service/portal/model"
 	"github.com/jinzhu/copier"
 	"strconv"
 	"strings"
 	"unicode/utf8"
 
-	"gincmf/service/portal/api/internal/svc"
-	"gincmf/service/portal/api/internal/types"
+	"zerocmf/service/portal/api/internal/svc"
+	"zerocmf/service/portal/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

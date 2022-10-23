@@ -1,7 +1,7 @@
 /**
 ** @创建时间: 2021/11/25 20:13
 ** @作者　　: return
-** @描述　　:
+** @描述　　: casbin
  */
 
 package database

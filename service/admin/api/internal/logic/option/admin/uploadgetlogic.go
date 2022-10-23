@@ -1,10 +1,10 @@
-package option
+package admin
 
 import (
 	"context"
 	"encoding/json"
-	"zerocmf/service/admin/model"
 	"gorm.io/gorm"
+	"zerocmf/service/admin/model"
 
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
@@ -26,10 +26,7 @@ func NewUploadGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UploadG
 	}
 }
 
-func (l *UploadGetLogic) UploadGet() (resp *types.Response, err error) {
-
-	// todo: add your logic here and delete this line
-	resp = new(types.Response)
+func (l *UploadGetLogic) UploadGet() (resp types.Response) {
 	c := l.svcCtx
 	db := c.Db
 
@@ -41,7 +38,7 @@ func (l *UploadGetLogic) UploadGet() (resp *types.Response, err error) {
 		return
 	}
 	value := option.OptionValue
-	err = json.Unmarshal([]byte(value), &uploadSetting)
+	err := json.Unmarshal([]byte(value), &uploadSetting)
 
 	if err != nil {
 		resp.Error("解析时出错："+err.Error(), nil)

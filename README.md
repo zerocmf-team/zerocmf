@@ -1,13 +1,14 @@
 # ZeroCMF完全开发手册
 
 ## 平台简介
-ZeroCMF是一款通用开发框架，在保持极致的性能下依然可以帮您快速实现业务
+ZeroCMF是一款通用快速开发框架，在保持极致的性能下依然可以帮您快速实现业务
 
 * 基于MIT协议，免费开源，可商业使用
 * go-zero + gorm + casbin，享受原滋原味的golang开发
 
 ## 环境要求
 > mysql  
+> redis  
 > nginx  
 > apisix // 微服务必须  
 > etcd   // 微服务必须

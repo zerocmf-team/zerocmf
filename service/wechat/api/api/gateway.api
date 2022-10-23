@@ -1,0 +1,76 @@
+syntax = "v1"
+
+type (
+    Code2SessionReq {
+        JsCode string `json:"js_code,optional"`
+    }
+)
+
+type (
+    CheckSignatureReq {
+        Signature string `form:"signature,optional"`
+        Timestamp string `form:"timestamp,optional"`
+        Nonce string `form:"nonce,optional"`
+        Echostr string `form:"echostr,optional"`
+    }
+)
+
+type (
+    CheckQrcodeScanReq {
+        SceneId string `form:"scene_id,optional"`
+    }
+)
+
+// 微信小程序相关
+
+@server(
+    group: wxapp
+    prefix: api/v1/wxapp
+)
+
+service wechat {
+    @server(
+        handler: code2Session
+    )
+    post /code2Session (Code2SessionReq) returns (Response)
+}
+
+// 微信公众号相关
+
+@server(
+    group: mp
+    prefix: api/v1/mp
+    middleware: WechatMpToken // 路由中间件声明
+)
+
+service wechat {
+    @server(
+        handler: checkSignature
+    )
+    get /gateway (CheckSignatureReq) returns (Response)
+
+    @server(
+        handler: gateway
+        middleware: WechatMpToken // 路由中间件声明
+    )
+    post /gateway returns (Response)
+}
+
+@server(
+    group: mp/qrcode
+    prefix: api/v1/mp
+    middleware: WechatMpToken // 路由中间件声明
+)
+
+service wechat {
+    @server(
+        handler: GetQrcode
+        middleware: WechatMpToken // 路由中间件声明
+    )
+    get /oauth/qrcode returns (Response)
+
+    @server(
+        handler: CheckQrcodeScan
+    )
+    get /oauth/qrcode/check (CheckQrcodeScanReq) returns (Response)
+}

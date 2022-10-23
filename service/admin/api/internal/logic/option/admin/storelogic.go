@@ -1,4 +1,4 @@
-package option
+package admin
 
 import (
 	"context"
@@ -24,9 +24,7 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) StoreLogic {
 	}
 }
 
-func (l *StoreLogic) Store(req types.OptionReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-	resp = new(types.Response)
+func (l *StoreLogic) Store(req *types.OptionReq) (resp types.Response) {
 	c := l.svcCtx
 	siteInfoValue, _ := json.Marshal(req)
 

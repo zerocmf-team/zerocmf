@@ -7,7 +7,7 @@
 package model
 
 import (
-	"zerocmf/common/bootstrap/db"
+	"zerocmf/common/bootstrap/database"
 )
 
 func Migrate(tenantId string) {

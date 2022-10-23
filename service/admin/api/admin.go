@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"zerocmf/common/bootstrap/data"
 	"github.com/zeromicro/go-zero/rest/router"
 	"net/http"
 	"strings"
+	"zerocmf/common/bootstrap/data"
 
 	"zerocmf/service/admin/api/internal/config"
 	"zerocmf/service/admin/api/internal/handler"

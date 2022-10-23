@@ -3,10 +3,10 @@ package wxapp
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/wechat/api/internal/logic/wxapp"
 	"zerocmf/service/wechat/api/internal/svc"
 	"zerocmf/service/wechat/api/internal/types"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func Code2SessionHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

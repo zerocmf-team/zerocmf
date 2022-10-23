@@ -2,10 +2,10 @@ package oauth
 
 import (
 	"context"
+	"gorm.io/gorm"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/common"
 	"zerocmf/service/user/model"
-	"gorm.io/gorm"
 
 	"github.com/jinzhu/copier"
 	"strconv"

@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"zerocmf/common/bootstrap/data"
 	"net/http"
 	"strings"
+	"zerocmf/common/bootstrap/data"
 
 	"zerocmf/service/wechat/api/internal/config"
 	"zerocmf/service/wechat/api/internal/handler"
@@ -40,6 +40,7 @@ func main() {
 			ctx.Config.App.Domain = domain
 			data.SetDomain(domain)
 			ctx.Request = r
+			ctx.ResponseWriter = w
 			// 处理userId
 			r.ParseForm()
 			userId := strings.Join(r.Form["userId"], "")

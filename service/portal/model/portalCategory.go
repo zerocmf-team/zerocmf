@@ -8,11 +8,12 @@ package model
 
 import (
 	"errors"
-	"zerocmf/common/bootstrap/data"
-	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 	"strconv"
 	"strings"
+	"time"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/util"
 )
 
 type PortalCategory struct {
@@ -34,7 +35,7 @@ type PortalCategory struct {
 	OneTpl         string  `gorm:"type:varchar(50);comment:分类文章页模板;not null" json:"one_tpl"`
 	More           string  `gorm:"type:longtext;comment:扩展属性" json:"more"`
 	PrevPath       string  `gorm:"-" json:"prev_path"`
-	TopAlias        string  `gorm:"-" json:"top_alias"`
+	TopAlias       string  `gorm:"-" json:"top_alias"`
 }
 
 type portalTree struct {
@@ -130,9 +131,14 @@ func (model *PortalCategory) List(db *gorm.DB) ([]PortalCategory, error) {
 	}
 
 	for k, v := range category {
-		topCategory, _ := new(PortalCategory).GetTopCategory(db, v.Id)
-		category[k].TopAlias = topCategory.Alias
-		category[k].PrevPath = util.FileUrl(v.Thumbnail)
+
+		topCategory := new(PortalCategory)
+		err := topCategory.GetTopCategory(db, v.Id)
+		if err == nil {
+			category[k].TopAlias = topCategory.Alias
+			category[k].PrevPath = util.FileUrl(v.Thumbnail)
+		}
+
 	}
 
 	return category, nil
@@ -242,22 +248,21 @@ func (model *PortalCategory) recursionPrevious(category []PortalCategory, parent
 	return breadcrumbs
 }
 
-func (model *PortalCategory) Show(db *gorm.DB, query string, queryArgs []interface{}) (PortalCategory, error) {
-	category := PortalCategory{}
-	result := db.Where(query, queryArgs...).First(&category)
+func (model *PortalCategory) Show(db *gorm.DB, query string, queryArgs []interface{}) (err error) {
+	result := db.Where(query, queryArgs...).First(&model)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return category, errors.New("该分类不存在！")
+			err = errors.New("该分类不存在！")
+			return
 		}
-		return category, result.Error
+		err = result.Error
+		return
 	}
-	if category.Thumbnail != "" {
-		category.PrevPath = util.FileUrl(category.Thumbnail)
+	if model.Thumbnail != "" {
+		model.PrevPath = util.FileUrl(model.Thumbnail)
 	}
-
 	//category.Alias = category.GetAlias()
-
-	return category, nil
+	return
 }
 
 func (model *PortalCategory) Save(db *gorm.DB) (PortalCategory, error) {
@@ -274,16 +279,18 @@ func (model *PortalCategory) Save(db *gorm.DB) (PortalCategory, error) {
 	return *model, nil
 }
 
-func (model *PortalCategory) GetTopCategory(db *gorm.DB, id int) (PortalCategory, error) {
-	cid, err := model.GetTopId(db, id)
+func (model *PortalCategory) GetTopCategory(db *gorm.DB, id int) (err error) {
+	var cid int
+	cid, err = model.GetTopId(db, id)
 	if err != nil {
-		return PortalCategory{}, err
+		return
 	}
-	data, err := model.Show(db, "id = ? AND delete_at = ?", []interface{}{cid, 0})
+
+	err = model.Show(db, "id = ? AND delete_at = ?", []interface{}{cid, 0})
 	if err != nil {
-		return PortalCategory{}, err
+		return
 	}
-	return data, nil
+	return
 }
 
 func (model *PortalCategoryPost) Store(db *gorm.DB, pcpPost []PortalCategoryPost) ([]PortalCategoryPost, error) {
@@ -459,4 +466,63 @@ func (model *PortalCategory) recursionChild(category []PortalCategory, parentId 
 		}
 	}
 	return ids
+}
+
+/**
+ * @Author return <1140444693@qq.com>
+ * @Description 删除一项
+ * @Date 2020/11/8 19:27:07
+ * @Param
+ * @return
+ **/
+
+func (model *PortalCategory) Delete(db *gorm.DB) (err error) {
+	id := model.Id
+	if id == 0 {
+		err = errors.New("分类id不能为0或空！")
+		return
+	}
+
+	portalCategory := new(PortalCategory)
+
+	err = portalCategory.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
+	if err != nil {
+		return
+	}
+
+	// 查看当前分类下是否存在子分类
+
+	var count int64
+	db.Model(model).Where("parent_id = ? AND delete_at = ?", id, 0).Count(&count)
+
+	if count > 0 {
+		err = errors.New("请先删除分类下的子分类！")
+		return
+	}
+
+	deleteAt := time.Now().Unix()
+	tx := db.Model(model).Where("id = ?", id).Update("delete_at", deleteAt)
+
+	if tx.Error != nil {
+		err = tx.Error
+		return
+	}
+
+	return
+}
+
+/**
+ * @Author return <1140444693@qq.com>
+ * @Description 批量删除
+ * @Date 2020/11/8 19:41:45
+ * @Param
+ * @return
+ **/
+
+func (model *PortalCategory) BatchDelete(db *gorm.DB, ids []string) (err error) {
+	deleteAt := time.Now().Unix()
+	if err = db.Model(&model).Where("id IN (?)", ids).Updates(map[string]interface{}{"delete_at": deleteAt}).Error; err != nil {
+		return
+	}
+	return
 }

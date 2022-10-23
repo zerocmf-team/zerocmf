@@ -1,8 +1,8 @@
 package config
 
 import (
-	"zerocmf/common/bootstrap/database"
 	"github.com/zeromicro/go-zero/rest"
+	"zerocmf/common/bootstrap/database"
 )
 
 type Config struct {

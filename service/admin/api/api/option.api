@@ -34,8 +34,9 @@ type (
 )
 
 @server(
-    group: option
+    group: option/admin
     prefix: api/v1
+    middleware: AuthMiddleware
 )
 
 service admin {
@@ -59,4 +60,16 @@ service admin {
         handler: UploadStore
     )
     post /upload (UploadReq) returns (Response)
+}
+
+@server(
+    group: option/app
+    prefix: api/v1/app
+)
+
+service admin {
+    @server(
+        handler: Get
+    )
+    get /settings returns (Response)
 }

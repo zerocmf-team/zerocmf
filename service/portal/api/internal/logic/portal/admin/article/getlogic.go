@@ -2,10 +2,10 @@ package article
 
 import (
 	"context"
-	"zerocmf/common/bootstrap/data"
-	"zerocmf/service/portal/model"
 	"strings"
 	"time"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/service/portal/model"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -27,7 +27,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response) {
+func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response,err error) {
 	c := l.svcCtx
 	r := c.Request
 	db := c.Db
@@ -54,8 +54,9 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response) {
 	startTime := req.StartTime
 	endTime := req.EndTime
 
+	var startTimeStamp time.Time
 	if startTime != "" && endTime != "" {
-		startTimeStamp, err := time.ParseInLocation("2006-01-02 15:04:05", startTime, time.Local)
+		startTimeStamp, err = time.ParseInLocation("2006-01-02 15:04:05", startTime, time.Local)
 		if err != nil {
 			resp.Error("起始时间非法！", err.Error())
 			return

@@ -5,10 +5,9 @@ import (
 	"context"
 	"crypto/md5"
 	"crypto/sha1"
+	"encoding/hex"
 	"errors"
 	"fmt"
-	"zerocmf/common/bootstrap/util"
-	"zerocmf/service/admin/model"
 	"github.com/gofrs/uuid"
 	"gorm.io/gorm"
 	"io"
@@ -17,6 +16,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/admin/model"
 
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
@@ -154,7 +155,6 @@ func handleUpload(c *svc.ServiceContext, db *gorm.DB, file *multipart.FileHeader
 	}
 
 	temPath := "default"
-
 	fileUuid, err := uuid.NewV4()
 
 	remarkName := file.Filename
@@ -178,16 +178,30 @@ func handleUpload(c *svc.ServiceContext, db *gorm.DB, file *multipart.FileHeader
 
 	md5h := md5.New()
 	md5h.Write(buf.Bytes())
-
-	//fileMd5 := hex.EncodeToString(md5h.Sum([]byte("")))
+	fileMd5 := hex.EncodeToString(md5h.Sum([]byte("")))
 
 	sha1h := sha1.New()
 	sha1h.Write(buf.Bytes())
+	fileSha1 := hex.EncodeToString(sha1h.Sum([]byte("")))
 
-	// fileSha1 := hex.EncodeToString(sha1h.Sum([]byte("")))
+	assets := model.Assets{}
+	tx := db.Where("fileMd5 = ?", fileMd5).First(&assets)
+	if tx.Error != nil {
+		if tx.Error != gorm.ErrRecordNotFound {
+			err = tx.Error
+			return
+		}
+	}
+
+	if assets.Id > 0 {
+		result = make(map[string]string, 0)
+		result["fileName"] = assets.FileName
+		result["filePath"] = assets.FilePath
+		result["prevPath"] = assets.PrevPath
+		return
+	}
 
 	// 上传文件至指定目录
-
 	saveUploadedFile(file, realpath)
 
 	userId, _ := c.Get("userId")
@@ -206,6 +220,8 @@ func handleUpload(c *svc.ServiceContext, db *gorm.DB, file *multipart.FileHeader
 		RemarkName: remarkName,
 		FileName:   fileNameSuffix,
 		FilePath:   filePath,
+		FileMd5:    fileMd5,
+		FileSha1:   fileSha1,
 		Suffix:     suffix,
 		AssetType:  fileTypeInt,
 	})

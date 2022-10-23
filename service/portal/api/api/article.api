@@ -52,6 +52,10 @@ type (
         Extends []Extends `json:"extends,optional"`
     }
 
+    articleDelReq {
+        Id int `path:"id,optional"`
+    }
+
     postListReq {
         Ids string `form:"ids,optional"`
         Hot int `form:"hot,optional"` // 根据浏览量和权重排序
@@ -82,6 +86,13 @@ service portal {
 
     @handler Edit
     post /:id (articleSaveReq) returns (Response)
+
+
+    @handler Delete
+    delete /:id (articleDelReq) returns (Response)
+
+    @handler Deletes
+    delete / returns (Response)
 }
 
 // 分类相关

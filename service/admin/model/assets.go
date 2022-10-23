@@ -8,9 +8,9 @@ package model
 
 import (
 	"errors"
+	"gorm.io/gorm"
 	"zerocmf/common/bootstrap/paginate"
 	"zerocmf/common/bootstrap/util"
-	"gorm.io/gorm"
 )
 
 /**
@@ -31,6 +31,8 @@ type Assets struct {
 	RemarkName string `gorm:"type:varchar(100);not null;comment:文件名" json:"remark_name"`
 	FileName   string `gorm:"type:varchar(100);not null;comment:文件名" json:"file_name"`
 	FilePath   string `gorm:"type:varchar(100);not null;comment:文件路径" json:"file_path"`
+	FileMd5    string `gorm:"type:varchar(32);not null;comment:文件md5值" json:"file_md5"`
+	FileSha1   string `gorm:"type:varchar(40);not null;comment:文件sha1值" json:"file_sha1"`
 	PrevPath   string `gorm:"-" json:"prev_path"` // 前台预览地址
 	Suffix     string `gorm:"type:varchar(10);not null;comment:文件后缀" json:"suffix"`
 	AssetType  int    `gorm:"column:type;type:tinyint(3);not null;comment:资源类型" json:"asset_type"`
@@ -75,5 +77,3 @@ func (model *Assets) Get(db *gorm.DB, current int, pageSize int, query string, q
 	return paginateData, nil
 
 }
-
-

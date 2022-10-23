@@ -2,8 +2,8 @@
 package types
 
 import (
-	bsData "zerocmf/common/bootstrap/data"
 	"github.com/jinzhu/copier"
+	bsData "zerocmf/common/bootstrap/data"
 )
 
 type Response struct {
@@ -14,6 +14,17 @@ type Response struct {
 
 type Code2SessionReq struct {
 	JsCode string `json:"js_code,optional"`
+}
+
+type CheckSignatureReq struct {
+	Signature string `form:"signature,optional"`
+	Timestamp string `form:"timestamp,optional"`
+	Nonce     string `form:"nonce,optional"`
+	Echostr   string `form:"echostr,optional"`
+}
+
+type CheckQrcodeScanReq struct {
+	SceneId string `form:"scene_id,optional"`
 }
 
 func (r *Response) Success(msg string, data interface{}) {

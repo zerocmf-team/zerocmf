@@ -57,6 +57,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/options",
 					Handler: portaladmincategory.OptionsHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: portaladmincategory.DeleteHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/",
+					Handler: portaladmincategory.DeletesHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/api/v1/admin/category"),
@@ -118,6 +128,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/:id",
 					Handler: portaladminarticle.EditHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: portaladminarticle.DeleteHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/",
+					Handler: portaladminarticle.DeletesHandler(serverCtx),
 				},
 			}...,
 		),

@@ -4,7 +4,7 @@ Timeout: 30000
 
 Etcd:
   Hosts:
-  - 127.0.0.1:23790
+  - 127.0.0.1:2379
   Key: admin.rpc
 
 Database:

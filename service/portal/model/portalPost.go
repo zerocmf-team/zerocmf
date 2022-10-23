@@ -9,14 +9,14 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"gorm.io/gorm"
+	"time"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/model"
 	"zerocmf/common/bootstrap/paginate"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/rpc/user"
-	"gorm.io/gorm"
-	"time"
 )
 
 type PortalPost struct {
@@ -252,9 +252,12 @@ func (model *PortalCategory) ListWithPost(db *gorm.DB, query string, queryArgs [
 		Where(query, queryArgs...).Scan(&category)
 
 	for k, v := range category {
-		topCategory, _ := new(PortalCategory).GetTopCategory(db, v.Id)
-		category[k].TopAlias = topCategory.Alias
-		category[k].PrevPath = util.FileUrl(v.Thumbnail)
+		topCategory := new(PortalCategory)
+		err := topCategory.GetTopCategory(db, v.Id)
+		if err != nil {
+			category[k].TopAlias = topCategory.Alias
+			category[k].PrevPath = util.FileUrl(v.Thumbnail)
+		}
 	}
 
 	if result.Error != nil {
@@ -282,14 +285,14 @@ func (model *PortalPost) Show(db *gorm.DB, query string, queryArgs []interface{}
 
 	tx := db.Where(query, queryArgs...).
 		Order("id desc").
-		Find(&model)
+		First(&model)
 
-	if util.IsDbErr(tx) != nil {
+	if tx.Error != nil {
 		err = tx.Error
 		return
 	}
-	m := More{}
 
+	m := More{}
 	json.Unmarshal([]byte(model.More), &m)
 	model.MoreJson = m
 	model.Template = m.Template

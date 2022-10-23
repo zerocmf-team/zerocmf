@@ -24,15 +24,15 @@ func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
 }
 
 func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
-	// todo: add your logic here and delete this line
 	id := req.Id
 	c := l.svcCtx
 	db := c.Db
-	data, err := new(model.PortalCategory).Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
+	portalCategory := new(model.PortalCategory)
+	err := portalCategory.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
-	resp.Success("获取成功！", data)
+	resp.Success("获取成功！", portalCategory)
 	return
 }

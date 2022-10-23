@@ -4,6 +4,8 @@ package handler
 import (
 	"net/http"
 
+	mp "zerocmf/service/wechat/api/internal/handler/mp"
+	mpqrcode "zerocmf/service/wechat/api/internal/handler/mp/qrcode"
 	wxapp "zerocmf/service/wechat/api/internal/handler/wxapp"
 	"zerocmf/service/wechat/api/internal/svc"
 
@@ -20,5 +22,43 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/wxapp"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.WechatMpToken},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/gateway",
+					Handler: mp.CheckSignatureHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/gateway",
+					Handler: mp.GatewayHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/mp"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.WechatMpToken},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/oauth/qrcode",
+					Handler: mpqrcode.GetQrcodeHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/oauth/qrcode/check",
+					Handler: mpqrcode.CheckQrcodeScanHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/mp"),
 	)
 }

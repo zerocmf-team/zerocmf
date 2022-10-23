@@ -1,11 +1,13 @@
-package option
+package app
 
 import (
 	"context"
+	"encoding/json"
+	"gorm.io/gorm"
+	"zerocmf/service/admin/model"
+
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
-	"zerocmf/service/admin/model"
-	"gorm.io/gorm"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -16,17 +18,15 @@ type GetLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) GetLogic {
-	return GetLogic{
+func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
+	return &GetLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *GetLogic) Get() (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-	resp = new(types.Response)
+func (l *GetLogic) Get() (resp types.Response) {
 	c := l.svcCtx
 	db := c.Db
 	option := model.Option{}
@@ -35,6 +35,9 @@ func (l *GetLogic) Get() (resp *types.Response, err error) {
 		resp.Error("获取失败："+tx.Error.Error(), nil)
 		return
 	}
-	resp.Success("获取成功", option)
+	options := model.SiteInfo{}
+	json.Unmarshal([]byte(option.OptionValue), &options)
+
+	resp.Success("获取成功", options)
 	return
 }

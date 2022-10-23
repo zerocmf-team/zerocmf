@@ -2,8 +2,8 @@
 package types
 
 import (
-	bsData "zerocmf/common/bootstrap/data"
 	"github.com/jinzhu/copier"
+	bsData "zerocmf/common/bootstrap/data"
 )
 
 type OneReq struct {
@@ -35,7 +35,8 @@ type CateSaveReq struct {
 	OneTpl         string `json:"one_tpl,optional"`
 }
 
-type ListGetReq struct {
+type CateDelReq struct {
+	Id int `path:"id,optional"`
 }
 
 type ArticleGetReq struct {
@@ -85,6 +86,10 @@ type ArticleSaveReq struct {
 	Video          string    `json:"video,optional"`
 	Template       string    `json:"template,optional"`
 	Extends        []Extends `json:"extends,optional"`
+}
+
+type ArticleDelReq struct {
+	Id int `path:"id,optional"`
 }
 
 type PostListReq struct {

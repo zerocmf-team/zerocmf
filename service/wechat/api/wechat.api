@@ -9,5 +9,5 @@ type (
 )
 
 import (
-	"api/login.api"
+	"api/gateway.api"
 )

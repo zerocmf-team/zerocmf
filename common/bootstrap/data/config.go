@@ -7,7 +7,6 @@
 package data
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -50,7 +49,5 @@ func SetSalts(value string) {
 }
 
 func Salts() string {
-	fmt.Println("salts",salts)
-	fmt.Println("domain",domain)
 	return salts
 }

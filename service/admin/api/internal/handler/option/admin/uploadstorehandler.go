@@ -1,12 +1,12 @@
-package option
+package admin
 
 import (
 	"net/http"
 
-	"zerocmf/service/admin/api/internal/logic/option"
+	"github.com/zeromicro/go-zero/rest/httpx"
+	"zerocmf/service/admin/api/internal/logic/option/admin"
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func UploadStoreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -17,8 +17,8 @@ func UploadStoreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := option.NewUploadStoreLogic(r.Context(), svcCtx)
-		resp, _ := l.UploadStore(&req)
+		l := admin.NewUploadStoreLogic(r.Context(), svcCtx)
+		resp := l.UploadStore(&req)
 		httpx.OkJson(w, resp)
 	}
 }

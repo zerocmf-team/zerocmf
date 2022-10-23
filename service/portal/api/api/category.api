@@ -21,8 +21,8 @@ type (
         OneTpl string `json:"one_tpl,optional"`
     }
 
-    listGetReq {
-
+    cateDelReq {
+        Id int `path:"id,optional"`
     }
 )
 
@@ -51,6 +51,12 @@ service portal {
 
     @handler Options
     get /options returns (Response)
+
+    @handler Delete
+    delete /:id (cateDelReq) returns (Response)
+
+    @handler Deletes
+    delete / returns (Response)
 }
 
 // 前台门户相关

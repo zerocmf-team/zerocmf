@@ -14,6 +14,7 @@ type (
 @server(
     group: assets
     prefix: api/v1
+    middleware: AuthMiddleware
 )
 
 service admin {

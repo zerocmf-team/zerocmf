@@ -2,8 +2,8 @@
 package types
 
 import (
-	bsData "zerocmf/common/bootstrap/data"
 	"github.com/jinzhu/copier"
+	bsData "zerocmf/common/bootstrap/data"
 )
 
 type Response struct {

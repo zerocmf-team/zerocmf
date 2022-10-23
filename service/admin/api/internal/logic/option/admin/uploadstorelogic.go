@@ -1,9 +1,8 @@
-package option
+package admin
 
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
 	"zerocmf/service/admin/model"
@@ -25,12 +24,7 @@ func NewUploadStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Uploa
 	}
 }
 
-func (l *UploadStoreLogic) UploadStore(req *types.UploadReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-
-	fmt.Println("req",req)
-
-	resp = new(types.Response)
+func (l *UploadStoreLogic) UploadStore(req *types.UploadReq) (resp types.Response) {
 
 	c := l.svcCtx
 	db := c.Db

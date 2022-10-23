@@ -8,15 +8,22 @@ package util
 
 import (
 	"crypto/md5"
+	"crypto/sha1"
 	"encoding/hex"
-	"zerocmf/common/bootstrap/data"
 	"gorm.io/gorm"
 	"strings"
+	"zerocmf/common/bootstrap/data"
 )
 
 func GetMd5(s string) string {
 	h := md5.New()
 	h.Write([]byte(data.Salts() + s))
+	return hex.EncodeToString(h.Sum(nil))
+}
+
+func GetSha1(s string) string {
+	h := sha1.New()
+	h.Write([]byte(s))
 	return hex.EncodeToString(h.Sum(nil))
 }
 

@@ -2,7 +2,7 @@ Name: admin
 Host: 0.0.0.0
 Port: 8800
 Timeout: 30000
-MaxBytes: 8388608
+MaxBytes: 1073741824
 
 Database:
   Type: mysql

@@ -2,9 +2,9 @@ package assets
 
 import (
 	"context"
+	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/admin/model"
-	"strings"
 
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
@@ -26,9 +26,8 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req types.AssetsReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-	resp = &types.Response{}
+func (l *GetLogic) Get(req *types.AssetsReq) (resp *types.Response) {
+	resp = new(types.Response)
 	c := l.svcCtx
 	db := c.Db
 	r := c.Request

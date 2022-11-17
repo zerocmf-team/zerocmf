@@ -7,7 +7,6 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"errors"
-	"fmt"
 	"github.com/gofrs/uuid"
 	"gorm.io/gorm"
 	"io"
@@ -45,7 +44,7 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) StoreLogic {
 	}
 }
 
-func (l *StoreLogic) Store(req types.AssetsReq) (resp *types.Response, err error) {
+func (l *StoreLogic) Store(req *types.AssetsReq) (resp *types.Response) {
 	// todo: add your logic here and delete this line
 
 	resp = new(types.Response)
@@ -64,11 +63,13 @@ func (l *StoreLogic) Store(req types.AssetsReq) (resp *types.Response, err error
 	fileType := req.Type
 	var assets []assetsResult
 	var fileList map[string]string
+	var err error
 
 	for _, fileItem := range files {
 		fileList, err = handleUpload(c, db, fileItem, fileType)
 		if err != nil {
-			resp.Error("文件不能为空！", nil)
+			resp.Error(err.Error(), nil)
+			return
 		}
 		assets = append(assets, assetsResult{FileName: fileList["fileName"], FilePath: fileList["filePath"], PrevPath: fileList["prevPath"]})
 	}
@@ -113,7 +114,6 @@ func handleUpload(c *svc.ServiceContext, db *gorm.DB, file *multipart.FileHeader
 	case "0":
 		iExtensionArr := strings.Split(uploadSetting.Image.Extensions, ",")
 		iResult := util.ToLowerInArray(suffix, iExtensionArr)
-		fmt.Println("iResult", iResult)
 		if !iResult {
 			return nil, errors.New("【" + suffix + "】不是合法的图片后缀！")
 		}
@@ -185,7 +185,7 @@ func handleUpload(c *svc.ServiceContext, db *gorm.DB, file *multipart.FileHeader
 	fileSha1 := hex.EncodeToString(sha1h.Sum([]byte("")))
 
 	assets := model.Assets{}
-	tx := db.Where("fileMd5 = ?", fileMd5).First(&assets)
+	tx := db.Where("file_md5 = ?", fileMd5).First(&assets)
 	if tx.Error != nil {
 		if tx.Error != gorm.ErrRecordNotFound {
 			err = tx.Error
@@ -197,7 +197,7 @@ func handleUpload(c *svc.ServiceContext, db *gorm.DB, file *multipart.FileHeader
 		result = make(map[string]string, 0)
 		result["fileName"] = assets.FileName
 		result["filePath"] = assets.FilePath
-		result["prevPath"] = assets.PrevPath
+		result["prevPath"] = util.FileUrl(assets.FilePath)
 		return
 	}
 

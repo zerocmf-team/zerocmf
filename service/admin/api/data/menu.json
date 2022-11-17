@@ -256,7 +256,23 @@
         "name": "分类管理",
         "path": "/portal/category",
         "icon": "",
-        "hide_in_menu": 0
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "object": "portal/category/add",
+            "name": "新增分类",
+            "path": "/portal/category/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "object": "portal/category/edit",
+            "name": "编辑分类",
+            "path": "/portal/category/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
       },
       {
         "object": "portal/page",

@@ -24,9 +24,7 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 	}
 }
 
-func (l *DeleteLogic) Delete(req *types.DeleteReq) (resp *types.Response, err error) {
-	// todo: add your logic here and delete this line
-
+func (l *DeleteLogic) Delete(req *types.DeleteReq) (resp *types.Response) {
 	resp = new(types.Response)
 
 	c := l.svcCtx
@@ -48,13 +46,13 @@ func (l *DeleteLogic) Delete(req *types.DeleteReq) (resp *types.Response, err er
 		assets.Id = id
 		assets.Status = 0
 
-		if err = db.Save(assets).Error; err != nil {
+		if err := db.Save(assets).Error; err != nil {
 			resp.Error("删除失败！", nil)
 			return
 		}
 	} else {
 		fmt.Println("ids", ids)
-		if err = db.Model(&assets).Where("id IN (?)", ids).Updates(map[string]interface{}{"status": 0}).Error; err != nil {
+		if err := db.Model(&assets).Where("id IN (?)", ids).Updates(map[string]interface{}{"status": 0}).Error; err != nil {
 			resp.Error("删除失败！", nil)
 			return
 		}

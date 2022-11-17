@@ -3,10 +3,10 @@ package assets
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/admin/api/internal/logic/assets"
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -18,7 +18,7 @@ func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := assets.NewDeleteLogic(r.Context(), svcCtx)
-		resp, _ := l.Delete(&req)
+		resp := l.Delete(&req)
 		httpx.OkJson(w, resp)
 	}
 }

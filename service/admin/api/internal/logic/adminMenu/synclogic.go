@@ -24,7 +24,7 @@ func NewSyncLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SyncLogic {
 	}
 }
 
-func (l *SyncLogic) Sync() (resp *types.Response, err error) {
+func (l *SyncLogic) Sync() (resp *types.Response) {
 	c := l.svcCtx
 	db := c.Db
 	model.InitMenus(db)

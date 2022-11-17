@@ -2,11 +2,11 @@ package adminMenu
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logx"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
 	"zerocmf/service/admin/model"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type GetLogic struct {
@@ -48,7 +48,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) GetLogic {
  * @return
  **/
 
-func (l *GetLogic) Get() (resp *types.Response, err error) {
+func (l *GetLogic) Get() (resp *types.Response) {
 	// todo: add your logic here and delete this line
 
 	resp = new(types.Response)
@@ -78,8 +78,9 @@ func (l *GetLogic) Get() (resp *types.Response, err error) {
 		return
 	}
 	var menusResult = make([]model.AdminMenu, 0)
+	var access bool
 	for _, v := range menus {
-		access, err := e.Enforce(userId, v.Object,"*")
+		access, err = e.Enforce(userId, v.Object,"*")
 		if err != nil {
 			resp.Error("系统出错",err.Error())
 			// panic(err.Error())

@@ -35,9 +35,24 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Handler: adminMenu.GetHandler(serverCtx),
 				},
 				{
+					Method:  http.MethodGet,
+					Path:    "/admin_menu/all",
+					Handler: adminMenu.GetAllMenusHandler(serverCtx),
+				},
+				{
 					Method:  http.MethodPost,
 					Path:    "/admin_menu/sync",
 					Handler: adminMenu.SyncHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/admin_menu",
+					Handler: adminMenu.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/admin_menu/:id",
+					Handler: adminMenu.EditHandler(serverCtx),
 				},
 			}...,
 		),

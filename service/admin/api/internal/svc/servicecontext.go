@@ -24,12 +24,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	database := database.NewDb(c.Database)
 	// 数据库迁移
 	curDb := database.Db()
-	model.Migrate("",true)
+	model.Migrate("", true)
 
 	return &ServiceContext{
-		Config: c,
-		Db:     curDb,
-		Data:   new(data.Data).InitContext(),
+		Config:         c,
+		Db:             curDb,
+		Data:           new(data.Data).InitContext(),
 		AuthMiddleware: middleware.NewAuthMiddleware().Handle,
 	}
 }

@@ -12,6 +12,17 @@ type Response struct {
 	Data interface{} `json:"data"`
 }
 
+type MenuReq struct {
+	Id         int     `path:"id,optional"`
+	ParentId   int     `json:"parent_id"`
+	MenuType   int     `json:"menu_type" validate:"oneof=0 1" label:"菜单类型"`
+	Name       string  `json:"name" validate:"required" label:"菜单名称"`
+	Path       string  `json:"path" validate:"required" label:"路由地址"`
+	Icon       string  `json:"icon"`
+	HideInMenu int     `json:"hide_in_menu"`
+	ListOrder  float64 `json:"list_order"`
+}
+
 type AssetsReq struct {
 	Type string `form:"type,optional,default=0"`
 }

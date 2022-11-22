@@ -7,10 +7,10 @@ import (
 	"zerocmf/service/admin/api/internal/svc"
 )
 
-func GetHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetAllMenusHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		l := adminMenu.NewGetLogic(r.Context(), svcCtx)
-		resp := l.Get()
+		l := adminMenu.NewGetAllMenusLogic(r.Context(), svcCtx)
+		resp := l.GetAllMenus()
 		httpx.OkJson(w, resp)
 	}
 }

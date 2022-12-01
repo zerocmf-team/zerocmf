@@ -19,10 +19,27 @@ type Paginate struct {
 	Total    int64       `json:"total"`
 }
 
-func (paginate *Paginate) Default(r *http.Request) (current int, pageSize int, err error) {
+type paginate struct {
+	Request *http.Request `json:"-"`
+}
 
+func NewPaginate(req *http.Request) (p *paginate) {
+	p = new(paginate)
+	p.Request = req
+	return
+}
+
+/**
+ * @Author return
+ * @Description 获取请求中的当前页码和分页数
+ * @Date 2022/12/1 23:21
+ * @Param
+ * @return
+ **/
+
+func (page *paginate) Default() (current int, pageSize int, err error) {
+	r := page.Request
 	r.ParseForm()
-
 	qCurrent := r.Form.Get("current")
 	if qCurrent == "" {
 		qCurrent = "1"
@@ -36,12 +53,12 @@ func (paginate *Paginate) Default(r *http.Request) (current int, pageSize int, e
 	pageSize, _ = strconv.Atoi(qPageSize)
 
 	if current <= 0 {
-		return 0,0,errors.New("当前页码需大于0！")
+		return 0, 0, errors.New("当前页码需大于0！")
 	}
 
 	if pageSize <= 0 {
-		return 0,0,errors.New("每页数需大于0！")
+		return 0, 0, errors.New("每页数需大于0！")
 	}
 
-	return current,pageSize,nil
+	return current, pageSize, nil
 }

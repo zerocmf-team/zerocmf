@@ -75,6 +75,9 @@ type (
         refreshToken string `json:"refreshToken,optional"`
     }
 
+    ValidationReq {
+        TenantId string `form:"tenant_id,optional"`
+    }
 )
 
 // 账号相关
@@ -183,4 +186,7 @@ service user {
 
     @handler TokenRequest
     post /token returns (Response)
+
+    @handler Validation
+    post /api/validation/token (ValidationReq) returns (Response)
 }

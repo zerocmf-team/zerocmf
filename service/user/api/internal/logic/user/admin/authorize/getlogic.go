@@ -2,11 +2,11 @@ package authorize
 
 import (
 	"context"
+	"github.com/jinzhu/copier"
 	"zerocmf/service/admin/model"
 	"zerocmf/service/admin/rpc/types/admin"
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
-	"github.com/jinzhu/copier"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -60,7 +60,7 @@ func recursionMenu(menus []model.AdminMenu, parentId int) []authorizes {
 				Id:       v.Id,
 				ParentId: v.ParentId,
 				Title:    v.Name,
-				Key:      v.Object,
+				Key:      v.Path,
 			}
 			routes := recursionMenu(menus, v.Id)
 			item.Children = routes

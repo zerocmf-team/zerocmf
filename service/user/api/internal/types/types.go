@@ -2,8 +2,8 @@
 package types
 
 import (
-	bsData "zerocmf/common/bootstrap/data"
 	"github.com/jinzhu/copier"
+	bsData "zerocmf/common/bootstrap/data"
 )
 
 type Response struct {
@@ -88,6 +88,26 @@ type RefreshReq struct {
 
 type ValidationReq struct {
 	TenantId string `form:"tenant_id,optional"`
+}
+
+type DepListReq struct {
+	Name   string `json:"name,optional"`
+	Status string `json:"status,optional"`
+}
+
+type DepOneReq struct {
+	Id string `path:"id"`
+}
+
+type DepReq struct {
+	Id        string  `json:"id,optional"`
+	ParentId  int     `json:"parent_id"`
+	Name      string  `json:"name" validate:"required" label:"名称"`
+	Status    int     `json:"status" label:"状态"`
+	ListOrder float64 `json:"list_order" validate:"required" label:"排序"`
+	CreateAt  int64   `json:"create_at,optional" label:"创建时间"`
+	UpdateAt  int64   `json:"updateAt,optional" label:"更新时间"`
+	DeleteAt  int64   `json:"deleteAt,optional" label:"删除时间"`
 }
 
 func (r *Response) Success(msg string, data interface{}) {

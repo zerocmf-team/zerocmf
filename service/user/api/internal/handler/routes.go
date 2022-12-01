@@ -7,6 +7,7 @@ import (
 	useradminaccount "zerocmf/service/user/api/internal/handler/user/admin/account"
 	useradminauthAccess "zerocmf/service/user/api/internal/handler/user/admin/authAccess"
 	useradminauthorize "zerocmf/service/user/api/internal/handler/user/admin/authorize"
+	useradmindepartment "zerocmf/service/user/api/internal/handler/user/admin/department"
 	useradminrole "zerocmf/service/user/api/internal/handler/user/admin/role"
 	userapp "zerocmf/service/user/api/internal/handler/user/app"
 	useroauth "zerocmf/service/user/api/internal/handler/user/oauth"
@@ -159,5 +160,34 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: useroauth.ValidationHandler(serverCtx),
 			},
 		},
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: useradmindepartment.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: useradmindepartment.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: useradmindepartment.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: useradmindepartment.EditHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/department"),
 	)
 }

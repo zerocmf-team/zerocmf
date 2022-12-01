@@ -9,8 +9,8 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
+	"zerocmf/common/bootstrap/util"
 )
 
 type Theme struct {
@@ -18,10 +18,10 @@ type Theme struct {
 	Name      string  `gorm:"type:varchar(40);comment:主题名称;not null" json:"name"`
 	Version   string  `gorm:"type:varchar(10);comment:主题版本;not null" json:"version"`
 	Thumbnail string  `gorm:"type:varchar(255);comment:主题缩略图;not null" json:"thumbnail"`
-	CreateAt  int64   `gorm:"type:int(10);comment:创建时间;default:0" json:"create_at"`
-	UpdateAt  int64   `gorm:"type:int(10);comment:更新时间;default:0" json:"update_at"`
+	CreateAt  int64   `gorm:"type:bigint(20);comment:创建时间;default:0" json:"create_at"`
+	UpdateAt  int64   `gorm:"type:bigint(20);comment:更新时间;default:0" json:"update_at"`
 	ListOrder float64 `gorm:"type:float;comment:排序;default:10000" json:"list_order"`
-	DeleteAt  int64   `gorm:"type:int(10);comment:删除时间;default:0" json:"delete_at"`
+	DeleteAt  int64   `gorm:"type:int(20);comment:删除时间;default:0" json:"delete_at"`
 }
 
 type ThemeFile struct {
@@ -37,8 +37,8 @@ type ThemeFile struct {
 	MoreJson       interface{} `gorm:"-" json:"more_json"`
 	ConfigMore     string      `gorm:"type:longtext;comment:主题文件默认配置文件" json:"config_more"`
 	ConfigMoreJson interface{} `gorm:"-" json:"config_more_json"`
-	CreateAt       int64       `gorm:"type:int(11)" json:"create_at"`
-	UpdateAt       int64       `gorm:"type:int(11)" json:"update_at"`
+	CreateAt       int64       `gorm:"type:bigint(20)" json:"create_at"`
+	UpdateAt       int64       `gorm:"type:bigint(20)" json:"update_at"`
 }
 
 func (model *Theme) AutoMigrate(db *gorm.DB) {

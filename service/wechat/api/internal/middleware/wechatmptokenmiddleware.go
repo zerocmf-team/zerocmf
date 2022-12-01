@@ -3,7 +3,7 @@ package middleware
 import (
 	goRedis "github.com/go-redis/redis"
 	"net/http"
-	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/Init"
 	weData "zerocmf/service/wechat/api/data"
 	"zerocmf/service/wechat/api/internal/types"
 	weUtil "zerocmf/service/wechat/api/util"
@@ -12,10 +12,10 @@ import (
 type WechatMpTokenMiddleware struct {
 	Redis *goRedis.Client
 	weData.MpInfo
-	*data.Data
+	*Init.Data
 }
 
-func NewWechatMpTokenMiddleware(data *data.Data, Redis *goRedis.Client) *WechatMpTokenMiddleware {
+func NewWechatMpTokenMiddleware(data *Init.Data, Redis *goRedis.Client) *WechatMpTokenMiddleware {
 	return &WechatMpTokenMiddleware{
 		Data:  data,
 		Redis: Redis,

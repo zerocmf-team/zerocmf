@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"zerocmf/common/bootstrap/data"
 	"net/http"
 	"strings"
+	"zerocmf/common/bootstrap/Init"
 
 	"zerocmf/service/user/api/internal/config"
 	"zerocmf/service/user/api/internal/handler"
@@ -23,7 +23,7 @@ func main() {
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 
-	data.SetSalts(c.Database.AuthCode)
+	Init.SetSalts(c.Database.AuthCode)
 
 	ctx := svc.NewServiceContext(c)
 
@@ -41,7 +41,7 @@ func main() {
 			host := r.Host
 			domain := scheme + host
 			ctx.Config.App.Domain = domain
-			data.SetDomain(domain)
+			Init.SetDomain(domain)
 			ctx.Request = r
 			ctx.ResponseWriter = w
 			// 处理userId

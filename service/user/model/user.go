@@ -9,12 +9,11 @@ package model
 import (
 	"errors"
 	"fmt"
-	"zerocmf/common/bootstrap/data"
-	"zerocmf/common/bootstrap/model"
-	"zerocmf/common/bootstrap/paginate"
-	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 	"time"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/model"
+	"zerocmf/common/bootstrap/util"
 )
 
 type User struct {
@@ -96,7 +95,7 @@ func (u *User) AutoMigrate(db *gorm.DB) {
  * @return
  **/
 
-func (u *User) Paginate(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (result paginate.Paginate, err error) {
+func (u *User) Paginate(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (result data.Paginate, err error) {
 	var user []User
 	var total int64 = 0
 	tx := db.Where(query, queryArgs...).Find(&user).Count(&total)
@@ -117,7 +116,7 @@ func (u *User) Paginate(db *gorm.DB, current, pageSize int, query string, queryA
 			user[k].CreateTime = time.Unix(v.CreateAt, 0).Format(data.TimeLayout)
 		}
 	}
-	result = paginate.Paginate{Data: user, Current: current, PageSize: pageSize, Total: total}
+	result = data.Paginate{Data: user, Current: current, PageSize: pageSize, Total: total}
 	if len(user) == 0 {
 		result.Data = make([]string, 0)
 	}

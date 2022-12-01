@@ -4,11 +4,11 @@
 ** @描述　　:
  */
 
-package data
+package Init
 
 import "sync"
 
-type Context struct {
+type context struct {
 	// This mutex protect Keys map
 	mu sync.RWMutex
 
@@ -18,7 +18,7 @@ type Context struct {
 
 // Set is used to store a new key/value pair exclusively for this context.
 // It also lazy initializes  c.Keys if it was not used previously.
-func (s *Context) Set(key string, value interface{}) {
+func (s *context) Set(key string, value interface{}) {
 	s.mu.Lock()
 	if s.Keys == nil {
 		s.Keys = make(map[string]interface{})
@@ -30,7 +30,7 @@ func (s *Context) Set(key string, value interface{}) {
 
 // Get returns the value for the given key, ie: (value, true).
 // If the value does not exists it returns (nil, false)
-func (s *Context) Get(key string) (value interface{}, exists bool) {
+func (s *context) Get(key string) (value interface{}, exists bool) {
 	s.mu.RLock()
 	value, exists = s.Keys[key]
 	s.mu.RUnlock()

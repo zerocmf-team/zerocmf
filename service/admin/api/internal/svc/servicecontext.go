@@ -4,7 +4,7 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 	"gorm.io/gorm"
 	"net/http"
-	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/Init"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/admin/api/internal/config"
 	"zerocmf/service/admin/api/internal/middleware"
@@ -15,7 +15,7 @@ type ServiceContext struct {
 	Config  config.Config
 	Db      *gorm.DB
 	Request *http.Request
-	*data.Data
+	*Init.Data
 	AuthMiddleware rest.Middleware
 }
 
@@ -29,7 +29,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:         c,
 		Db:             curDb,
-		Data:           new(data.Data).InitContext(),
+		Data:           new(Init.Data).Context(),
 		AuthMiddleware: middleware.NewAuthMiddleware().Handle,
 	}
 }

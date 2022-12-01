@@ -2,13 +2,13 @@ package navItem
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
+	"github.com/zeromicro/go-zero/core/logx"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
-	"github.com/gin-gonic/gin"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type GetLogic struct {
@@ -56,9 +56,9 @@ func (l *GetLogic) Get(req *types.NavItemGetReq) (resp types.Response) {
 	}
 
 	// 根据navId获取全部导航项
-	current, pageSize, err := new(data.Paginate).Default(r)
+	current, pageSize, err := data.NewPaginate(r).Default()
 	if err != nil {
-		resp.Error( err.Error(), nil)
+		resp.Error(err.Error(), nil)
 		return
 	}
 
@@ -73,7 +73,7 @@ func (l *GetLogic) Get(req *types.NavItemGetReq) (resp types.Response) {
 
 	navItems, err := new(model.NavItem).GetWithChild(db, itemQuery, itemQueryArgs)
 	if err != nil {
-		resp.Error( err.Error(), nil)
+		resp.Error(err.Error(), nil)
 		return
 	}
 

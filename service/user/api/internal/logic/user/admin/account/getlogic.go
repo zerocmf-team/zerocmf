@@ -55,7 +55,7 @@ func (l *GetLogic) Get(req *types.ListReq) (resp types.Response) {
 
 	queryStr := strings.Join(query, " AND ")
 
-	current, pageSize, err := new(data.Paginate).Default(r)
+	current, pageSize, err := data.NewPaginate(r).Default()
 
 	if err != nil {
 		resp.Error(err.Error(), nil)

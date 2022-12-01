@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"zerocmf/common/bootstrap/data"
-
+	"zerocmf/common/bootstrap/Init"
 	"zerocmf/service/wechat/api/internal/config"
 	"zerocmf/service/wechat/api/internal/handler"
 	"zerocmf/service/wechat/api/internal/svc"
@@ -38,7 +37,7 @@ func main() {
 			host := r.Host
 			domain := scheme + host
 			ctx.Config.App.Domain = domain
-			data.SetDomain(domain)
+			Init.SetDomain(domain)
 			ctx.Request = r
 			ctx.ResponseWriter = w
 			// 处理userId

@@ -1,17 +1,17 @@
 package svc
 
 import (
-	"zerocmf/common/bootstrap/data"
+	"gorm.io/gorm"
+	"zerocmf/common/bootstrap/Init"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/user/model"
 	"zerocmf/service/user/rpc/internal/config"
-	"gorm.io/gorm"
 )
 
 type ServiceContext struct {
 	Config config.Config
 	Db      *gorm.DB
-	*data.Data
+	*Init.Data
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {

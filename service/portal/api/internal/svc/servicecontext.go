@@ -1,24 +1,24 @@
 package svc
 
 import (
-	"zerocmf/common/bootstrap/data"
-	"zerocmf/common/bootstrap/database"
-	"zerocmf/service/portal/api/internal/config"
-	"zerocmf/service/portal/api/internal/middleware"
-	"zerocmf/service/portal/model"
-	"zerocmf/service/user/rpc/user"
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/gorm"
 	"net/http"
+	"zerocmf/common/bootstrap/Init"
+	"zerocmf/common/bootstrap/database"
+	"zerocmf/service/portal/api/internal/config"
+	"zerocmf/service/portal/api/internal/middleware"
+	"zerocmf/service/portal/model"
+	"zerocmf/service/user/rpc/user"
 )
 
 type ServiceContext struct {
 	Config  config.Config
 	Db      *gorm.DB
 	Request *http.Request
-	*data.Data
+	*Init.Data
 	AuthMiddleware rest.Middleware
 	UserRpc        user.User
 }
@@ -37,7 +37,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:         c,
 		Db:             db,
-		Data:           new(data.Data).InitContext(),
+		Data:           new(Init.Data).Context(),
 		UserRpc:        user.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		AuthMiddleware: middleware.NewAuthMiddleware().Handle,
 	}

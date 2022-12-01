@@ -26,7 +26,7 @@ func (m *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		// Passthrough to next handler if need
+		// Passthrough to next handler1 if need
 		next(w, r)
 	}
 }

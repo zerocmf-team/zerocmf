@@ -7,10 +7,9 @@
 package model
 
 import (
-	"zerocmf/common/bootstrap/data"
-	"zerocmf/common/bootstrap/paginate"
-	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/util"
 )
 
 type Nav struct {
@@ -96,17 +95,17 @@ func (model *NavItem) Show(db *gorm.DB, query string, queryArgs []interface{}) (
 	return navItem, nil
 }
 
-func (model *NavItem) GetWithChildPaginate(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (paginate.Paginate, error) {
+func (model *NavItem) GetWithChildPaginate(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (data.Paginate, error) {
 	// 合并参数合计
 	var total int64 = 0
 	var navItem []NavItem
 	tx := db.Where(query, queryArgs...).Find(&navItem).Order("list_order desc").Count(&total)
 	tx = db.Where(query, queryArgs...).Limit(pageSize).Offset((current - 1) * pageSize).Order("list_order desc").Find(&navItem)
 	if tx.Error != nil {
-		return paginate.Paginate{}, tx.Error
+		return data.Paginate{}, tx.Error
 	}
-	data := model.recursionNav(navItem, 0)
-	paginate := paginate.Paginate{Data: data, Current: current, PageSize: pageSize, Total: total}
+	res := model.recursionNav(navItem, 0)
+	paginate := data.Paginate{Data: res, Current: current, PageSize: pageSize, Total: total}
 	if len(navItem) == 0 {
 		paginate.Data = make([]string, 0)
 	}

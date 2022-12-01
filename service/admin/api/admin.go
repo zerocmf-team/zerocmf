@@ -6,8 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/rest/router"
 	"net/http"
 	"strings"
-	"zerocmf/common/bootstrap/data"
-
+	"zerocmf/common/bootstrap/Init"
 	"zerocmf/service/admin/api/internal/config"
 	"zerocmf/service/admin/api/internal/handler"
 	"zerocmf/service/admin/api/internal/svc"
@@ -47,7 +46,7 @@ func main() {
 			host := r.Host
 			domain := scheme + host
 			ctx.Config.App.Domain = domain
-			data.SetDomain(domain)
+			Init.SetDomain(domain)
 			ctx.Request = r
 			// 处理userId
 			r.ParseForm()

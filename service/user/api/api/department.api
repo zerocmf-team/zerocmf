@@ -1,0 +1,44 @@
+syntax = "v1"
+
+type (
+    DepListReq {
+        Name string `json:"name,optional"`
+        status string `json:"status,optional"`
+    }
+
+    DepOneReq {
+        Id string `path:"id"`
+    }
+
+    DepReq {
+        Id string `json:"id,optional"`
+        ParentId int `json:"parent_id"`
+        Name string `json:"name" validate:"required" label:"名称"`
+        Status int `json:"status" label:"状态"`
+        ListOrder float64 `json:"list_order" validate:"required" label:"排序"`
+        CreateAt int64 `json:"create_at,optional" label:"创建时间"`
+        UpdateAt int64 `json:"updateAt,optional" label:"更新时间"`
+        DeleteAt int64 `json:"deleteAt,optional" label:"删除时间"`
+    }
+)
+
+// 部门相关
+@server(
+    group: user/admin/department
+    prefix: /api/v1/admin/department
+    middleware: AuthMiddleware
+)
+
+service user {
+    @handler Get
+    get / (DepListReq) returns (Response)
+
+    @handler Show
+    get /:id (DepOneReq) returns (Response)
+
+    @handler Store
+    post / (DepReq) returns (Response)
+
+    @handler Edit
+    post /:id (DepReq) returns (Response)
+}

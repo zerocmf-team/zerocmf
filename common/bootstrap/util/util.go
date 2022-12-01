@@ -12,12 +12,12 @@ import (
 	"encoding/hex"
 	"gorm.io/gorm"
 	"strings"
-	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/Init"
 )
 
 func GetMd5(s string) string {
 	h := md5.New()
-	h.Write([]byte(data.Salts() + s))
+	h.Write([]byte(Init.Salts() + s))
 	return hex.EncodeToString(h.Sum(nil))
 }
 
@@ -46,7 +46,7 @@ func FileUrl(path string) string {
 	if path == "" {
 		return ""
 	}
-	prevPath := data.Domain() + "/public/uploads/" + path
+	prevPath := Init.Domain() + "/public/uploads/" + path
 	return prevPath
 }
 

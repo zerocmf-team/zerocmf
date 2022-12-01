@@ -1,227 +1,174 @@
 [
   {
     "object": "settings",
-    "name": "系统设置",
+    "name": "settings",
     "path": "/settings",
     "icon": "",
     "hide_in_menu": 0,
     "list_order": 10000,
     "children": [
       {
-        "object": "settings/websites",
-        "name": "站点设置",
+        "name": "websites",
         "path": "/settings/websites",
         "icon": "",
-        "hide_in_menu": 0
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "detail",
+            "path": "/settings/websites/detail",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
       },
       {
-        "object": "settings/upload",
-        "name": "上传设置",
+        "name": "upload",
         "path": "/settings/upload",
         "icon": "",
-        "hide_in_menu": 0
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "detail",
+            "path": "/settings/upload/detail",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
       },
       {
-        "object": "settings/assets",
-        "name": "素材管理",
+        "name": "assets",
         "path": "/settings/assets",
         "icon": "",
-        "hide_in_menu": 0
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/settings/assets/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "menu",
+        "path": "/settings/menu",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "object": "settings/menu/list",
+            "name": "list",
+            "path": "/settings/menu/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
       }
     ]
   },
   {
-    "object": "account",
-    "name": "账号管理",
+    "name": "account",
     "path": "/account",
     "icon": "",
     "hide_in_menu": 0,
     "list_order": 10000,
     "children": [
       {
-        "object": "account/role/default",
-        "name": "角色设置",
-        "path": "/account/role",
-        "icon": "",
-        "hide_in_menu": 0,
-        "children": [
-          {
-            "object": "account/role",
-            "name": "角色列表",
-            "path": "/account/role",
-            "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "查看角色列表",
-                "path": "/admin/user/role",
-                "method": "GET"
-              }
-            ]
-          },
-          {
-            "object": "account/role/add",
-            "name": "新增角色",
-            "path": "/account/role/add",
-            "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "查看全部权限",
-                "path": "/admin/user/authorize",
-                "method": "GET"
-              }
-            ]
-          },
-          {
-            "object": "account/role/addPost",
-            "name": "新增角色提交",
-            "path": "/account/role/addPost",
-            "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "提交角色名称和操作权限集",
-                "path": "/admin/user/auth_access",
-                "method": "POST"
-              }
-            ]
-          },
-          {
-            "object": "account/role/edit",
-            "name": "编辑角色",
-            "path": "/account/role/edit/:id",
-            "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "查看单个角色信息",
-                "path": "/admin/user/role/:id",
-                "method": "GET"
-              },
-              {
-                "desc": "查看单个角色权限集",
-                "path": "admin/user/auth_access/:id",
-                "method": "GET"
-              }
-            ]
-          },
-          {
-            "object": "account/role/editPost",
-            "name": "编辑角色提交",
-            "path": "/account/role/editPost",
-            "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "提交修改单个角色信息和权限集",
-                "path": "/admin/user/auth_access/:id",
-                "method": "POST"
-              }
-            ]
-          },
-          {
-            "object": "account/role/delete",
-            "name": "删除角色",
-            "path": "/account/role/delete/:id",
-            "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "提交删除角色",
-                "path": "/admin/user/role/:id",
-                "method": "DELETE"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "object": "account/user/default",
-        "name": "账号设置",
+        "name": "user",
         "path": "/account/user",
         "icon": "",
         "hide_in_menu": 0,
         "children": [
           {
-            "object": "account/user",
-            "name": "账号列表",
-            "path": "/account/user",
+            "name": "list",
+            "path": "/account/user/list",
             "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "查看账号列表",
-                "path": "/admin/user/account",
-                "method": "GET"
-              }
-            ]
+            "hide_in_menu": 1
           },
           {
-            "object": "account/user/add",
-            "name": "新增账号",
+            "name": "add",
             "path": "/account/user/add",
             "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-            ]
+            "hide_in_menu": 1
           },
           {
-            "object": "account/user/addPost",
-            "name": "新增账号提交",
-            "path": "/account/user/addPost",
-            "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "新增单个账号",
-                "path": "/admin/user/account",
-                "method": "POST"
-              }
-            ]
-          },
-          {
-            "object": "account/user/edit",
-            "name": "编辑账号",
+            "name": "edit",
             "path": "/account/user/edit/:id",
             "icon": "",
-            "hide_in_menu": 1,
-            "api": []
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "role",
+        "path": "/account/role",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/account/role/list",
+            "icon": "",
+            "hide_in_menu": 1
           },
           {
-            "object": "account/user/editPost",
-            "name": "编辑账号提交",
-            "path": "/account/user/editPost",
+            "name": "add",
+            "path": "/account/role/add",
             "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "编辑单个账号",
-                "path": "/admin/user/account/:id",
-                "method": "POST"
-              }
-            ]
+            "hide_in_menu": 1
           },
           {
-            "object": "account/user/delete",
-            "name": "删除账号",
-            "path": "/account/user/delete",
+            "name": "edit",
+            "path": "/account/role/edit/:id",
             "icon": "",
-            "hide_in_menu": 1,
-            "api": [
-              {
-                "desc": "删除单个或多个账号",
-                "path": "/admin/user/account/:id",
-                "method": "DELETE"
-              }
-            ]
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "department",
+        "path": "/account/department",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/account/department/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
+            "path": "/account/department/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "edit",
+            "path": "/account/department/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
           }
         ]
       }
     ]
   },
   {
-    "object": "portal",
+    "name": "customer",
+    "path": "/customer",
+    "icon": "",
+    "hide_in_menu": 0,
+    "list_order": 10000,
+    "children": [
+      {
+        "name": "list",
+        "path": "/customer/list",
+        "icon": "",
+        "hide_in_menu": 0
+      }
+    ]
+  },
+  {
     "name": "门户管理",
     "path": "/portal",
     "icon": "",
@@ -231,21 +178,21 @@
       {
         "object": "portal/index",
         "name": "文章管理",
-        "path": "/portal/index",
+        "path": "/portal/article",
         "icon": "",
         "hide_in_menu": 0,
         "children": [
           {
-            "object": "portal/index/add",
+            "object": "portal/article/add",
             "name": "新增文章",
-            "path": "/portal/index/add",
+            "path": "/portal/article/add",
             "icon": "",
             "hide_in_menu": 1
           },
           {
-            "object": "portal/index/edit",
+            "object": "portal/article/edit",
             "name": "编辑文章",
-            "path": "/portal/index/edit/:id",
+            "path": "/portal/article/edit/:id",
             "icon": "",
             "hide_in_menu": 1
           }

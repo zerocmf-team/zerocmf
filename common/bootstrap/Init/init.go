@@ -4,18 +4,18 @@
 ** @描述　　:
  */
 
-package data
+package Init
 
 type iData interface {
 	InitContext()
 }
 
 type Data struct {
-	*Context
+	*context
 }
 
-func (rest *Data) InitContext() (data *Data) {
+func (rest *Data) Context() (data *Data) {
 	return &Data{
-		Context: new(Context),
+		context: new(context),
 	}
 }

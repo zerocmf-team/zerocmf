@@ -54,6 +54,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/admin_menu/:id",
 					Handler: adminMenu.EditHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/admin_menu/:id",
+					Handler: adminMenu.DeleteHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/api/v1"),

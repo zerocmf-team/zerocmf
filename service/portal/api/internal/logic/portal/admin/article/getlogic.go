@@ -71,7 +71,9 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response,err error)
 		queryArgs = append(queryArgs, startTimeStamp, endTimeStamp, startTimeStamp, endTimeStamp)
 	}
 	queryStr := strings.Join(query, " AND ")
-	current, pageSize, err := new(data.Paginate).Default(r)
+	
+	
+	current, pageSize, err := data.NewPaginate(r).Default()
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

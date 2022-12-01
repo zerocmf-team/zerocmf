@@ -7,10 +7,10 @@
 package model
 
 import (
-	"zerocmf/common/bootstrap/paginate"
-	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 	"time"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/util"
 )
 
 type Role struct {
@@ -19,8 +19,8 @@ type Role struct {
 	Name      string  `gorm:"type:varchar(30);comment:'名称'" json:"name"`
 	Remark    string  `gorm:"type:varchar(255);comment:'备注'" json:"remark"`
 	ListOrder float64 `gorm:"type:float;comment:'排序';default:10000" json:"list_order"`
-	CreateAt  int64   `gorm:"type:int(11)" json:"create_at"`
-	UpdateAt  int64   `gorm:"type:int(11)" json:"update_at"`
+	CreateAt  int64   `gorm:"type:bigint(20)" json:"create_at"`
+	UpdateAt  int64   `gorm:"type:bigint(20)" json:"update_at"`
 	Status    int     `gorm:"type:tinyint(3);comment:'状态';default:1" json:"status"`
 }
 
@@ -57,7 +57,7 @@ func (_ *Role) AutoMigrate(db *gorm.DB) {
 
 }
 
-func (model *Role) Paginate(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (result paginate.Paginate, err error) {
+func (model *Role) Paginate(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (result data.Paginate, err error) {
 
 	var role []Role
 	var total int64 = 0
@@ -72,16 +72,16 @@ func (model *Role) Paginate(db *gorm.DB, current, pageSize int, query string, qu
 		return
 	}
 
-	result = paginate.Paginate{Data: role, Current: current, PageSize: pageSize, Total: total}
+	result = data.Paginate{Data: role, Current: current, PageSize: pageSize, Total: total}
 	if len(role) == 0 {
 		result.Data = make([]string, 0)
 	}
-	return result,nil
+	return result, nil
 
 }
 
-func (model *Role) Show(db *gorm.DB,query string, queryArgs []interface{}) error {
-	tx := db.Where(query,queryArgs...).First(&model)
+func (model *Role) Show(db *gorm.DB, query string, queryArgs []interface{}) error {
+	tx := db.Where(query, queryArgs...).First(&model)
 	if util.IsDbErr(tx) != nil {
 		return tx.Error
 	}

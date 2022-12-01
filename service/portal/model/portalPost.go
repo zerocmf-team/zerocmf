@@ -14,7 +14,6 @@ import (
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/model"
-	"zerocmf/common/bootstrap/paginate"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/rpc/user"
 )
@@ -34,10 +33,10 @@ type PortalPost struct {
 	PostFavorites       int              `gorm:"type:int(11);comment:收藏数;default:0;NOT NULL" json:"post_favorites"`
 	PostLike            int              `gorm:"type:int(11);comment:点赞数;default:0;NOT NULL" json:"post_like"`
 	CommentCount        int              `gorm:"type:int(11);comment:评论数;default:0;NOT NULL" json:"comment_count"`
-	CreateAt            int64            `gorm:"type:int(11);NOT NULL" json:"create_at"`
-	UpdateAt            int64            `gorm:"type:int(11);NOT NULL" json:"update_at"`
-	PublishedAt         int64            `gorm:"type:int(11);comment:发布时间;NOT NULL" json:"published_at"`
-	DeleteAt            int64            `gorm:"type:int(11);comment:删除实际;NOT NULL" json:"delete_at"`
+	CreateAt            int64            `gorm:"type:bigint(20);NOT NULL" json:"create_at"`
+	UpdateAt            int64            `gorm:"type:bigint(20);NOT NULL" json:"update_at"`
+	PublishedAt         int64            `gorm:"type:bigint(20);comment:发布时间;NOT NULL" json:"published_at"`
+	DeleteAt            int64            `gorm:"type:bigint(20);comment:删除实际;NOT NULL" json:"delete_at"`
 	PostTitle           string           `gorm:"type:varchar(100);comment:post标题;NOT NULL" json:"post_title"`
 	PostKeywords        string           `gorm:"type:varchar(150);comment:SEO关键词;NOT NULL" json:"post_keywords"`
 	PostExcerpt         string           `gorm:"type:longtext;comment:post摘要;NOT NULL" json:"post_excerpt"`
@@ -168,7 +167,7 @@ func (model PortalPost) PortalList(db *gorm.DB, query string, queryArgs []interf
  * @return
  **/
 
-func (model PortalPost) IndexByCategory(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}, extra map[string]string) (result paginate.Paginate, err error) {
+func (model PortalPost) IndexByCategory(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}, extra map[string]string) (result data.Paginate, err error) {
 
 	order := "p.list_order desc,p.id desc"
 	if extra["hot"] == "1" {
@@ -222,7 +221,7 @@ func (model PortalPost) IndexByCategory(db *gorm.DB, current, pageSize int, quer
 		portalPostData[k].Tags = []PostTagResult{}
 	}
 
-	result = paginate.Paginate{Data: portalPostData, Current: current, PageSize: pageSize, Total: total}
+	result = data.Paginate{Data: portalPostData, Current: current, PageSize: pageSize, Total: total}
 
 	if len(portalPostData) == 0 {
 		result.Data = make([]string, 0)

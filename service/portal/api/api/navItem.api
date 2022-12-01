@@ -7,15 +7,15 @@ type (
 
     NavItemSaveReq {
         Id int `path:"id,optional"`
-        NavId int `json:"nav_id"`
-        ParentId int `json:"parent_id"`
-        Status int `json:"status"`
-        ListOrder float64 `json:"list_order"`
-        Name string `json:"name"`
-        Target string `json:"target"`
-        HrefType int `json:"href_type"`
-        Href string `json:"href"`
-        Icon string `json:"icon"`
+        NavId int `json:"nav_id,optional"`
+        ParentId int `json:"parent_id,optional"`
+        Status int `json:"status,optional"`
+        ListOrder float64 `json:"list_order,optional"`
+        Name string `json:"name,optional"`
+        Target string `json:"target,optional"`
+        HrefType int `json:"href_type,optional"`
+        Href string `json:"href,optional"`
+        Icon string `json:"icon,optional"`
         Path string `json:"path,optional"`
     }
 

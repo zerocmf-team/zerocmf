@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"zerocmf/common/bootstrap/data"
 	"net/http"
 	"strings"
+	"zerocmf/common/bootstrap/Init"
 
 	"zerocmf/service/portal/api/internal/config"
 	"zerocmf/service/portal/api/internal/handler"
@@ -40,7 +40,7 @@ func main() {
 			host := r.Host
 			domain := scheme + host
 			ctx.Config.App.Domain = domain
-			data.SetDomain(domain)
+			Init.SetDomain(domain)
 			ctx.Request = r
 			// 处理userId
 			r.ParseForm()

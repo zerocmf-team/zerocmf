@@ -4,7 +4,7 @@
 ** @描述　　:
  */
 
-package data
+package Init
 
 import (
 	"sync"

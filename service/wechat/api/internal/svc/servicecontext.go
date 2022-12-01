@@ -6,7 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 	"gorm.io/gorm"
 	"net/http"
-	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/Init"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/redis"
 	"zerocmf/common/bootstrap/sessions"
@@ -27,7 +27,7 @@ type ServiceContext struct {
 	Store          *goSessions.CookieStore
 	WechatMpToken  rest.Middleware
 	weData.MpInfo
-	*data.Data
+	*Init.Data
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -39,7 +39,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	redis := redis.NewRedis(c.Redis)
 	store := sessions.NewStore()
 
-	data := new(data.Data).InitContext()
+	data := new(Init.Data).InitContext()
 	mpTokenMiddleware := middleware.NewWechatMpTokenMiddleware(data, redis)
 
 	return &ServiceContext{

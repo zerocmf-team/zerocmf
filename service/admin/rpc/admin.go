@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-
+	"zerocmf/common/bootstrap/Init"
 	"zerocmf/service/admin/rpc/internal/config"
 	"zerocmf/service/admin/rpc/internal/server"
 	"zerocmf/service/admin/rpc/internal/svc"
@@ -23,6 +23,9 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
+
+	Init.SetSalts(c.Database.AuthCode)
+
 	ctx := svc.NewServiceContext(c)
 	svr := server.NewAdminServer(ctx)
 

@@ -2,9 +2,9 @@ package list
 
 import (
 	"context"
+	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/portal/model"
-	"strings"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -57,7 +57,7 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 		queryRes = append(queryRes, queryStr)
 	}
 
-	current, pageSize, err := new(data.Paginate).Default(r)
+	current, pageSize, err := data.NewPaginate(r).Default()
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

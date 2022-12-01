@@ -2,9 +2,9 @@ package category
 
 import (
 	"context"
+	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/portal/model"
-	"strings"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -43,7 +43,7 @@ func (l *GetLogic) Get(req *types.CateGetReq) (resp types.Response) {
 
 	queryStr := strings.Join(query, " AND ")
 
-	current, pageSize, err := new(data.Paginate).Default(r)
+	current, pageSize, err := data.NewPaginate(r).Default()
 
 	data, err := new(model.PortalCategory).Index(db, current, pageSize, queryStr, queryArgs)
 	if err != nil {

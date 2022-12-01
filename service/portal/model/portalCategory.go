@@ -21,7 +21,7 @@ type PortalCategory struct {
 	ParentId       int     `gorm:"type:bigint(20);comment:父级id;not null" json:"parent_id"`
 	PostCount      int     `gorm:"type:bigint(20);comment:分类文章数;not null" json:"post_count"`
 	Status         int     `gorm:"type:tinyint(3);comment:状态,1:发布,0:不发布;default:1;not null" json:"status"`
-	DeleteAt       int64   `gorm:"type:int(11);comment:删除时间;not null" json:"delete_at"`
+	DeleteAt       int64   `gorm:"type:bigint(20);comment:删除时间;not null" json:"delete_at"`
 	ListOrder      float64 `gorm:"type:float(0);comment:排序;default:10000;not null" json:"list_order"`
 	Name           string  `gorm:"type:varchar(200);comment:唯一名称;not null" json:"name"`
 	Alias          string  `gorm:"type:varchar(200);comment:唯一名称;not null" json:"alias"`

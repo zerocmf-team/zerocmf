@@ -42,7 +42,7 @@ func MenuSave(svcCtx *svc.ServiceContext, req *types.MenuReq) (resp *types.Respo
 
 	var tx *gorm.DB
 	if id > 0 {
-		tx = db.Updates(&menu)
+		tx = db.Debug().Save(&menu)
 	} else {
 		menu.CreateAt = time.Now().Unix()
 		tx = db.Create(&menu)

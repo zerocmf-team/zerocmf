@@ -15,12 +15,16 @@ type Response struct {
 type MenuReq struct {
 	Id         int     `path:"id,optional"`
 	ParentId   int     `json:"parent_id"`
-	MenuType   int     `json:"menu_type" validate:"oneof=0 1" label:"菜单类型"`
-	Name       string  `json:"name" validate:"required" label:"菜单名称"`
-	Path       string  `json:"path" validate:"required" label:"路由地址"`
+	MenuType   int     `json:"menu_type"`
+	Name       string  `json:"name"`
+	Path       string  `json:"path"`
 	Icon       string  `json:"icon"`
-	HideInMenu int     `json:"hide_in_menu"`
+	HideInMenu int     `json:"hideInMenu"`
 	ListOrder  float64 `json:"list_order"`
+}
+
+type IdReq struct {
+	Id int `path:"id" validate:"required" label:"id"`
 }
 
 type AssetsReq struct {

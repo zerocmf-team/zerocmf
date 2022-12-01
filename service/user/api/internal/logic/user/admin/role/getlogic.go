@@ -50,7 +50,7 @@ func (l *GetLogic) Get(req *types.RoleGet) (resp types.Response) {
 
 	var queryStr string
 	queryStr = strings.Join(query, " AND ")
-	current, pageSize, err := new(data.Paginate).Default(r)
+	current, pageSize, err := data.NewPaginate(r).Default()
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

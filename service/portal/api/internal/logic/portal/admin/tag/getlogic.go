@@ -41,7 +41,7 @@ func (l *GetLogic) Get(req *types.TagGetReq) (resp types.Response) {
 		queryArgs = []interface{}{"%" + name + "%"}
 	}
 
-	current, pageSize, err := new(data.Paginate).Default(r)
+	current, pageSize, err := data.NewPaginate(r).Default()
 
 	if err != nil {
 		resp.Error(err.Error(), nil)

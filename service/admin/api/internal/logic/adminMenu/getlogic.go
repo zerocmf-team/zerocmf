@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
 	"strconv"
+	"strings"
 	"time"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/database"
@@ -28,14 +29,15 @@ type GetLogic struct {
 
 type routers struct {
 	Id         int           `json:"id"`
-	Name       string        `gorm:"type:varchar(30);comment:'路由名称'" json:"name"`
-	Index      string        `gorm:"type:varchar(255);comment:'分类层级关系路径'" json:"index"`
-	Path       string        `gorm:"type:varchar(100);comment:'路由路径'" json:"path"`
-	Icon       string        `gorm:"type:varchar(30);comment:'图标名称'" json:"icon"`
-	HideInMenu int           `gorm:"type:tinyint(3);comment:'菜单中隐藏';default:0" json:"hideInMenu"`
-	ListOrder  float64       `gorm:"type:float;comment:'排序';default:10000" json:"list_order"`
-	CreateAt   int64         `gorm:"type:bigint(20);NOT NULL" json:"create_at"`
-	CreateTime string        `gorm:"-" json:"create_time"`
+	Name       string        `json:"name"`
+	Locale     string        `json:"locale"`
+	Index      string        `json:"index"`
+	Path       string        `json:"path"`
+	Icon       string        `json:"icon"`
+	HideInMenu int           `json:"hideInMenu"`
+	ListOrder  float64       `json:"list_order"`
+	CreateAt   int64         `json:"create_at"`
+	CreateTime string        `json:"create_time"`
 	Routes     []interface{} `json:"routes,omitempty"`
 }
 
@@ -56,10 +58,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) GetLogic {
  **/
 
 func (l *GetLogic) Get() (resp *types.Response) {
-	// todo: add your logic here and delete this line
-
 	resp = new(types.Response)
-
 	c := l.svcCtx
 	var menus []model.AdminMenu
 	db := c.Db
@@ -101,7 +100,7 @@ func (l *GetLogic) Get() (resp *types.Response) {
 	if userId == "1" || len(rolePolicies) == 0 {
 		menusResult = menus
 	}
-	results := recursionMenu(menusResult, 0, "")
+	results := recursionMenu(menusResult, 0, "", "")
 	if len(results) == 0 {
 		results = make([]routers, 0)
 	}
@@ -118,7 +117,7 @@ func (l *GetLogic) Get() (resp *types.Response) {
  * @return
  **/
 
-func recursionMenu(menus []model.AdminMenu, parentId int, parentIndex string) []routers {
+func recursionMenu(menus []model.AdminMenu, parentId int, parentIndex string, locale string) []routers {
 	var routesResult []routers
 	index := 0
 	for _, v := range menus {
@@ -132,9 +131,21 @@ func recursionMenu(menus []model.AdminMenu, parentId int, parentIndex string) []
 				curIndex = parentIndex + "-" + iStr
 			}
 
+			var curLocale string
+			if locale == "" {
+				curLocale = "menu." + v.Name
+			} else {
+				if strings.HasPrefix(locale, "/") {
+					curLocale = v.Name
+				} else {
+					curLocale = locale + "." + v.Name
+				}
+			}
+
 			result := routers{
 				Id:         v.Id,
 				Index:      curIndex,
+				Locale:     curLocale,
 				Name:       v.Name,
 				Path:       v.Path,
 				Icon:       v.Icon,
@@ -144,7 +155,7 @@ func recursionMenu(menus []model.AdminMenu, parentId int, parentIndex string) []
 				CreateTime: time.Unix(v.CreateAt, 0).Format(data.TimeLayout),
 			}
 			index++
-			routes := recursionMenu(menus, v.Id, curIndex)
+			routes := recursionMenu(menus, v.Id, curIndex, curLocale)
 			childRoutes := make([]interface{}, len(routes))
 			for ri, rv := range routes {
 				childRoutes[ri] = rv

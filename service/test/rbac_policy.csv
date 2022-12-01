@@ -1,0 +1,6 @@
+
+p, admin, settings/index, route
+p, admin, settings/websites, route
+
+p, admin,settings/index:api/settings/test, get
+p, admin,settings/index:api/settings/test, post

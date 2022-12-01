@@ -9,7 +9,7 @@ package model
 import (
 	"errors"
 	"gorm.io/gorm"
-	"zerocmf/common/bootstrap/paginate"
+	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/util"
 )
 
@@ -25,7 +25,7 @@ type Assets struct {
 	Id         int    `json:"id"`
 	UserId     int    `gorm:"type:int(11);not null;comment:所属用户id" json:"user_id"`
 	FileSize   int64  `gorm:"type:int(11);not null;comment:文件大小" json:"file_size"`
-	CreateAt   int64  `gorm:"type:int(10);default:0;comment:上传时间" json:"create_at"`
+	CreateAt   int64  `gorm:"type:bigint(20);default:0;comment:上传时间" json:"create_at"`
 	Status     int    `gorm:"type:tinyint(3);default:1;comment:文件状态" json:"status"`
 	FileKey    string `gorm:"type:varchar(64);not null;comment:文件唯一码(md5)" json:"file_key"`
 	RemarkName string `gorm:"type:varchar(100);not null;comment:文件名" json:"remark_name"`
@@ -51,7 +51,7 @@ func (model *Assets) AutoMigrate(db *gorm.DB) {
  * @return
  **/
 
-func (model *Assets) Get(db *gorm.DB, current int, pageSize int, query string, queryArgs []interface{}) (paginateData paginate.Paginate, err error) {
+func (model *Assets) Get(db *gorm.DB, current int, pageSize int, query string, queryArgs []interface{}) (paginateData data.Paginate, err error) {
 
 	var assets []Assets
 
@@ -73,7 +73,7 @@ func (model *Assets) Get(db *gorm.DB, current int, pageSize int, query string, q
 		assets[k].PrevPath = prevPath
 	}
 
-	paginateData = paginate.Paginate{Data: assets, Current: current, PageSize: pageSize, Total: total}
+	paginateData = data.Paginate{Data: assets, Current: current, PageSize: pageSize, Total: total}
 	return paginateData, nil
 
 }

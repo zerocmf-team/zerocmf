@@ -23,9 +23,11 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 	}
 }
 
-func (l *DetailLogic) Detail(req *types.ThemeFileDetailReq) (resp types.Response) {
+func (l *DetailLogic) Detail(req *types.ThemeFileDetailReq) (resp *types.Response) {
 	c := l.svcCtx
 	theme := req.Theme
+
+	resp = new(types.Response)
 
 	if theme == "" {
 		resp.Error("主题不能为空！", nil)

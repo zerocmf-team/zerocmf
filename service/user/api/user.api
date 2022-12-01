@@ -10,4 +10,5 @@ type (
 
 import (
 	"api/user.api"
+	"api/department.api"
 )

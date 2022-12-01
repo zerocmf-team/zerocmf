@@ -12,4 +12,5 @@ func Migrate(tenantId string) {
 	curDb := database.Conf().ManualDb(tenantId)
 	new(User).AutoMigrate(curDb)
 	new(Role).AutoMigrate(curDb)
+	new(Department).AutoMigrate(curDb)
 }

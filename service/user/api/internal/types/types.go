@@ -13,6 +13,7 @@ type Response struct {
 }
 
 type ListReq struct {
+	UserType     string `json:"user_type,optional"`
 	UserLogin    string `json:"user_login,optional"`
 	UserNickname string `json:"userNickname,optional"`
 	UserEmail    string `json:"userEmail,optional"`

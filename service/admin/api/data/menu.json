@@ -161,37 +161,48 @@
     "list_order": 10000,
     "children": [
       {
-        "name": "list",
-        "path": "/customer/list",
+        "name": "member",
+        "path": "/customer/member",
         "icon": "",
-        "hide_in_menu": 0
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/customer/member/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
       }
     ]
   },
   {
-    "name": "门户管理",
+    "name": "portal",
     "path": "/portal",
     "icon": "",
     "hide_in_menu": 0,
     "list_order": 10000,
     "children": [
       {
-        "object": "portal/index",
-        "name": "文章管理",
+        "name": "article",
         "path": "/portal/article",
         "icon": "",
         "hide_in_menu": 0,
         "children": [
           {
-            "object": "portal/article/add",
-            "name": "新增文章",
+            "name": "list",
+            "path": "/portal/article/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
             "path": "/portal/article/add",
             "icon": "",
             "hide_in_menu": 1
           },
           {
-            "object": "portal/article/edit",
-            "name": "编辑文章",
+            "name": "edit",
             "path": "/portal/article/edit/:id",
             "icon": "",
             "hide_in_menu": 1
@@ -199,22 +210,25 @@
         ]
       },
       {
-        "object": "portal/category",
-        "name": "分类管理",
+        "name": "category",
         "path": "/portal/category",
         "icon": "",
         "hide_in_menu": 0,
         "children": [
           {
-            "object": "portal/category/add",
-            "name": "新增分类",
+            "name": "list",
+            "path": "/portal/category/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
             "path": "/portal/category/add",
             "icon": "",
             "hide_in_menu": 1
           },
           {
-            "object": "portal/category/edit",
-            "name": "编辑分类",
+            "name": "edit",
             "path": "/portal/category/edit/:id",
             "icon": "",
             "hide_in_menu": 1
@@ -222,22 +236,25 @@
         ]
       },
       {
-        "object": "portal/page",
-        "name": "页面管理",
+        "name": "page",
         "path": "/portal/page",
         "icon": "",
         "hide_in_menu": 0,
         "children": [
           {
-            "object": "portal/page/add",
-            "name": "新增页面",
+            "name": "list",
+            "path": "/portal/page/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
             "path": "/portal/page/add",
             "icon": "",
             "hide_in_menu": 1
           },
           {
-            "object": "portal/page/edit",
-            "name": "编辑页面",
+            "name": "edit",
             "path": "/portal/page/edit/:id",
             "icon": "",
             "hide_in_menu": 1
@@ -245,11 +262,18 @@
         ]
       },
       {
-        "object": "portal/tag",
-        "name": "标签管理",
+        "name": "tag",
         "path": "/portal/tag",
         "icon": "",
-        "hide_in_menu": 0
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/portal/tag/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
       }
     ]
   }

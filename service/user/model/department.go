@@ -2,6 +2,8 @@ package model
 
 import (
 	"gorm.io/gorm"
+	"strconv"
+	"time"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/util"
 )
@@ -18,11 +20,76 @@ type Department struct {
 	UpdateTime string  `gorm:"-" json:"update_time"`
 }
 
+type department struct {
+	Id         int          `json:"id"`
+	ParentId   int          `json:"parent_id"`
+	Name       string       `json:"name"`
+	Status     int          `json:"status"`
+	Path       string       `json:"path"`
+	ListOrder  float64      `json:"list_order"`
+	CreateTime string       `json:"create_time"`
+	UpdateTime string       `json:"update_time"`
+	Children   []department `json:"children"`
+}
+
 func (_ *Department) AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&Department{})
 }
 
-func (rest *Department) Paginate(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (result data.Paginate, err error)  {
+/**
+ * @Author return
+ * @Description 递归获取树形表格数据
+ * @Date 2022/12/2 16:39
+ * @Param
+ * @return
+ **/
+
+func (rest *Department) TreeList(db *gorm.DB, query string, queryArgs []interface{}) (result []department, err error) {
+	var dep []Department
+	tx := db.Where(query, queryArgs...).Find(&dep)
+	if util.IsDbErr(tx) != nil {
+		err = tx.Error
+		return
+	}
+
+	result = recursionDepartment(dep,0,"")
+
+	return
+}
+
+func recursionDepartment(depInArr []Department, parentId int, parentIndex string) []department {
+	var resArr []department
+	index := 0
+	for _, v := range depInArr {
+		if parentId == v.ParentId {
+			iStr := strconv.Itoa(index)
+			var curIndex string
+			if parentIndex == "" {
+				curIndex = iStr
+			} else {
+				curIndex = parentIndex + "-" + iStr
+			}
+
+			result := department{
+				Id:         v.Id,
+				ParentId:   v.ParentId,
+				Name:       v.Name,
+				Status:     v.Status,
+				Path:       curIndex,
+				ListOrder:  v.ListOrder,
+				CreateTime: time.Unix(v.CreateAt, 0).Format(data.TimeLayout),
+				UpdateTime: time.Unix(v.UpdateAt, 0).Format(data.TimeLayout),
+			}
+			index++
+			children := recursionDepartment(depInArr, v.Id, curIndex)
+			result.Children = children
+			resArr = append(resArr, result)
+		}
+	}
+	return resArr
+}
+
+func (rest *Department) Paginate(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (result data.Paginate, err error) {
 	var department []Department
 	var total int64 = 0
 	tx := db.Where(query, queryArgs...).Find(&department).Count(&total)

@@ -2,9 +2,9 @@ package account
 
 import (
 	"context"
+	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/user/model"
-	"strings"
 
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
@@ -32,8 +32,14 @@ func (l *GetLogic) Get(req *types.ListReq) (resp types.Response) {
 	db := c.Db
 	r := c.Request
 
-	query := []string{"user_type = ?"}
-	queryArgs := []interface{}{"1"}
+	var query []string
+	var queryArgs []interface{}
+
+	userType := req.UserType
+	if userType != "" {
+		query = append(query,"user_type = ?")
+		queryArgs = append(queryArgs,userType)
+	}
 
 	userLogin := req.UserLogin
 	if userLogin != "" {

@@ -7,7 +7,6 @@ import (
 	"net/url"
 	"strconv"
 	"time"
-	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/wechat/api/internal/svc"
 	"zerocmf/service/wechat/api/internal/types"
 	weUtil "zerocmf/service/wechat/api/util"
@@ -44,6 +43,7 @@ func (l *GetQrcodeLogic) GetQrcode() (resp types.Response) {
 	r := c.Request
 	w := c.ResponseWriter
 	store := c.Store
+	expireSeconds := 120
 	session, _ := store.Get(r, "qrcode")
 	values := session.Values
 
@@ -56,8 +56,6 @@ func (l *GetQrcodeLogic) GetQrcode() (resp types.Response) {
 			return
 		}
 
-		expireSeconds := 120
-
 		redis.Expire(key, time.Duration(expireSeconds)*time.Second)
 
 		unix := time.Now().Unix()
@@ -66,7 +64,6 @@ func (l *GetQrcodeLogic) GetQrcode() (resp types.Response) {
 
 		// 创建唯一的二维码标识
 		qrcode := unixStr + replyStr
-		qrcodeMd5 := util.GetMd5(qrcode)
 		// 调用接口生成二维码
 		mpQrcode := new(promote.Qrcode)
 		res, err := mpQrcode.Create(token, expireSeconds, mpQrcode.QrStrScene(), mpQrcode.WithSceneStr(qrcode))
@@ -93,7 +90,6 @@ func (l *GetQrcodeLogic) GetQrcode() (resp types.Response) {
 			session.Values["ticket"] = ticket
 			session.Values["expSec"] = expSec
 			session.Values["expAt"] = expAt
-			session.Values[qrcodeMd5] = qrcode
 			session.Options.MaxAge = expSec //失效时间
 		}
 

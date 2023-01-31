@@ -39,7 +39,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	redis := redis.NewRedis(c.Redis)
 	store := sessions.NewStore()
 
-	data := new(Init.Data).InitContext()
+	data := new(Init.Data).Context()
 	mpTokenMiddleware := middleware.NewWechatMpTokenMiddleware(data, redis)
 
 	return &ServiceContext{

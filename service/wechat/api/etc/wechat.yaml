@@ -1,7 +1,7 @@
 Name: wechat
 Host: 0.0.0.0
 Port: 8803
-Timeout: 30000
+Timeout: 0
 
 Appid: wxce4c356a74b76720
 Secret: df5cca115cf3db90736952d51a51a4c7

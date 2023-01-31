@@ -47,6 +47,9 @@ service wechat {
     @server(
         handler: checkSignature
     )
+
+    // 验证接口配置信息
+
     get /gateway (CheckSignatureReq) returns (Response)
 
     @server(
@@ -68,6 +71,11 @@ service wechat {
         middleware: WechatMpToken // 路由中间件声明
     )
     get /oauth/qrcode returns (Response)
+
+    @server(
+        handler: WsQrcode
+    )
+    get /ws/qrcode returns (Response)
 
     @server(
         handler: CheckQrcodeScan

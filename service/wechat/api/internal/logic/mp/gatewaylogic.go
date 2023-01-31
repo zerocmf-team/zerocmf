@@ -90,18 +90,22 @@ func (l *GatewayLogic) subscribe(gateway GatewayReq) (resp types.Response) {
 
 	fmt.Println("额外加密消息eventKey：", eventKey)
 
+	c := l.svcCtx
+	redis := c.Redis
+	redis.HMSet(eventKey, map[string]interface{}{"openId": gateway.FromUserName, "appId": gateway.ToUserName})
+	redis.Expire(eventKey, time.Second * 120)
+
 	reply := ReplyText{
 		ToUserName:   cDATA(gateway.FromUserName),
 		FromUserName: cDATA(gateway.ToUserName),
 		CreateTime:   time.Now().Unix(),
 		MsgType:      cDATA("text"),
-		Content:      cDATA("欢迎您登录，你的openid为" + gateway.ToUserName),
+		Content:      cDATA("欢迎您登录，你的openid为" + gateway.FromUserName),
 	}
 
 	res, _ := xml.Marshal(reply)
 	resStr := html.UnescapeString(string(res))
 
-	fmt.Println("res", resStr)
 	resp.Success("获取成功", resStr)
 	return
 }

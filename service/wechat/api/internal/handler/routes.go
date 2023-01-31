@@ -54,6 +54,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodGet,
+					Path:    "/ws/qrcode",
+					Handler: mpqrcode.WsQrcodeHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
 					Path:    "/oauth/qrcode/check",
 					Handler: mpqrcode.CheckQrcodeScanHandler(serverCtx),
 				},

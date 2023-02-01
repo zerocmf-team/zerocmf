@@ -67,6 +67,16 @@ type UploadReq struct {
 	FileTypes FileTypes `json:"file_types,optional"`
 }
 
+type MobileLoginReq struct {
+	Platform        string `json:"platform"`
+	AccessKeyId     string `json:"access_key_id"`
+	AccessKeySecret string `json:"access_key_secret"`
+	SignName        string `json:"sign_name"`
+	TemplateCode    string `json:"template_code"`
+	TemplateParam   string `json:"template_param"`
+	Status          int    `json:"status"`
+}
+
 func (r *Response) Success(msg string, data interface{}) {
 	success := new(bsData.Rest).Success(msg, data)
 	copier.Copy(&r, &success)

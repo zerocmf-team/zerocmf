@@ -31,6 +31,16 @@ type (
         ChunkSize int `json:"chunk_size,optional"`
         FileTypes FileTypes `json:"file_types,optional"`
     }
+
+    MobileLoginReq {
+        Platform string `json:"platform"`
+        AccessKeyId string `json:"access_key_id"`
+        AccessKeySecret string `json:"access_key_secret"`
+        SignName string `json:"sign_name"`
+        TemplateCode string `json:"template_code"`
+        TemplateParam string `json:"template_param"`
+        Status int `json:"status"`
+    }
 )
 
 @server(
@@ -59,7 +69,26 @@ service admin {
     @server(
         handler: UploadStore
     )
-    post /upload (UploadReq) returns (Response)
+    post /upload (MobileLoginReq) returns (Response)
+}
+
+@server(
+    group: option/admin/login // 登录设置
+    prefix: api/v1/settings
+    middleware: AuthMiddleware
+)
+
+service admin {
+
+    @server(
+        handler: MobileGet
+    )
+    get /mobile returns (Response)
+
+    @server(
+        handler: MobileStore
+    )
+    post /mobile (UploadReq) returns (Response)
 }
 
 @server(

@@ -63,6 +63,20 @@
             "hide_in_menu": 1
           }
         ]
+      },
+      {
+        "name": "login",
+        "path": "/settings/login",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/settings/login/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
       }
     ]
   },

@@ -191,6 +191,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/:id",
 					Handler: useradmindepartment.EditHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: useradmindepartment.DeleteHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/api/v1/admin/department"),

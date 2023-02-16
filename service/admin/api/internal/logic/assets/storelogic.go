@@ -45,10 +45,8 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) StoreLogic {
 }
 
 func (l *StoreLogic) Store(req *types.AssetsReq) (resp *types.Response) {
-	// todo: add your logic here and delete this line
 
 	resp = new(types.Response)
-
 	c := l.svcCtx
 	db := c.Db
 	r := c.Request

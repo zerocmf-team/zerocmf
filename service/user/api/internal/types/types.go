@@ -13,10 +13,10 @@ type Response struct {
 }
 
 type ListReq struct {
-	UserType     string `json:"user_type,optional"`
-	UserLogin    string `json:"user_login,optional"`
-	UserNickname string `json:"userNickname,optional"`
-	UserEmail    string `json:"userEmail,optional"`
+	UserType     string `form:"user_type,optional"`
+	UserLogin    string `form:"user_login,optional"`
+	UserNickname string `form:"user_nickname,optional"`
+	UserEmail    string `form:"user_email,optional"`
 }
 
 type OneReq struct {
@@ -53,7 +53,7 @@ type RoleDelete struct {
 }
 
 type AccessStore struct {
-	Name       string   `json:"name,optional"`
+	Name       string   `json:"name" validate:"required" label:"姓名"`
 	Remark     string   `json:"remark,optional"`
 	RoleAccess []string `json:"role_access,optional"`
 }
@@ -97,13 +97,16 @@ type DepListReq struct {
 }
 
 type DepOneReq struct {
-	Id string `path:"id"`
+	Id int `path:"id"`
 }
 
 type DepReq struct {
-	Id        string  `json:"id,optional"`
+	Id        int     `json:"id,optional"`
 	ParentId  int     `json:"parent_id"`
 	Name      string  `json:"name" validate:"required" label:"名称"`
+	Leader    string  `json:"leader,optional"`
+	Mobile    string  `json:"mobile,optional"`
+	Email     string  `json:"email"`
 	Status    int     `json:"status" label:"状态"`
 	ListOrder float64 `json:"list_order" validate:"required" label:"排序"`
 	CreateAt  int64   `json:"create_at,optional" label:"创建时间"`

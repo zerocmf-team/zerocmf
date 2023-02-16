@@ -9,8 +9,8 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
+	"zerocmf/common/bootstrap/util"
 )
 
 type Option struct {
@@ -55,6 +55,27 @@ type TypeValues struct {
 	Extensions        string `json:"extensions"`
 }
 
+// 手机号登录设置
+
+type MobileLoginSettings struct {
+	Platform        string `json:"platform"`
+	AccessKeyId     string `json:"access_key_id"`
+	AccessKeySecret string `json:"access_key_secret"`
+	SignName        string `json:"sign_name"`
+	TemplateCode    string `json:"template_code"`
+	TemplateParam   string `json:"template_param"`
+	Status          int    `json:"status"`
+}
+
+// 微信小程序登录设置
+
+type WxappLoginSettings struct {
+	AppId     string `json:"appId"`
+	AppSecret string `json:"appSecret"`
+	Token     string `json:"token"`
+	Status    int    `json:"status"`
+}
+
 func (_ *Option) AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&Option{})
 
@@ -93,6 +114,24 @@ func (_ *Option) AutoMigrate(db *gorm.DB) {
 		uploadSettingValue, _ := json.Marshal(uploadSetting)
 		db.Create(&Option{AutoLoad: 1, OptionName: "upload_setting", OptionValue: string(uploadSettingValue)})
 	}
+
+	tx = db.Where("option_name = ?", "mobile_login_setting").First(&Option{})
+	if tx.RowsAffected == 0 {
+		mobileLogin := MobileLoginSettings{
+			Status: 0,
+		}
+		mobileLoginValue, _ := json.Marshal(mobileLogin)
+		db.Create(&Option{AutoLoad: 1, OptionName: "mobile_login_setting", OptionValue: string(mobileLoginValue)})
+	}
+
+	tx = db.Where("option_name = ?", "wxapp_login_setting").First(&Option{})
+	if tx.RowsAffected == 0 {
+		wxappLogin := WxappLoginSettings{
+			Status: 0,
+		}
+		wxappLoginValue, _ := json.Marshal(wxappLogin)
+		db.Create(&Option{AutoLoad: 1, OptionName: "wxapp_login_setting", OptionValue: string(wxappLoginValue)})
+	}
 }
 
 func UploadSettings(db *gorm.DB) (uploadSetting UploadSetting, err error) {
@@ -106,5 +145,4 @@ func UploadSettings(db *gorm.DB) (uploadSetting UploadSetting, err error) {
 		return uploadSetting, errors.New("序列化json出错：" + err.Error())
 	}
 	return
-
 }

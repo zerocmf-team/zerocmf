@@ -77,6 +77,13 @@ type MobileLoginReq struct {
 	Status          int    `json:"status"`
 }
 
+type WxAppReq struct {
+	AppId     string `json:"appId"`
+	AppSecret string `json:"appSecret"`
+	Token     string `json:"token"`
+	Status    int    `json:"status"`
+}
+
 func (r *Response) Success(msg string, data interface{}) {
 	success := new(bsData.Rest).Success(msg, data)
 	copier.Copy(&r, &success)

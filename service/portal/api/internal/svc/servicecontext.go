@@ -1,7 +1,6 @@
 package svc
 
 import (
-	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/gorm"
@@ -25,12 +24,9 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	database := database.Conf()
-	copier.Copy(&database, &c.Database)
-
+	newDb := database.NewDb(c.Database)
 	// 设置为默认的db
-	db := database.Db() // 初始化
-
+	db := newDb.Db() // 初始化
 	// 数据库迁移
 	model.Migrate("")
 

@@ -146,7 +146,7 @@ func (model PortalPost) PortalList(db *gorm.DB, query string, queryArgs []interf
 
 	// 合并参数合计
 	var post []PortalPost
-	tx := db.Where(query, queryArgs...).Debug().Order("list_order desc,id desc").Find(&post)
+	tx := db.Where(query, queryArgs...).Order("list_order desc,id desc").Find(&post)
 	for k, v := range post {
 		m := More{}
 		json.Unmarshal([]byte(v.More), &m)
@@ -282,7 +282,7 @@ func (model *PortalCategory) ListWithPost(db *gorm.DB, query string, queryArgs [
 
 func (model *PortalPost) Show(db *gorm.DB, query string, queryArgs []interface{}) (err error) {
 
-	tx := db.Where(query, queryArgs...).
+	tx := db.Debug().Where(query, queryArgs...).
 		Order("id desc").
 		First(&model)
 

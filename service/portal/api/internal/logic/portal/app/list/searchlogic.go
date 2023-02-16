@@ -2,9 +2,9 @@ package list
 
 import (
 	"context"
+	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/portal/model"
-	"strings"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -38,8 +38,8 @@ func (l *SearchLogic) Search(req *types.ArticleSearchReq) (resp types.Response) 
 	}
 
 	query := []string{"p.post_type = ?","p.delete_at = ?","(p.post_title like ? or p.post_keywords like ? or p.post_excerpt like ? or p.post_content like ?)"}
-	queryArgs := []interface{}{1,0,"%"+keywords+"%","%"+keywords+"%","%"+keywords+"%","%"+keywords+"%"}
-
+	// queryArgs := []interface{}{1,0,"%"+keywords+"%","%"+keywords+"%","%"+keywords+"%","%"+keywords+"%"}
+	queryArgs := []interface{}{1,0,keywords,keywords,keywords,keywords}
 	queryStr := strings.Join(query, " AND ")
 
 	current, pageSize, err := data.NewPaginate(r).Default()

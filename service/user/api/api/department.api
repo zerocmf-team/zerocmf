@@ -7,13 +7,16 @@ type (
     }
 
     DepOneReq {
-        Id string `path:"id"`
+        Id int `path:"id"`
     }
 
     DepReq {
-        Id string `json:"id,optional"`
+        Id int `json:"id,optional"`
         ParentId int `json:"parent_id"`
         Name string `json:"name" validate:"required" label:"名称"`
+        Leader string `json:"leader,optional"`
+        Mobile string `json:"mobile,optional"`
+        Email string `json:"email"`
         Status int `json:"status" label:"状态"`
         ListOrder float64 `json:"list_order" validate:"required" label:"排序"`
         CreateAt int64 `json:"create_at,optional" label:"创建时间"`
@@ -41,4 +44,7 @@ service user {
 
     @handler Edit
     post /:id (DepReq) returns (Response)
+
+    @handler Delete
+    delete /:id (DepOneReq) returns (Response)
 }

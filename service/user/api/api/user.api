@@ -2,10 +2,10 @@ syntax = "v1"
 
 type (
     ListReq {
-        UserType string `json:"user_type,optional"`
-        UserLogin string `json:"user_login,optional"`
-        UserNickname string `json:"userNickname,optional"`
-        UserEmail string `json:"userEmail,optional"`
+        UserType string `form:"user_type,optional"`
+        UserLogin string `form:"user_login,optional"`
+        UserNickname string `form:"user_nickname,optional"`
+        UserEmail string `form:"user_email,optional"`
     }
 
     OneReq {
@@ -42,7 +42,7 @@ type (
     }
 
     AccessStore {
-        Name string `json:"name,optional"`
+        Name string `json:"name" validate:"required" label:"姓名"`
         Remark string `json:"remark,optional"`
         RoleAccess []string `json:"role_access,optional"`
     }

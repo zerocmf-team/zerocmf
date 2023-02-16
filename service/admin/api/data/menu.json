@@ -75,6 +75,18 @@
             "path": "/settings/login/list",
             "icon": "",
             "hide_in_menu": 1
+          },
+          {
+            "name": "mobile",
+            "path": "/settings/login/detail/mobile",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "wxapp",
+            "path": "/settings/login/detail/wxapp",
+            "icon": "",
+            "hide_in_menu": 1
           }
         ]
       }

@@ -2,14 +2,12 @@ package department
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logx"
 	"strings"
-	"zerocmf/common/bootstrap/Required"
-	"zerocmf/service/user/model"
-
+	"zerocmf/common/bootstrap/required"
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
-
-	"github.com/zeromicro/go-zero/core/logx"
+	"zerocmf/service/user/model"
 )
 
 type GetLogic struct {
@@ -33,12 +31,12 @@ func (l *GetLogic) Get(req *types.DepListReq) (resp *types.Response) {
 	query := make([]string, 0)
 	var queryArgs = make([]interface{}, 0)
 	name := req.Name
-	if Required.String(name) {
+	if required.String(name) {
 		query = append(query, "name like %?%")
 		queryArgs = append(queryArgs, name)
 	}
 	status := req.Status
-	if Required.String(status) {
+	if required.String(status) {
 		query = append(query, "status = ?")
 		queryArgs = append(queryArgs, name)
 	}

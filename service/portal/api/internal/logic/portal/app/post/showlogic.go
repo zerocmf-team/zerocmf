@@ -2,10 +2,10 @@ package post
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logx"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ShowLogic struct {
@@ -43,6 +43,7 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 	var queryArgs = []interface{}{id, typ, 0}
 
 	post := model.PortalPost{}
+
 	err := post.Show(db, query, queryArgs)
 
 	if err != nil {

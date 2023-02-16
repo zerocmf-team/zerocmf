@@ -11,7 +11,10 @@ import (
 type Department struct {
 	Id         int     `json:"id"`
 	ParentId   int     `gorm:"type:int(11);default:0;comment:父级id" json:"parent_id"`
-	Name       string  `gorm:"type:varchar(30);comment:'名称'" json:"name"`
+	Name       string  `gorm:"type:varchar(30);comment:名称" json:"name"`
+	Leader     string  `gorm:"type:varchar(30);comment:负责人" json:"leader"`
+	Mobile     string  `gorm:"type:varchar(20);comment:联系电话" json:"mobile"`
+	Email      string  `gorm:"type:varchar(100);comment:联系邮箱" json:"email"`
 	Status     int     `gorm:"type:tinyint(3);default:1;comment:文件状态" json:"status"`
 	ListOrder  float64 `gorm:"type:float;default:10000;comment:排序（越大越靠前）" json:"list_order" validate:"required" label:"排序"`
 	CreateAt   int64   `gorm:"type:bigint(20);NOT NULL" json:"create_at"`
@@ -21,15 +24,9 @@ type Department struct {
 }
 
 type department struct {
-	Id         int          `json:"id"`
-	ParentId   int          `json:"parent_id"`
-	Name       string       `json:"name"`
-	Status     int          `json:"status"`
-	Path       string       `json:"path"`
-	ListOrder  float64      `json:"list_order"`
-	CreateTime string       `json:"create_time"`
-	UpdateTime string       `json:"update_time"`
-	Children   []department `json:"children"`
+	Department
+	Path     string       `json:"path"`
+	Children []department `json:"children"`
 }
 
 func (_ *Department) AutoMigrate(db *gorm.DB) {
@@ -52,7 +49,7 @@ func (rest *Department) TreeList(db *gorm.DB, query string, queryArgs []interfac
 		return
 	}
 
-	result = recursionDepartment(dep,0,"")
+	result = recursionDepartment(dep, 0, "")
 
 	return
 }
@@ -70,15 +67,12 @@ func recursionDepartment(depInArr []Department, parentId int, parentIndex string
 				curIndex = parentIndex + "-" + iStr
 			}
 
+			v.CreateTime = time.Unix(v.CreateAt, 0).Format(data.TimeLayout)
+			v.UpdateTime = time.Unix(v.UpdateAt, 0).Format(data.TimeLayout)
+
 			result := department{
-				Id:         v.Id,
-				ParentId:   v.ParentId,
-				Name:       v.Name,
-				Status:     v.Status,
+				Department: v,
 				Path:       curIndex,
-				ListOrder:  v.ListOrder,
-				CreateTime: time.Unix(v.CreateAt, 0).Format(data.TimeLayout),
-				UpdateTime: time.Unix(v.UpdateAt, 0).Format(data.TimeLayout),
 			}
 			index++
 			children := recursionDepartment(depInArr, v.Id, curIndex)

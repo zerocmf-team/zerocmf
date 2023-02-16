@@ -1,4 +1,4 @@
-package Required
+package required
 
 import "strings"
 

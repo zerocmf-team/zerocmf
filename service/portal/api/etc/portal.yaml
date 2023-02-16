@@ -1,6 +1,7 @@
 Name: portal
 Host: 0.0.0.0
 Port: 8802
+Timeout: 30000
 
 UserRpc:
   Timeout: 30000

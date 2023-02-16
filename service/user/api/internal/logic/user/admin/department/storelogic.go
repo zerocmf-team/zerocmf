@@ -3,6 +3,7 @@ package department
 import (
 	"context"
 	"github.com/jinzhu/copier"
+	"time"
 	"zerocmf/service/user/model"
 
 	"zerocmf/service/user/api/internal/svc"
@@ -25,15 +26,21 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 	}
 }
 
-func (l *StoreLogic) Store(req *types.DepReq) (resp *types.Response) {
+func (l *StoreLogic) Store(req *types.DepReq) (resp types.Response) {
 	c := l.svcCtx
 	return saveDepartment(req, c)
 }
 
-func saveDepartment(req *types.DepReq, c *svc.ServiceContext) (resp *types.Response) {
-	resp = new(types.Response)
+func saveDepartment(req *types.DepReq, c *svc.ServiceContext) (resp types.Response) {
 	dep := model.Department{}
 	copier.Copy(&dep, &req)
+
+	if req.Id == 0 {
+		dep.CreateAt = time.Now().Unix()
+	}else {
+		dep.UpdateAt = time.Now().Unix()
+	}
+
 	tx := c.Db.Save(&dep)
 	if tx.Error != nil {
 		resp.Error("系统异常", tx.Error.Error())

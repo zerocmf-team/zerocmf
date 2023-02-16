@@ -41,6 +41,13 @@ type (
         TemplateParam string `json:"template_param"`
         Status int `json:"status"`
     }
+
+    WxAppReq {
+        AppId string `json:"appId"`
+        AppSecret string `json:"appSecret"`
+        Token string `json:"token"`
+        Status int `json:"status"`
+    }
 )
 
 @server(
@@ -60,7 +67,6 @@ service admin {
     )
     post /settings (OptionReq) returns (Response)
 
-
     @server(
         handler: UploadGet
     )
@@ -69,7 +75,7 @@ service admin {
     @server(
         handler: UploadStore
     )
-    post /upload (MobileLoginReq) returns (Response)
+    post /upload (UploadReq) returns (Response)
 }
 
 @server(
@@ -79,7 +85,6 @@ service admin {
 )
 
 service admin {
-
     @server(
         handler: MobileGet
     )
@@ -88,7 +93,17 @@ service admin {
     @server(
         handler: MobileStore
     )
-    post /mobile (UploadReq) returns (Response)
+    post /mobile (MobileLoginReq) returns (Response)
+
+    @server(
+        handler: WxappGet
+    )
+    get /wxapp returns (Response)
+
+    @server(
+        handler: WxappStore
+    )
+    post /wxapp (WxAppReq) returns (Response)
 }
 
 @server(

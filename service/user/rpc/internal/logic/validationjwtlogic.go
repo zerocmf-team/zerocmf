@@ -2,13 +2,11 @@ package logic
 
 import (
 	"context"
-	"zerocmf/service/user/common"
 	"github.com/jinzhu/copier"
-
+	"github.com/zeromicro/go-zero/core/logx"
+	"zerocmf/service/user/common"
 	"zerocmf/service/user/rpc/internal/svc"
 	"zerocmf/service/user/rpc/types/user"
-
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ValidationJwtLogic struct {
@@ -26,8 +24,6 @@ func NewValidationJwtLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Val
 }
 
 func (l *ValidationJwtLogic) ValidationJwt(in *user.OauthRequest) (*user.OauthReply, error) {
-	// todo: add your logic here and delete this line
-
 	token := in.GetToken()
 	tenantId := in.GetTenantId()
 	c := l.svcCtx
@@ -35,15 +31,12 @@ func (l *ValidationJwtLogic) ValidationJwt(in *user.OauthRequest) (*user.OauthRe
 	inConf := common.Config{}
 	copier.Copy(&inConf, &conf)
 	oauth := common.NewServer(inConf, tenantId)
-
 	srv := oauth.Srv
 	ti, err := srv.Manager.LoadAccessToken(context.Background(), token)
-
 	if err != nil {
 
 		return &user.OauthReply{}, err
 	}
-
 	return &user.OauthReply{
 		UserId:  ti.GetUserID(),
 	}, nil

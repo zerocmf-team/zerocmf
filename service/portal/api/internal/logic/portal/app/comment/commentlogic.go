@@ -2,15 +2,13 @@ package comment
 
 import (
 	"context"
-	"zerocmf/common/bootstrap/model"
-	"zerocmf/service/user/rpc/user"
+	"github.com/zeromicro/go-zero/core/logx"
 	"strconv"
 	"time"
-
+	"zerocmf/common/bootstrap/model"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
-
-	"github.com/zeromicro/go-zero/core/logx"
+	"zerocmf/service/user/rpc/types/user"
 )
 
 type CommentLogic struct {

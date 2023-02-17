@@ -2,11 +2,11 @@ package comment
 
 import (
 	"context"
-	"zerocmf/common/bootstrap/model"
-	"zerocmf/service/user/rpc/user"
 	"github.com/jinzhu/copier"
 	"strconv"
 	"time"
+	"zerocmf/common/bootstrap/model"
+	"zerocmf/service/user/rpc/types/user"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"

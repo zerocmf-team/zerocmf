@@ -11,7 +11,8 @@ import (
 	"zerocmf/service/user/api/internal/config"
 	"zerocmf/service/user/api/internal/middleware"
 	"zerocmf/service/user/model"
-	"zerocmf/service/user/rpc/user"
+	"zerocmf/service/user/rpc/types/user"
+	"zerocmf/service/user/rpc/userclient"
 )
 
 type ServiceContext struct {
@@ -20,7 +21,7 @@ type ServiceContext struct {
 	Request *http.Request
 	ResponseWriter http.ResponseWriter
 	*Init.Data
-	UserRpc user.User
+	UserRpc user.UserClient
 	AdminRpc admin.Admin
 	AuthMiddleware rest.Middleware
 }
@@ -37,7 +38,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:  c,
 		Db:      db,
 		Data:    new(Init.Data).Context(),
-		UserRpc: user.NewUser(zrpc.MustNewClient(c.UserRpc)),
+		UserRpc: userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		AdminRpc:admin.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
 		AuthMiddleware: middleware.NewAuthMiddleware().Handle,
 	}

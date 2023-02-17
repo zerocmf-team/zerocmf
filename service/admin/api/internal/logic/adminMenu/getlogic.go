@@ -2,6 +2,7 @@ package adminMenu
 
 import (
 	"context"
+	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 	"strconv"
 	"strings"
@@ -11,6 +12,7 @@ import (
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
 	"zerocmf/service/admin/model"
+	"zerocmf/service/user/rpc/types/user"
 )
 
 type GetLogic struct {
@@ -60,6 +62,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) GetLogic {
 func (l *GetLogic) Get() (resp *types.Response) {
 	resp = new(types.Response)
 	c := l.svcCtx
+	userRpc := c.UserRpc
 	var menus []model.AdminMenu
 	db := c.Db
 	tx := db.Where("path <> ?", "").Order("list_order, id").Find(&menus)
@@ -69,24 +72,33 @@ func (l *GetLogic) Get() (resp *types.Response) {
 	}
 
 	userId, _ := l.svcCtx.Get("userId")
-	database := database.Conf()
+
+	databaseReply, err := userRpc.Database(l.ctx, &user.DatabaseRequest{})
+	if err != nil {
+		resp.Error(err.Error(), nil)
+		return
+	}
+
+	dbConf := database.Database{}
+	copier.Copy(&dbConf, &databaseReply)
 
 	//	获取当前用户的全部角色
-	e, err := database.NewEnforcer("")
+	e, err := dbConf.NewEnforcer("")
 	//	存入casbin
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
 
-	//	存入casbin
-	if err != nil {
-		return
-	}
 	var menusResult = make([]model.AdminMenu, 0)
 	var access bool
 	for _, v := range menus {
-		access, err = e.Enforce(userId, v.Path, "*")
+
+		path := v.Path
+		if v.ParentId == 0 {
+			path = v.Path
+		}
+		access, err = e.Enforce(userId, path, "*")
 		if err != nil {
 			resp.Error("系统出错", err.Error())
 			// panic(err.Error())
@@ -95,11 +107,11 @@ func (l *GetLogic) Get() (resp *types.Response) {
 			menusResult = append(menusResult, v)
 		}
 	}
-	rolePolicies := e.GetFilteredPolicy(0, userId.(string))
 
-	if userId == "1" || len(rolePolicies) == 0 {
+	if userId == "1" || len(menusResult) == 0 {
 		menusResult = menus
 	}
+
 	results := recursionMenu(menusResult, 0, "", "")
 	if len(results) == 0 {
 		results = make([]routers, 0)

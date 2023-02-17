@@ -63,11 +63,29 @@ message OauthReply {
   string userId = 1;
 }
 
+message DatabaseRequest {
+
+}
+
+message DatabaseReply {
+  string Type = 1;
+  string Host = 2;
+  string Database = 3;
+  string Username = 4;
+  string Password = 5;
+  int32 Port = 6;
+  string Charset = 7;
+  string Prefix = 8;
+  string AuthCode = 9;
+}
+
 service user {
   rpc Get (UserRequest) returns (UserReply) {}
 
   rpc Init (InitRequest) returns (InitReply) {} // 初始化服务调用
 
   rpc ValidationJwt (OauthRequest) returns (OauthReply) {}
+
+  rpc Database (DatabaseRequest) returns (DatabaseReply) {}
 }
 

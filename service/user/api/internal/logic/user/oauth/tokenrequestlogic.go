@@ -2,10 +2,8 @@ package oauth
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"zerocmf/service/user/common"
 	"github.com/jinzhu/copier"
+	"zerocmf/service/user/common"
 
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
@@ -31,13 +29,7 @@ func (l *TokenRequestLogic) TokenRequest() (resp types.Response) {
 	c := l.svcCtx
 	r := c.Request
 	w := c.ResponseWriter
-
 	r.ParseForm()
-
-	f,_ := json.Marshal(r.Form)
-
-	fmt.Println("form", string(f) )
-
 	conf := c.Config
 	inConf := common.Config{}
 	copier.Copy(&inConf, &conf)

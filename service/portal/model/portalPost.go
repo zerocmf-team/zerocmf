@@ -15,7 +15,7 @@ import (
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/model"
 	"zerocmf/common/bootstrap/util"
-	"zerocmf/service/user/rpc/user"
+	"zerocmf/service/user/rpc/types/user"
 )
 
 type PortalPost struct {
@@ -58,7 +58,7 @@ type PortalPost struct {
 	UpdateTime          string           `gorm:"-" json:"update_time"`
 	PublishedTime       string           `gorm:"-" json:"published_time"`
 	DeleteTime          string           `gorm:"-" json:"delete_time"`
-	userRpc             user.User
+	userRpc             user.UserClient
 }
 
 type More struct {
@@ -133,7 +133,7 @@ func (model PortalPost) AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&PostFavoritesPost{})
 }
 
-func NewPost(userRpc user.User) PortalPost {
+func NewPost(userRpc user.UserClient) PortalPost {
 	return PortalPost{
 		userRpc: userRpc,
 	}

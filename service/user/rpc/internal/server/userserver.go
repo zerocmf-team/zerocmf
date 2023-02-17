@@ -36,3 +36,8 @@ func (s *UserServer) ValidationJwt(ctx context.Context, in *user.OauthRequest) (
 	l := logic.NewValidationJwtLogic(ctx, s.svcCtx)
 	return l.ValidationJwt(in)
 }
+
+func (s *UserServer) Database(ctx context.Context, in *user.DatabaseRequest) (*user.DatabaseReply, error) {
+	l := logic.NewDatabaseLogic(ctx, s.svcCtx)
+	return l.Database(in)
+}

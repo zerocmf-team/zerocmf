@@ -2,15 +2,13 @@ package comment
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/model"
-	"zerocmf/service/user/rpc/user"
-	"strconv"
-
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
-
-	"github.com/zeromicro/go-zero/core/logx"
+	"zerocmf/service/user/rpc/userclient"
 )
 
 type GetLogic struct {
@@ -50,7 +48,7 @@ func (l *GetLogic) Get(req *types.PostCommentGetReq) (resp types.Response) {
 			tenantId = tenant.(string)
 		}
 
-		_, err := userRpc.Get(context.Background(), &user.UserRequest{
+		_, err := userRpc.Get(context.Background(), &userclient.UserRequest{
 			UserId:   int64(userIdInt),
 			TenantId: tenantId,
 		})

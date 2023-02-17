@@ -2,6 +2,7 @@ package svc
 
 import (
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/gorm"
 	"net/http"
 	"zerocmf/common/bootstrap/Init"
@@ -9,10 +10,12 @@ import (
 	"zerocmf/service/admin/api/internal/config"
 	"zerocmf/service/admin/api/internal/middleware"
 	"zerocmf/service/admin/model"
+	"zerocmf/service/user/rpc/userclient"
 )
 
 type ServiceContext struct {
 	Config  config.Config
+	UserRpc userclient.User
 	Db      *gorm.DB
 	Request *http.Request
 	*Init.Data
@@ -28,6 +31,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	return &ServiceContext{
 		Config:         c,
+		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		Db:             curDb,
 		Data:           new(Init.Data).Context(),
 		AuthMiddleware: middleware.NewAuthMiddleware().Handle,

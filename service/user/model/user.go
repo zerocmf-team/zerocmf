@@ -103,7 +103,7 @@ func (u *User) Paginate(db *gorm.DB, current, pageSize int, query string, queryA
 		err = tx.Error
 		return
 	}
-	tx = db.Where(query, queryArgs...).Debug().Limit(pageSize).Offset((current - 1) * pageSize).Find(&user)
+	tx = db.Where(query, queryArgs...).Limit(pageSize).Offset((current - 1) * pageSize).Find(&user)
 	if util.IsDbErr(tx) != nil {
 		err = tx.Error
 		return

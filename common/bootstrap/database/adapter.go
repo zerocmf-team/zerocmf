@@ -46,7 +46,7 @@ func (db *Database) NewEnforcer(tenantId string) (e *casbin.Enforcer, err error)
 		e = some(where (p.eft == allow))
 		
 		[matchers]
-		m = g(r.sub, p.sub) && (menuMatch(r.obj, p.obj) || r.obj == p.obj) && r.act == p.act
+		m = g(r.sub, p.sub) && (menuMatch(r.obj, p.obj) || r.obj == p.obj) && r.act == p.act || r.sub == "1"
 		`
 	// 		m = g(r.sub, p.sub) && r.obj == p.obj && (r.act == p.act || (keyMatch(r.obj, p.obj) || keyMatch2(r.obj, p.obj)) && regexMatch(r.act, p.act))
 	m, _ := model.NewModelFromString(text)

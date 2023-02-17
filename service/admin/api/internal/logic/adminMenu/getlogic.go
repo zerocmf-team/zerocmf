@@ -108,10 +108,6 @@ func (l *GetLogic) Get() (resp *types.Response) {
 		}
 	}
 
-	if userId == "1" || len(menusResult) == 0 {
-		menusResult = menus
-	}
-
 	results := recursionMenu(menusResult, 0, "", "")
 	if len(results) == 0 {
 		results = make([]routers, 0)

@@ -32,32 +32,32 @@ func (l *DeleteLogic) Delete(req *types.IdReq) (resp *types.Response) {
 	id := req.Id
 
 	adminMenu := model.AdminMenu{}
-	tx :=db.Where("id = ?",id).First(&adminMenu)
+	tx := db.Where("id = ?", id).First(&adminMenu)
 	if tx.Error != nil {
-		if errors.Is(tx.Error,gorm.ErrRecordNotFound) {
-			resp.Error("该菜单不存在或已被删除！",nil)
+		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+			resp.Error("该菜单不存在或已被删除！", nil)
 			return
 		}
-		resp.Error("系统错误",nil)
+		resp.Error("系统错误", nil)
 		return
 	}
 
 	var count int64 = 0
-	tx = db.Where("parent_id",id).Find(&adminMenu).Count(&count)
+	tx = db.Where("parent_id", id).Find(&adminMenu).Count(&count)
 	if tx.Error != nil {
-		resp.Error(tx.Error.Error(),nil)
+		resp.Error(tx.Error.Error(), nil)
 		return
 	}
 	if count > 0 {
-		resp.Error("请先删除子集菜单！",nil)
+		resp.Error("请先删除子集菜单！", nil)
 		return
 	}
 
-	tx = db.Where("id",id).Delete(&adminMenu)
+	tx = db.Where("id", id).Delete(&adminMenu)
 	if tx.Error != nil {
-		resp.Error(tx.Error.Error(),nil)
+		resp.Error(tx.Error.Error(), nil)
 		return
 	}
-	resp.Success("删除成功！",nil)
+	resp.Success("删除成功！", nil)
 	return
 }

@@ -1,7 +1,6 @@
 package account
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -19,7 +18,6 @@ func GetHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		fmt.Println("req",req)
 		l := account.NewGetLogic(r.Context(), svcCtx)
 		resp := l.Get(&req)
 		httpx.OkJson(w, resp)

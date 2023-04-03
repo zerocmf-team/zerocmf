@@ -2,11 +2,11 @@ package article
 
 import (
 	"context"
+	"strconv"
+	"strings"
 	comModel "zerocmf/common/bootstrap/model"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/model"
-	"strconv"
-	"strings"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -66,8 +66,8 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 
 	// 获取当前文章全部分类
 	pQueryArgs := []interface{}{id, 0}
-	pc := model.PortalCategory{}
-	category, err := pc.ListWithPost(db, "p.id = ? AND p.delete_at = ?", pQueryArgs)
+	pCate := model.PortalCategory{}
+	category, err := pCate.FindPostCategory(db, "p.id = ? AND p.delete_at = ?", pQueryArgs)
 	result.Category = category
 
 	result.Extends = post.MoreJson.Extends
@@ -81,7 +81,7 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 	result.Video = post.MoreJson.Video
 	result.VideoPrevPath = post.MoreJson.VideoPrevPath
 
-	fullUrl := "page/" +  strconv.Itoa(id)
+	fullUrl := "page/" + strconv.Itoa(id)
 	route := comModel.Route{}
 	tx := db.Where("full_url", fullUrl).First(&route)
 

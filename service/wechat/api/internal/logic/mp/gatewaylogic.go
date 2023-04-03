@@ -93,7 +93,7 @@ func (l *GatewayLogic) subscribe(gateway GatewayReq) (resp types.Response) {
 	c := l.svcCtx
 	redis := c.Redis
 	redis.HMSet(eventKey, map[string]interface{}{"openId": gateway.FromUserName, "appId": gateway.ToUserName})
-	redis.Expire(eventKey, time.Second * 120)
+	redis.Expire(eventKey, time.Second*120)
 
 	reply := ReplyText{
 		ToUserName:   cDATA(gateway.FromUserName),

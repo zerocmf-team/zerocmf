@@ -14,7 +14,7 @@ import (
 
 type Nav struct {
 	Id     int    `json:"id"`
-	Key    string `gorm:"type:varchar(10);comment:导航类型;index:idx_key,unique;not null;" json:"key"`
+	Key    string `gorm:"type:varchar(10);comment:导航类型;not null" json:"key"`
 	Name   string `gorm:"type:varchar(20);comment:主导航名称" json:"name"`
 	Remark string `gorm:"type:varchar(255);comment:备注" json:"remark"`
 }
@@ -50,7 +50,7 @@ func (model *Nav) AutoMigrate(db *gorm.DB) {
 	}
 }
 
-func (model *Nav) Get(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (paginate data.Paginate,err error) {
+func (model *Nav) Get(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (paginate data.Paginate, err error) {
 	// 合并参数合计
 	var total int64 = 0
 	var nav []Nav
@@ -112,7 +112,7 @@ func (model *NavItem) GetWithChildPaginate(db *gorm.DB, current, pageSize int, q
 	return paginate, nil
 }
 
-func (model *NavItem) GetWithChild(db *gorm.DB, query string, queryArgs []interface{}) (navItem []NavItem ,err error) {
+func (model *NavItem) GetWithChild(db *gorm.DB, query string, queryArgs []interface{}) (navItem []NavItem, err error) {
 	// 合并参数合计
 	tx := db.Where(query, queryArgs...).Order("list_order desc").Find(&navItem)
 	if tx.Error != nil {
@@ -121,12 +121,11 @@ func (model *NavItem) GetWithChild(db *gorm.DB, query string, queryArgs []interf
 	data := model.recursionNav(navItem, 0)
 
 	if data == nil {
-		data = make([]NavItem,0)
+		data = make([]NavItem, 0)
 	}
 
 	return data, nil
 }
-
 
 func (model *NavItem) recursionNav(nav []NavItem, parentId int) []NavItem {
 

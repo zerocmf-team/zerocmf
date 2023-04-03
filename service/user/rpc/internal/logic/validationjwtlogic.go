@@ -38,6 +38,6 @@ func (l *ValidationJwtLogic) ValidationJwt(in *user.OauthRequest) (*user.OauthRe
 		return &user.OauthReply{}, err
 	}
 	return &user.OauthReply{
-		UserId:  ti.GetUserID(),
+		UserId: ti.GetUserID(),
 	}, nil
 }

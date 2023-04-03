@@ -36,7 +36,7 @@ func (l *CommentLogic) Comment(req *types.PostCommentAddReq) (resp types.Respons
 
 	var (
 		userData *user.UserReply
-		err error
+		err      error
 	)
 
 	if userId != "" {

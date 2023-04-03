@@ -7,11 +7,11 @@
 package casbin
 
 import (
-	"zerocmf/common/bootstrap/database"
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"strconv"
+	"zerocmf/common/bootstrap/database"
 )
 
 func NewEnforcer(tenantId string) (e *casbin.Enforcer, err error) {

@@ -16,8 +16,6 @@ import (
 	"zerocmf/service/wechat/model"
 )
 
-
-
 type ServiceContext struct {
 	Config         config.Config
 	Db             *gorm.DB

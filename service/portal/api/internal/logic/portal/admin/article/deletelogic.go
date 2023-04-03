@@ -33,7 +33,7 @@ func (l *DeleteLogic) Delete(req *types.ArticleDelReq) (resp types.Response) {
 	id := req.Id
 
 	if id == 0 {
-		resp.Error("分类id不能为空！",nil)
+		resp.Error("分类id不能为空！", nil)
 		return
 	}
 

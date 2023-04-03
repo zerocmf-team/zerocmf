@@ -2,9 +2,9 @@ package oauth
 
 import (
 	"context"
+	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/user/rpc/types/user"
-	"strings"
 
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"

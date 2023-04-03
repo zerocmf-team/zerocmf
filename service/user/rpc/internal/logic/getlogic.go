@@ -24,17 +24,17 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(in *user.UserRequest) (userReply *user.UserReply,err error) {
+func (l *GetLogic) Get(in *user.UserRequest) (userReply *user.UserReply, err error) {
 	c := l.svcCtx
 	db := c.Db
 	id := in.GetUserId()
 	userModel := model.User{}
-	tx := db.Where("id = ?",id).First(&userModel)
+	tx := db.Where("id = ?", id).First(&userModel)
 	if util.IsDbErr(tx) != nil {
 		err = tx.Error
 		return
 	}
 	userReply = new(user.UserReply)
-	copier.Copy(&userReply,&userModel)
+	copier.Copy(&userReply, &userModel)
 	return
 }

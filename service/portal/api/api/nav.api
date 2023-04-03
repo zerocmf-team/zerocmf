@@ -1,0 +1,51 @@
+syntax = "v1"
+
+type (
+    NavGetReq {
+        Key string `form:"key,optional"`
+        Name string `form:"name,optional"`
+    }
+
+    NavShowReq {
+        Id int `path:"id,optional"`
+    }
+
+    NavSaveReq {
+        Id int `path:"id,optional"`
+        Key string `json:"key,optional"`
+        Name string `json:"name"`
+        Remark string `json:"remark,optional"`
+    }
+)
+
+@server(
+    group: nav
+    prefix: api/v1/admin/nav
+)
+
+service portal {
+    @server(
+        handler: Get
+    )
+    get / (NavGetReq) returns (Response)
+
+    @server(
+        handler: Show
+    )
+    get /:id (NavShowReq) returns (Response)
+
+    @server(
+        handler: Store
+    )
+    post / (NavSaveReq) returns (Response)
+
+    @server(
+        handler: Edit
+    )
+    post /:id (NavSaveReq) returns (Response)
+
+    @server(
+        handler: Delete
+    )
+    delete /:id (NavShowReq) returns (Response)
+}

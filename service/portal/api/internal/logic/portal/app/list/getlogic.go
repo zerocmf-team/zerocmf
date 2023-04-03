@@ -45,7 +45,7 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 
 	ids := req.Ids
 
-	idsArr := strings.Split(ids,",")
+	idsArr := strings.Split(ids, ",")
 	for _, v := range idsArr {
 		query = append(query, "cp.category_id = ?")
 		queryArgs = append(queryArgs, v)
@@ -63,7 +63,7 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 		return
 	}
 
-	data, err := new(model.PortalPost).IndexByCategory(db, current, pageSize, strings.Join(queryRes, " AND "), queryArgs, extra)
+	data, err := new(model.PortalPost).ListByCategory(db, current, pageSize, strings.Join(queryRes, " AND "), queryArgs, extra)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

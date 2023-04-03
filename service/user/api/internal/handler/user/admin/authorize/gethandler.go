@@ -3,9 +3,9 @@ package authorize
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/user/api/internal/logic/user/admin/authorize"
 	"zerocmf/service/user/api/internal/svc"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func GetHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

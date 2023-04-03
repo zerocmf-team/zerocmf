@@ -32,17 +32,17 @@ func (l *EditLogic) Edit(req *types.MenuReq) (resp *types.Response) {
 	menu := model.AdminMenu{}
 	id := req.Id
 	if id <= 0 {
-		resp.Error("参数不合法",nil)
+		resp.Error("参数不合法", nil)
 		return
 	}
 
-	tx :=db.Where("id = ?",id).First(&menu)
+	tx := db.Where("id = ?", id).First(&menu)
 	if tx.Error != nil {
-		if errors.Is(tx.Error,gorm.ErrRecordNotFound) {
-			resp.Error("该菜单不存在或已被删除！",nil)
+		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+			resp.Error("该菜单不存在或已被删除！", nil)
 			return
 		}
-		resp.Error("系统错误",nil)
+		resp.Error("系统错误", nil)
 		return
 	}
 	resp = MenuSave(l.svcCtx, req)

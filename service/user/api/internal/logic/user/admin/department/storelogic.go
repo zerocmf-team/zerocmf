@@ -37,7 +37,7 @@ func saveDepartment(req *types.DepReq, c *svc.ServiceContext) (resp types.Respon
 
 	if req.Id == 0 {
 		dep.CreateAt = time.Now().Unix()
-	}else {
+	} else {
 		dep.UpdateAt = time.Now().Unix()
 	}
 

@@ -126,7 +126,7 @@ func (l *WsQrcodeLogic) WsQrcode(w http.ResponseWriter, r *http.Request) {
 
 		qrcode := values["qrcode"].(string)
 		mapVal := redis.HGetAll(qrcode).Val()
-		fmt.Println("mapVal",mapVal)
+		fmt.Println("mapVal", mapVal)
 		if len(mapVal) > 0 {
 			resp.Success("获取成功！", mapVal)
 		} else {

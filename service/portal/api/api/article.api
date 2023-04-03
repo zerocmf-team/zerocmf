@@ -5,6 +5,7 @@ type (
     articleGetReq {
         Title string `form:"post_title,optional"`
         PostType string `form:"post_type,optional"`
+        PostStatus *int `form:"post_status,optional"`
         StartTime string `form:"start_time,optional"`
         EndTime string `form:"end_time,optional"`
     }

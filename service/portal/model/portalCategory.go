@@ -40,8 +40,6 @@ type PortalCategory struct {
 
 type portalTree struct {
 	PortalCategory
-	Value    string       `json:"value"`
-	Title    string       `json:"title"`
 	Children []portalTree `json:"children"`
 }
 
@@ -69,8 +67,6 @@ func (model *PortalCategory) recursionByParent(category []PortalCategory, parent
 		if parentId == v.ParentId {
 			item := portalTree{
 				PortalCategory: v,
-				Value:          strconv.Itoa(v.Id),
-				Title:          v.Name,
 			}
 
 			children := model.recursionByParent(category, v.Id)
@@ -219,7 +215,7 @@ func (model *PortalCategory) GetPrevious(db *gorm.DB, id int) (breadcrumbs []Bre
 	breadcrumbs = append(breadcrumbs, Breadcrumb{
 		Id:    model.Id,
 		Name:  model.Name,
-		Alias: model.GetAlias(),
+		Alias: model.Alias,
 	})
 
 	return
@@ -389,12 +385,8 @@ func (model *PortalCategory) recursionChildById(category []PortalCategory, paren
 		// 当前子项
 		if parentId == v.ParentId {
 
-			v.Alias = v.GetAlias()
-
 			item := portalTree{
 				PortalCategory: v,
-				Value:          strconv.Itoa(v.Id),
-				Title:          v.Name,
 			}
 
 			if parentId == 0 || v.ParentId > 0 {

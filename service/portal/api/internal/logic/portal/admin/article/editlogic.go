@@ -25,6 +25,6 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 
 func (l *EditLogic) Edit(req *types.ArticleSaveReq) (resp types.Response) {
 	c := l.svcCtx
-	resp = save(c,req)
+	resp = save(c, req)
 	return
 }

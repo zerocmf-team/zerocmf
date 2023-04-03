@@ -1,0 +1,40 @@
+syntax = "v1"
+
+type appListReq {
+
+}
+
+type appShowReq {
+    id int `json:"id"`
+}
+
+type appSaveReq {
+    Id int `path:"id,optional"`
+    Name string `json:"name"`
+    Description string `json:"description,optional"`
+    Version string `json:"version"`
+}
+
+@server(
+    group: portal/admin/app
+    middleware: AuthMiddleware
+    prefix: api/v1/admin/app
+)
+
+service portal {
+    @handler Get
+    get / (appListReq) returns (Response)
+
+    @handler Show
+    get /:id (appShowReq) returns (Response)
+
+    @handler Store
+    post / (appSaveReq) returns (Response)
+
+    @handler Edit
+    post /:id (appSaveReq) returns (Response)
+
+
+    @handler Delete
+    delete /:id (appShowReq) returns (Response)
+}

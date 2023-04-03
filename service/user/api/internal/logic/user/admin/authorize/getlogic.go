@@ -49,7 +49,7 @@ func (l *GetLogic) Get() (resp types.Response) {
 
 	copier.Copy(&menus, &menuData)
 
-	results := recursionMenu(menus, 0,"")
+	results := recursionMenu(menus, 0, "")
 	resp.Success("获取成功！", results)
 	return
 }

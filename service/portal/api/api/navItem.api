@@ -2,7 +2,7 @@ syntax = "v1"
 
 type (
     NavItemGetReq {
-        Key string `form:"key,optional"`
+        NavId int `path:"navId,optional"`
     }
 
     NavItemSaveReq {
@@ -33,7 +33,7 @@ service portal {
     @server(
         handler: Get
     )
-    get / (NavItemGetReq) returns (Response)
+    get /:navId (NavItemGetReq) returns (Response)
 
     @server(
         handler: Store

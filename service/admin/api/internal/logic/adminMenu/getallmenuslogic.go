@@ -35,7 +35,7 @@ func (l *GetAllMenusLogic) GetAllMenus() (resp *types.Response) {
 		return
 	}
 
-	results := recursionMenu(menus, 0,"","")
+	results := recursionMenu(menus, 0, "", "")
 	if len(results) == 0 {
 		results = make([]routers, 0)
 	}

@@ -2,17 +2,15 @@ package category
 
 import (
 	"context"
-	comModel "zerocmf/common/bootstrap/model"
-	"zerocmf/service/portal/model"
 	"github.com/jinzhu/copier"
+	"github.com/zeromicro/go-zero/core/logx"
 	"strconv"
 	"strings"
 	"unicode/utf8"
-
+	comModel "zerocmf/common/bootstrap/model"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
-
-	"github.com/zeromicro/go-zero/core/logx"
+	"zerocmf/service/portal/model"
 )
 
 type StoreLogic struct {
@@ -30,7 +28,6 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 }
 
 func (l *StoreLogic) Store(req *types.CateSaveReq) (resp types.Response) {
-	// todo: add your logic here and delete this line
 	c := l.svcCtx
 	resp = Save(c, req)
 	return
@@ -39,35 +36,32 @@ func (l *StoreLogic) Store(req *types.CateSaveReq) (resp types.Response) {
 func Save(c *svc.ServiceContext, req *types.CateSaveReq) (resp types.Response) {
 
 	db := c.Db
-	name := req.Name
-	parentId := req.ParentId
 	editId := req.Id
-	portalCategory := model.PortalCategory{
-		ParentId: parentId,
-		Name:     name,
-	}
+	portalCategory := model.PortalCategory{}
 
 	msg := "新增成功！"
 	if editId == 0 {
 		portalCategory.Id = editId
-	}else {
+	} else {
 		msg = "更新成功！"
-		pCate := model.PortalCategory{}
-		tx := db.Where("id = ?",editId).First(&pCate)
+
+		tx := db.Where("id = ?", editId).First(&portalCategory)
 
 		if tx.Error != nil {
-			resp.Error(tx.Error.Error(),nil)
+			resp.Error(tx.Error.Error(), nil)
 			return
 		}
 
-		// 新的父级不能小于原父级
-		if pCate.ParentId < parentId {
-			resp.Error("非法父级",nil)
+		// 新的父级不能等于自己
+		parentId := req.ParentId
+		if portalCategory.Id == parentId {
+			resp.Error("非法父级", nil)
 			return
 		}
-
 	}
-	copier.Copy(&portalCategory, &req)
+	copier.Copy(&portalCategory, req)
+	portalCategory.Status = req.Status
+
 	data, err := portalCategory.Save(db)
 	if err != nil {
 		resp.Error(err.Error(), nil)
@@ -83,6 +77,7 @@ func Save(c *svc.ServiceContext, req *types.CateSaveReq) (resp types.Response) {
 		}
 		fullUrl := "list/" + strconv.Itoa(portalCategory.Id)
 		url := alias
+		// 插入别名
 		route := comModel.Route{
 			Type:    1,
 			FullUrl: fullUrl,

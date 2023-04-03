@@ -3,10 +3,10 @@ package themeFile
 import (
 	"context"
 	"errors"
+	"gorm.io/gorm"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
-	"gorm.io/gorm"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -43,7 +43,7 @@ func (l *ListLogic) List(req *types.ThemeFileListReq) (resp types.Response) {
 	data, err := new(model.ThemeFile).List(db, query, queryArgs)
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		resp.Error( err.Error(), nil)
+		resp.Error(err.Error(), nil)
 		return
 	}
 

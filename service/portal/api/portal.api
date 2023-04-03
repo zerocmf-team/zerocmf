@@ -19,6 +19,9 @@ import (
 	"api/themeFile.api"
 	"api/tag.api"
 	"api/route.api"
+	"api/nav.api"
 	"api/navItem.api"
 	"api/comment.api"
+	"api/app.api"
+	"api/appPage.api"
 )

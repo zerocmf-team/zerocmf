@@ -31,7 +31,7 @@ func (l *DeletesLogic) Deletes() (resp types.Response) {
 	r.ParseForm()
 	ids := r.Form["ids[]"]
 	portalCategory := new(model.PortalCategory)
-	err := portalCategory.BatchDelete(db,ids)
+	err := portalCategory.BatchDelete(db, ids)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

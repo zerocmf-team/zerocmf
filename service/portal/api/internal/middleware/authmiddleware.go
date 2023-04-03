@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"zerocmf/common/bootstrap/data"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 	"strings"
+	"zerocmf/common/bootstrap/data"
 )
 
 type AuthMiddleware struct {

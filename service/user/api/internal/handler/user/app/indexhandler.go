@@ -3,9 +3,9 @@ package app
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/user/api/internal/logic/user/app"
 	"zerocmf/service/user/api/internal/svc"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func IndexHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

@@ -1,0 +1,59 @@
+syntax = "v1"
+
+type appPageListReq {
+    Type string `form:"type,optional"`
+    Paginate string `form:"paginate,optional"`
+}
+
+type appPageShowReq {
+    Id int `path:"id"`
+}
+
+type appPageSaveReq {
+    Id int `path:"id,optional"`
+    AppId int `json:"appId"`
+    IsPublic int `json:"isPublic,optional"`
+    Name string `json:"name"`
+    Alias string `json:"alias,optional"`
+    Description string `json:"description,optional"`
+    Schema string `json:"schema,optional"`
+    SeoTitle string `json:"seoTitle,optional"`
+    SeoKeywords string `json:"seoKeywords,optional"`
+    SeoDescription string `json:"seoDescription,optional"`
+    Type string `json:"type"`
+    ListOrder float64 `json:"listOrder,optional"`
+    Status int `json:"status"`
+}
+
+@server(
+    group: portal/admin/app_page
+    middleware: AuthMiddleware
+    prefix: api/v1/admin/app_page
+)
+
+service portal {
+    @handler Get
+    get / (appPageListReq) returns (Response)
+
+    @handler Show
+    get /:id (appPageShowReq) returns (Response)
+
+    @handler Store
+    post / (appPageSaveReq) returns (Response)
+
+    @handler Edit
+    post /:id (appPageSaveReq) returns (Response)
+
+
+    @handler Delete
+    delete /:id (appPageShowReq) returns (Response)
+}
+
+@server(
+    group: portal/app/app_page
+    prefix: api/v1/app/app_page
+)
+service portal {
+    @handler Show
+    get /:id (appPageShowReq) returns (Response)
+}

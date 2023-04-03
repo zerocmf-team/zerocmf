@@ -22,4 +22,8 @@ func Migrate(tenantId string) {
 
 	// 评论数据库迁移
 	new(Comment).AutoMigrate(curDb)
+
+	new(App).AutoMigrate(curDb)
+	new(AppPage).AutoMigrate(curDb)
+
 }

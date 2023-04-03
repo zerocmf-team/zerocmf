@@ -3,10 +3,10 @@ package oauth
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/user/api/internal/logic/user/oauth"
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func RefreshHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

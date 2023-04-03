@@ -3,9 +3,9 @@ package navItem
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/portal/api/internal/logic/navItem"
 	"zerocmf/service/portal/api/internal/svc"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func OptionsUrlsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

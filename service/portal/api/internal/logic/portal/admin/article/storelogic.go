@@ -36,7 +36,7 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 
 func (l *StoreLogic) Store(req *types.ArticleSaveReq) (resp types.Response) {
 	c := l.svcCtx
-	resp = save(c,req)
+	resp = save(c, req)
 	return
 }
 
@@ -92,7 +92,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	if id > 0 {
 		query := "id = ?"
 		queryArgs := []interface{}{id}
-		err := portal.Show(db,query,queryArgs)
+		err := portal.Show(db, query, queryArgs)
 		if err != nil {
 			resp.Error(err.Error(), nil)
 			return
@@ -144,14 +144,14 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	)
 
 	if id == 0 {
-		postData, err = portal.Store(db)
+		err = portal.Store(db)
 	} else {
 		portal.Id = id
-		postData, err = portal.Update(db)
+		err = portal.Update(db)
 	}
 
 	if err != nil {
-		resp.Error(err.Error(), nil)
+		resp.Error("数据库系统错误", err.Error())
 		return
 	}
 
@@ -211,10 +211,11 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	data.Category = pcpData
 
 	var tag []int
+	var portalTag model.PortalTag
 	for _, v := range req.PostKeywords {
 		if strings.TrimSpace(v) != "" {
 			// 查询当前tag是否存在
-			portalTag, err := new(model.PortalTag).Show(db, "name = ?", []interface{}{v})
+			portalTag, err = new(model.PortalTag).Show(db, "name = ?", []interface{}{v})
 			if err != nil {
 				resp.Error(err.Error(), nil)
 				return
@@ -230,7 +231,11 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	tagPost := model.PortalTagPost{
 		PostId: postData.Id,
 	}
-	tagPost.FirstOrSave(db, tag)
+	err = tagPost.FirstOrSave(db, tag)
+	if err != nil {
+		resp.Error("数据库系统错误", err.Error())
+		return
+	}
 	data.PortalPost = postData
 	message := "添加成功！"
 	if id > 0 {

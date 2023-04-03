@@ -3,13 +3,13 @@ package authAccess
 import (
 	"context"
 	"errors"
-	"zerocmf/common/bootstrap/casbin"
-	"zerocmf/common/bootstrap/util"
-	"zerocmf/service/user/model"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 	"strconv"
 	"time"
+	"zerocmf/common/bootstrap/casbin"
+	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/user/model"
 
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
@@ -37,10 +37,10 @@ func (l *StoreLogic) Store(req *types.AccessStore) (resp types.Response) {
 	role, err := save(form, l.svcCtx)
 
 	if err != nil {
-		resp.Error(err.Error(),nil)
+		resp.Error(err.Error(), nil)
 		return
 	}
-	resp.Success("操作成功！",role)
+	resp.Success("操作成功！", role)
 	return
 }
 
@@ -78,7 +78,7 @@ func save(req access, c *svc.ServiceContext) (result model.Role, err error) {
 		}
 		id := strconv.Itoa(role.Id)
 		for _, v := range form.RoleAccess {
-			e.AddPolicy(id, v,"*")
+			e.AddPolicy(id, v, "*")
 		}
 	} else {
 		roleItem := model.Role{}
@@ -155,7 +155,7 @@ func save(req access, c *svc.ServiceContext) (result model.Role, err error) {
 		// 开始删除策略
 		rules := make([][]string, 0)
 		for _, v := range alreadyDel {
-			rules = append(rules, []string{id, v,"*"})
+			rules = append(rules, []string{id, v, "*"})
 		}
 		if len(rules) > 0 {
 			e.RemovePolicies(rules)
@@ -164,7 +164,7 @@ func save(req access, c *svc.ServiceContext) (result model.Role, err error) {
 		// 开始新增策略
 		rules = make([][]string, 0)
 		for _, v := range alreadyAdd {
-			rules = append(rules, []string{id, v,"*"})
+			rules = append(rules, []string{id, v, "*"})
 		}
 		if len(rules) > 0 {
 			e.AddPolicies(rules)

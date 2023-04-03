@@ -2,9 +2,9 @@ package role
 
 import (
 	"context"
+	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/user/model"
-	"strings"
 
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"

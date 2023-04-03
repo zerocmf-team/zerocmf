@@ -3,12 +3,12 @@ package tag
 import (
 	"context"
 	"errors"
+	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
-	"github.com/zeromicro/go-zero/core/logx"
-	"gorm.io/gorm"
 )
 
 type DeleteLogic struct {
@@ -55,7 +55,7 @@ func (l *DeleteLogic) Delete(req *types.OneReq) (resp types.Response) {
 		return
 	}
 
-	resp.Success( "删除成功！", nil)
+	resp.Success("删除成功！", nil)
 	return
 
 }

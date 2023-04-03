@@ -28,7 +28,7 @@ func NewDatabaseLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Database
 func (l *DatabaseLogic) Database(in *user.DatabaseRequest) (*user.DatabaseReply, error) {
 	dbConf := database.Conf()
 	reply := new(user.DatabaseReply)
-	err := copier.Copy(&reply,&dbConf)
+	err := copier.Copy(&reply, &dbConf)
 	if err != nil {
 		return nil, err
 	}

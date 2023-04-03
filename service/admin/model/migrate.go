@@ -11,7 +11,7 @@ import (
 	"zerocmf/common/bootstrap/model"
 )
 
-func Migrate(tenantId string,api bool) {
+func Migrate(tenantId string, api bool) {
 	curDb := database.Conf().ManualDb(tenantId)
 	if api {
 		new(AdminMenu).AutoMigrate(curDb)

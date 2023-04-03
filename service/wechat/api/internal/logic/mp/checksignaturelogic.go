@@ -29,34 +29,34 @@ func NewCheckSignatureLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ch
 func (l *CheckSignatureLogic) CheckSignature(req *types.CheckSignatureReq) (resp types.Response) {
 	signature := req.Signature
 	if signature == "" {
-		resp.Error("signature不能为空",nil)
+		resp.Error("signature不能为空", nil)
 		return
 	}
 	timestamp := req.Timestamp
 	if timestamp == "" {
-		resp.Error("timestamp不能为空",nil)
+		resp.Error("timestamp不能为空", nil)
 		return
 	}
 	nonce := req.Nonce
 	if nonce == "" {
-		resp.Error("nonce不能为空",nil)
+		resp.Error("nonce不能为空", nil)
 		return
 	}
 	token := "gincmf2021"
 	echoStr := req.Echostr
 	if echoStr == "" {
-		resp.Error("echostr不能为空",nil)
+		resp.Error("echostr不能为空", nil)
 		return
 	}
-	tmpArr := []string{token,timestamp,nonce}
+	tmpArr := []string{token, timestamp, nonce}
 	sort.Strings(tmpArr)
-	tmpStr := strings.Join(tmpArr,"")
+	tmpStr := strings.Join(tmpArr, "")
 	tmpSha1 := util.GetSha1(tmpStr)
 
 	if signature == tmpSha1 {
-		resp.Success("校验成功",echoStr)
+		resp.Success("校验成功", echoStr)
 		return
 	}
-	resp.Error("校验失败",nil)
+	resp.Error("校验失败", nil)
 	return
 }

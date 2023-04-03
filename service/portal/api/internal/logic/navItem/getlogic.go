@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/zeromicro/go-zero/core/logx"
 	"zerocmf/common/bootstrap/data"
-	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
@@ -30,29 +29,14 @@ func (l *GetLogic) Get(req *types.NavItemGetReq) (resp types.Response) {
 	c := l.svcCtx
 	db := c.Db
 	r := c.Request
-	key := req.Key
 
-	if key == "" {
-		resp.Error("唯一标识不能为空！", nil)
-		return
-	}
-
-	query := "`key` = ?"
-	queryArgs := []interface{}{key}
+	query := "id = ?"
+	queryArgs := []interface{}{req.NavId}
 	nav := model.Nav{}
 	err := nav.Show(db, query, queryArgs)
 	if err != nil {
-		resp.Error("操作失败", nil)
+		resp.Error("操作失败", err.Error())
 		return
-	}
-
-	if nav.Id == 0 {
-		nav.Key = key
-		tx := db.Where(query, queryArgs...).FirstOrCreate(&nav)
-		if util.IsDbErr(tx) != nil {
-			resp.Error(tx.Error.Error(), nil)
-			return
-		}
 	}
 
 	// 根据navId获取全部导航项
@@ -63,7 +47,7 @@ func (l *GetLogic) Get(req *types.NavItemGetReq) (resp types.Response) {
 	}
 
 	itemQuery := "nav_id = ? AND status = 1"
-	itemQueryArgs := []interface{}{nav.Id}
+	itemQueryArgs := []interface{}{req.NavId}
 
 	navItemsPaginate, err := new(model.NavItem).GetWithChildPaginate(db, current, pageSize, itemQuery, itemQueryArgs)
 	if err != nil {

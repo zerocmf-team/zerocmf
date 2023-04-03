@@ -7,12 +7,11 @@
 package model
 
 import (
-	"zerocmf/common/bootstrap/model"
 	"gorm.io/gorm"
+	"zerocmf/common/bootstrap/model"
 )
 
 type Comment struct {
-
 }
 
 func (c *Comment) AutoMigrate(db *gorm.DB) {

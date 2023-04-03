@@ -8,17 +8,17 @@ package model
 
 import (
 	"errors"
-	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
+	"zerocmf/common/bootstrap/util"
 )
 
 type Route struct {
-	Id           int     `json:"id"`
-	ListOrder    float64 `gorm:"type:float;comment:排序;default:10000" json:"list_order"`
-	Status       int     `gorm:"type:tinyint(3);comment:状态;default:1;;not null" json:"status"`
-	Type         int     `gorm:"type:tinyint(4);comment:URL规则类型;1:用户自定义;2:别名添加';default:1;;not null" json:"type"`
-	FullUrl      string  `gorm:"type:varchar(255);comment:完整url;not null" json:"full_url"`
-	Url          string  `gorm:"type:varchar(255);comment:实际显示的url;not null" json:"url"`
+	Id        int     `json:"id"`
+	ListOrder float64 `gorm:"type:float;comment:排序;default:10000" json:"list_order"`
+	Status    int     `gorm:"type:tinyint(3);comment:状态;default:1;;not null" json:"status"`
+	Type      int     `gorm:"type:tinyint(4);comment:URL规则类型;1:用户自定义;2:别名添加';default:1;;not null" json:"type"`
+	FullUrl   string  `gorm:"type:varchar(255);comment:完整url;not null" json:"full_url"`
+	Url       string  `gorm:"type:varchar(255);comment:实际显示的url;not null" json:"url"`
 }
 
 type RouteResult struct {
@@ -49,9 +49,9 @@ func (model *Route) List(db *gorm.DB, query string, queryArgs []interface{}) ([]
 
 func (model *Route) Set(db *gorm.DB) error {
 	route := Route{
-		Type:         model.Type,
-		FullUrl:      model.FullUrl,
-		Url:          model.Url,
+		Type:    model.Type,
+		FullUrl: model.FullUrl,
+		Url:     model.Url,
 	}
 	tx := db.Where("full_url", route.FullUrl).First(&route)
 	if tx.Error != nil && !errors.Is(tx.Error, gorm.ErrRecordNotFound) {

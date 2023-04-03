@@ -16,13 +16,13 @@ import (
 )
 
 type ServiceContext struct {
-	Config  config.Config
-	Db      *gorm.DB
-	Request *http.Request
+	Config         config.Config
+	Db             *gorm.DB
+	Request        *http.Request
 	ResponseWriter http.ResponseWriter
 	*Init.Data
-	UserRpc user.UserClient
-	AdminRpc admin.Admin
+	UserRpc        user.UserClient
+	AdminRpc       admin.Admin
 	AuthMiddleware rest.Middleware
 }
 
@@ -35,11 +35,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	model.Migrate("")
 
 	return &ServiceContext{
-		Config:  c,
-		Db:      db,
-		Data:    new(Init.Data).Context(),
-		UserRpc: userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
-		AdminRpc:admin.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
+		Config:         c,
+		Db:             db,
+		Data:           new(Init.Data).Context(),
+		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
+		AdminRpc:       admin.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
 		AuthMiddleware: middleware.NewAuthMiddleware().Handle,
 	}
 }

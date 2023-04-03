@@ -2,11 +2,11 @@ package app
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
 	"zerocmf/service/user/model"
-	"github.com/zeromicro/go-zero/core/logx"
-	"gorm.io/gorm"
 )
 
 type CurrentUserLogic struct {
@@ -49,6 +49,6 @@ func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 		return
 	}
 
-	resp.Success( "获取成功！", user)
+	resp.Success("获取成功！", user)
 	return
 }

@@ -27,7 +27,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response,err error) {
+func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response, err error) {
 	c := l.svcCtx
 	r := c.Request
 	db := c.Db
@@ -51,10 +51,19 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response,err error)
 	query = append(query, "p.post_type = ?")
 	queryArgs = append(queryArgs, postType)
 
+	postStatus := req.PostStatus
+	if postStatus != nil {
+		query = append(query, "p.post_status = ?")
+		queryArgs = append(queryArgs, postStatus)
+	}
+
 	startTime := req.StartTime
 	endTime := req.EndTime
 
-	var startTimeStamp time.Time
+	var (
+		startTimeStamp time.Time
+		endTimeStamp   time.Time
+	)
 	if startTime != "" && endTime != "" {
 		startTimeStamp, err = time.ParseInLocation("2006-01-02 15:04:05", startTime, time.Local)
 		if err != nil {
@@ -62,7 +71,7 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response,err error)
 			return
 		}
 
-		endTimeStamp, err := time.ParseInLocation("2006-01-02 15:04:05", endTime, time.Local)
+		endTimeStamp, err = time.ParseInLocation("2006-01-02 15:04:05", endTime, time.Local)
 		if err != nil {
 			resp.Error("结束时间非法！", err.Error())
 		}
@@ -71,8 +80,7 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response,err error)
 		queryArgs = append(queryArgs, startTimeStamp, endTimeStamp, startTimeStamp, endTimeStamp)
 	}
 	queryStr := strings.Join(query, " AND ")
-	
-	
+
 	current, pageSize, err := data.NewPaginate(r).Default()
 	if err != nil {
 		resp.Error(err.Error(), nil)
@@ -80,7 +88,7 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response,err error)
 	}
 
 	post := model.PortalPost{}
-	data, err := post.IndexByCategory(db, current, pageSize, queryStr, queryArgs, nil)
+	data, err := post.ListByCategory(db, current, pageSize, queryStr, queryArgs, nil)
 	if err != nil {
 		resp.Error("获取失败！", nil)
 		return

@@ -2,11 +2,11 @@ package tag
 
 import (
 	"context"
+	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
-	"strings"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -51,10 +51,10 @@ func (l *GetLogic) Get(req *types.TagGetReq) (resp types.Response) {
 	queryStr := strings.Join(query, " AND ")
 	data, err := new(model.PortalTag).Index(db, current, pageSize, queryStr, queryArgs)
 	if err != nil {
-		resp.Error( err.Error(), nil)
+		resp.Error(err.Error(), nil)
 		return
 	}
 
-	resp.Success( "获取成功！", data)
+	resp.Success("获取成功！", data)
 	return
 }

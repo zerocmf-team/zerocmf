@@ -7,9 +7,9 @@
 package model
 
 import (
-	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
 	"time"
+	"zerocmf/common/bootstrap/util"
 )
 
 /**

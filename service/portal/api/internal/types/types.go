@@ -17,7 +17,8 @@ type Response struct {
 }
 
 type CateGetReq struct {
-	Name string `form:"name,optional"`
+	Name   string `form:"name,optional"`
+	Status *int   `form:"status,optional"`
 }
 
 type CateSaveReq struct {
@@ -40,10 +41,11 @@ type CateDelReq struct {
 }
 
 type ArticleGetReq struct {
-	Title     string `form:"post_title,optional"`
-	PostType  string `form:"post_type,optional"`
-	StartTime string `form:"start_time,optional"`
-	EndTime   string `form:"end_time,optional"`
+	Title      string `form:"post_title,optional"`
+	PostType   string `form:"post_type,optional"`
+	PostStatus *int   `form:"post_status,optional"`
+	StartTime  string `form:"start_time,optional"`
+	EndTime    string `form:"end_time,optional"`
 }
 
 type ArticleSearchReq struct {
@@ -132,8 +134,24 @@ type TagGetReq struct {
 	Name string `form:"name,optional"`
 }
 
+type NavGetReq struct {
+	Key  string `form:"key,optional"`
+	Name string `form:"name,optional"`
+}
+
+type NavShowReq struct {
+	Id int `path:"id,optional"`
+}
+
+type NavSaveReq struct {
+	Id     int    `path:"id,optional"`
+	Key    string `json:"key,optional"`
+	Name   string `json:"name"`
+	Remark string `json:"remark,optional"`
+}
+
 type NavItemGetReq struct {
-	Key string `form:"key,optional"`
+	NavId int `path:"navId,optional"`
 }
 
 type NavItemSaveReq struct {
@@ -171,6 +189,45 @@ type PostReplyReq struct {
 	ReplyType int    `json:"reply_type,optional"`
 	Content   string `json:"content,optional"`
 	ToUserId  int    `json:"to_user_id,optional"`
+}
+
+type AppListReq struct {
+}
+
+type AppShowReq struct {
+	Id int `json:"id"`
+}
+
+type AppSaveReq struct {
+	Id          int    `path:"id,optional"`
+	Name        string `json:"name"`
+	Description string `json:"description,optional"`
+	Version     string `json:"version"`
+}
+
+type AppPageListReq struct {
+	Type     string `form:"type,optional"`
+	Paginate string `form:"paginate,optional"`
+}
+
+type AppPageShowReq struct {
+	Id int `path:"id"`
+}
+
+type AppPageSaveReq struct {
+	Id             int     `path:"id,optional"`
+	AppId          int     `json:"appId"`
+	IsPublic       int     `json:"isPublic,optional"`
+	Name           string  `json:"name"`
+	Alias          string  `json:"alias,optional"`
+	Description    string  `json:"description,optional"`
+	Schema         string  `json:"schema,optional"`
+	SeoTitle       string  `json:"seoTitle,optional"`
+	SeoKeywords    string  `json:"seoKeywords,optional"`
+	SeoDescription string  `json:"seoDescription,optional"`
+	Type           string  `json:"type"`
+	ListOrder      float64 `json:"listOrder,optional"`
+	Status         int     `json:"status"`
 }
 
 func (r *Response) Success(msg string, data interface{}) {

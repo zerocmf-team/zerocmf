@@ -8,8 +8,8 @@ package model
 
 import (
 	"encoding/json"
-	"zerocmf/common/bootstrap/util"
 	"gorm.io/gorm"
+	"zerocmf/common/bootstrap/util"
 )
 
 type Option struct {

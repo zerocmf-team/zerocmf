@@ -2,13 +2,13 @@ package account
 
 import (
 	"context"
+	"strconv"
+	"time"
 	"zerocmf/common/bootstrap/casbin"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
 	"zerocmf/service/user/model"
-	"strconv"
-	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -38,7 +38,7 @@ func (l *StoreLogic) Store(req *types.AdminStoreReq) (resp types.Response) {
 		return
 	}
 
-	user := model.User {
+	user := model.User{
 		UserType:     1,
 		CreateAt:     time.Now().Unix(),
 		Mobile:       form.Mobile,
@@ -57,15 +57,15 @@ func (l *StoreLogic) Store(req *types.AdminStoreReq) (resp types.Response) {
 		return
 	}
 
-	currentUser := model.User{}
-	tx := db.Where("user_login = ?", form.UserLogin).First(&currentUser)
+	existUser := model.User{}
+	tx := db.Where("user_login = ?", form.UserLogin).First(&existUser)
 
 	if util.IsDbErr(tx) != nil {
 		resp.Error(tx.Error.Error(), nil)
 		return
 	}
 
-	if currentUser.Id > 0 {
+	if existUser.Id > 0 {
 		resp.Error("该用户已存在！", nil)
 		return
 	}
@@ -75,7 +75,7 @@ func (l *StoreLogic) Store(req *types.AdminStoreReq) (resp types.Response) {
 		resp.Error("创建用户出错，请联系管理员！", tx.Error)
 		return
 	}
-	userId := strconv.Itoa(currentUser.Id)
+	userId := strconv.Itoa(existUser.Id)
 	roleIds := form.RoleIds
 	rules := make([][]string, 0)
 	for _, v := range roleIds {

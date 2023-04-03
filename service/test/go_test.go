@@ -13,15 +13,15 @@ func TestName(t *testing.T) {
 		panic(err.Error())
 	}
 
-	sub := "2" // 想要访问资源的用户
+	sub := "2"                                // 想要访问资源的用户
 	obj := "settings/index:api/settings/test" // 将要被访问的资源
-	act := "get" // 用户对资源实施的操作
+	act := "get"                              // 用户对资源实施的操作
 
 	ok, err := e.Enforce(sub, obj, act)
 
 	if err != nil {
 		// 处理错误
-		fmt.Println("err",err.Error())
+		fmt.Println("err", err.Error())
 	}
 
 	fmt.Println("ok", ok)
@@ -31,6 +31,5 @@ func TestName(t *testing.T) {
 	} else {
 		// 拒绝请求，抛出异常
 	}
-
 
 }

@@ -36,5 +36,3 @@ func (s *context) Get(key string) (value interface{}, exists bool) {
 	s.mu.RUnlock()
 	return
 }
-
-

@@ -3,6 +3,7 @@ package post
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
@@ -33,14 +34,8 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 		return
 	}
 
-	typ := req.Type
-	if !(typ == 1 || typ == 2) {
-		resp.Error("页面类型错误", nil)
-		return
-	}
-
-	var query = "id = ? AND post_type = ? and delete_at = ?"
-	var queryArgs = []interface{}{id, typ, 0}
+	var query = "id = ? and delete_at = ?"
+	var queryArgs = []interface{}{id, 0}
 
 	post := model.PortalPost{}
 
@@ -55,6 +50,12 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 		resp.Error("该文章不存在或已被删除", nil)
 		return
 	}
+
+	// 查询文章的所属分类
+	pQueryArgs := []interface{}{id, 0}
+	pCate := model.PortalCategory{}
+	pCates, err := pCate.FindPostCategory(db, "p.id = ? AND p.delete_at = ?", pQueryArgs)
+	post.Category = pCates
 
 	// 更新访问量 +1
 	postHits := post.PostHits
@@ -74,19 +75,25 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 	}
 
 	result.PortalPost = post
-
-	if typ == 1 {
-
+	postType := post.PostType
+	if postType == 1 {
 		// 查询上一篇
 		query = "id < ? AND post_type = ? and delete_at = ?"
-		queryArgs = []interface{}{id, typ, 0}
+		queryArgs = []interface{}{id, postType, 0}
 
 		prevPost := model.PortalPost{}
 		err = prevPost.Show(db, query, queryArgs)
-		if err != nil {
+		if err != nil && err != gorm.ErrRecordNotFound {
 			resp.Error(err.Error(), nil)
 			return
 		}
+
+		//// 查询文章的所属分类
+		//prevQueryArgs := []interface{}{id, 0}
+		//prevCate := model.PortalCategory{}
+		//var prevCates []model.PortalCategory
+		//prevCates, err = prevCate.FindPostCategory(db, "p.id = ? AND p.delete_at = ?", prevQueryArgs)
+		//prevPost.Category = prevCates
 
 		// 查询下一篇
 		query = "id > ? AND post_type = ? and delete_at = ?"
@@ -94,7 +101,7 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 		nextPost := model.PortalPost{}
 
 		err = nextPost.Show(db, query, queryArgs)
-		if err != nil {
+		if err != nil && err != gorm.ErrRecordNotFound {
 			resp.Error(err.Error(), nil)
 			return
 		}
@@ -107,7 +114,6 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 			result.NextPost = &nextPost
 		}
 	}
-
 	resp.Success("获取成功！", result)
 	return
 }

@@ -93,8 +93,7 @@ func TestValidate(t *testing.T) {
 
 	zhTranslations.RegisterDefaultTranslations(validate, trans)
 
-	 translateOverride(trans)
-
+	translateOverride(trans)
 
 	err := validate.Struct(user)
 

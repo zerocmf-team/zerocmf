@@ -3,10 +3,10 @@ package comment
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/portal/api/internal/logic/portal/app/comment"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func ReplyHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

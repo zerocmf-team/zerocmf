@@ -126,20 +126,20 @@ type PostFavoritesPost struct {
 	model.LikePost
 }
 
-func (model PortalPost) AutoMigrate(db *gorm.DB) {
-	db.AutoMigrate(&model)
-	db.AutoMigrate(&PortalCategoryPost{})
-	db.AutoMigrate(&PostLikePost{})
-	db.AutoMigrate(&PostFavoritesPost{})
-}
-
 func NewPost(userRpc user.UserClient) PortalPost {
 	return PortalPost{
 		userRpc: userRpc,
 	}
 }
 
-func (model PortalPost) PortalList(db *gorm.DB, query string, queryArgs []interface{}) ([]PortalPost, error) {
+func (model *PortalPost) AutoMigrate(db *gorm.DB) {
+	db.AutoMigrate(&model)
+	db.AutoMigrate(&PortalCategoryPost{})
+	db.AutoMigrate(&PostLikePost{})
+	db.AutoMigrate(&PostFavoritesPost{})
+}
+
+func (model *PortalPost) PortalList(db *gorm.DB, query string, queryArgs []interface{}) ([]PortalPost, error) {
 
 	query += " AND delete_at = ?"
 	queryArgs = append(queryArgs, 0)
@@ -167,7 +167,7 @@ func (model PortalPost) PortalList(db *gorm.DB, query string, queryArgs []interf
  * @return
  **/
 
-func (model PortalPost) IndexByCategory(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}, extra map[string]string) (result data.Paginate, err error) {
+func (model *PortalPost) ListByCategory(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}, extra map[string]string) (result data.Paginate, err error) {
 
 	order := "p.list_order desc,p.id desc"
 	if extra["hot"] == "1" {
@@ -200,7 +200,7 @@ func (model PortalPost) IndexByCategory(db *gorm.DB, current, pageSize int, quer
 	for k, v := range portalPostData {
 		portalPostData[k].ThumbPrevPath = util.FileUrl(v.Thumbnail)
 		category := PortalCategory{}
-		categoryItem, _ := category.ListWithPost(db, "p.id = ? AND  p.delete_at = ?", []interface{}{v.Id, 0})
+		categoryItem, _ := category.FindPostCategory(db, "p.id = ? AND  p.delete_at = ?", []interface{}{v.Id, 0})
 		portalPostData[k].Category = categoryItem
 
 		createTime := time.Unix(v.CreateAt, 0).Format("2006-01-02 15:04:05")
@@ -238,7 +238,7 @@ func (model PortalPost) IndexByCategory(db *gorm.DB, current, pageSize int, quer
  * @return
  **/
 
-func (model *PortalCategory) ListWithPost(db *gorm.DB, query string, queryArgs []interface{}) ([]PortalCategory, error) {
+func (model *PortalCategory) FindPostCategory(db *gorm.DB, query string, queryArgs []interface{}) ([]PortalCategory, error) {
 
 	var category []PortalCategory
 
@@ -282,7 +282,7 @@ func (model *PortalCategory) ListWithPost(db *gorm.DB, query string, queryArgs [
 
 func (model *PortalPost) Show(db *gorm.DB, query string, queryArgs []interface{}) (err error) {
 
-	tx := db.Debug().Where(query, queryArgs...).
+	tx := db.Where(query, queryArgs...).
 		Order("id desc").
 		First(&model)
 
@@ -312,20 +312,19 @@ func (model *PortalPost) Show(db *gorm.DB, query string, queryArgs []interface{}
 
 }
 
-func (model PortalPost) Store(db *gorm.DB) (PortalPost, error) {
-	portal := PortalPost{}
-	result := db.Create(&model)
-	if result.Error != nil {
-		return portal, nil
+func (model *PortalPost) Store(db *gorm.DB) (err error) {
+	tx := db.Create(&model)
+	if tx.Error != nil {
+		return nil
 	}
-	return model, nil
+	return nil
 }
 
-func (model PortalPost) Update(db *gorm.DB) (post PortalPost, err error) {
+func (model *PortalPost) Update(db *gorm.DB) (err error) {
 	tx := db.Save(&model)
 	if tx.Error != nil {
 		err = tx.Error
 		return
 	}
-	return model, nil
+	return nil
 }

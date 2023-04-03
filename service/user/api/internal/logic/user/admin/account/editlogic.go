@@ -2,11 +2,11 @@ package account
 
 import (
 	"context"
+	"strconv"
+	"time"
 	"zerocmf/common/bootstrap/casbin"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/model"
-	"strconv"
-	"time"
 
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
@@ -36,9 +36,7 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 	c := l.svcCtx
 	db := c.Db
 
-	form := req
-
-	if len(form.RoleIds) <= 0 {
+	if len(req.RoleIds) <= 0 {
 		resp.Error("至少选择一项角色！", nil)
 		return
 	}
@@ -46,11 +44,10 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 	user := model.User{
 		UserType:     1,
 		CreateAt:     time.Now().Unix(),
-		Mobile:       form.Mobile,
-		UserRealName: form.UserRealname,
-		UserLogin:    form.UserLogin,
-		UserPass:     util.GetMd5(form.UserPass),
-		UserEmail:    form.UserEmail,
+		Mobile:       req.Mobile,
+		UserRealName: req.UserRealname,
+		UserLogin:    req.UserLogin,
+		UserEmail:    req.UserEmail,
 		UserStatus:   1,
 	}
 
@@ -66,21 +63,24 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 	editUser := model.User{}
 	tx := db.Where("id = ?", editId).First(&editUser)
 
-	if editUser.Id > 0 && editUser.UserLogin != form.UserLogin {
-		currentUser := model.User{}
-		tx = db.Where("user_login = ?", form.UserLogin).First(&currentUser)
+	// 查询用户名是否唯一
+	if editUser.Id > 0 && editUser.UserLogin != req.UserLogin {
+		existUser := model.User{}
+		tx = db.Where("user_login = ?", req.UserLogin).First(&existUser)
 		if util.IsDbErr(tx) != nil {
 			resp.Error(tx.Error.Error(), nil)
 			return
 		}
-		if currentUser.Id > 0 {
+		if existUser.Id > 0 {
 			resp.Error("该登录名已存在！", nil)
 			return
 		}
 	}
 
-	if form.UserPass == "" {
-		user.UserPass = util.GetMd5(form.UserPass)
+	if req.UserPass == "" {
+		user.UserPass = editUser.UserPass
+	} else {
+		user.UserPass = util.GetMd5(req.UserPass)
 	}
 	user.Id = userId
 	tx = db.Save(&user)
@@ -99,17 +99,17 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 	alreadyDel := make([]string, 0)
 	// 判断是否需要被删除
 	for _, v := range roles {
-		if util.ToLowerInArray(v, form.RoleIds) == false {
+		if util.ToLowerInArray(v, req.RoleIds) == false {
 			alreadyDel = append(alreadyDel, v)
 		}
 	}
 	// 如果新增为空，则全部删除
-	if len(form.RoleIds) == 0 {
+	if len(req.RoleIds) == 0 {
 		alreadyDel = roles
 	}
 
 	alreadyAdd := make([]string, 0)
-	for _, v := range form.RoleIds {
+	for _, v := range req.RoleIds {
 		if util.ToLowerInArray(v, roles) == false {
 			alreadyAdd = append(alreadyAdd, v)
 		}
@@ -117,7 +117,7 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 
 	// 如果数据库不存在，则为新增
 	if len(roles) == 0 {
-		alreadyAdd = form.RoleIds
+		alreadyAdd = req.RoleIds
 	}
 
 	// 开始删除策略

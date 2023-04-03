@@ -37,9 +37,9 @@ func (l *SearchLogic) Search(req *types.ArticleSearchReq) (resp types.Response) 
 		return
 	}
 
-	query := []string{"p.post_type = ?","p.delete_at = ?","(p.post_title like ? or p.post_keywords like ? or p.post_excerpt like ? or p.post_content like ?)"}
+	query := []string{"p.post_type = ?", "p.delete_at = ?", "(p.post_title like ? or p.post_keywords like ? or p.post_excerpt like ? or p.post_content like ?)"}
 	// queryArgs := []interface{}{1,0,"%"+keywords+"%","%"+keywords+"%","%"+keywords+"%","%"+keywords+"%"}
-	queryArgs := []interface{}{1,0,keywords,keywords,keywords,keywords}
+	queryArgs := []interface{}{1, 0, keywords, keywords, keywords, keywords}
 	queryStr := strings.Join(query, " AND ")
 
 	current, pageSize, err := data.NewPaginate(r).Default()
@@ -49,7 +49,7 @@ func (l *SearchLogic) Search(req *types.ArticleSearchReq) (resp types.Response) 
 	}
 
 	post := model.PortalPost{}
-	res, err := post.IndexByCategory(db, current, pageSize, queryStr, queryArgs, nil)
+	res, err := post.ListByCategory(db, current, pageSize, queryStr, queryArgs, nil)
 	if err != nil {
 		resp.Error("获取失败！", nil)
 		return

@@ -2,9 +2,9 @@ package oauth
 
 import (
 	"context"
-	"zerocmf/service/user/common"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
+	"zerocmf/service/user/common"
 
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
@@ -40,7 +40,7 @@ func (l *RefreshLogic) Refresh(req *types.RefreshReq) (resp types.Response) {
 	conf := c.Config
 	inConf := common.Config{}
 	copier.Copy(&inConf, &conf)
-	oauthConfig := common.NewConf(inConf,"")
+	oauthConfig := common.NewConf(inConf, "")
 	tkr := oauthConfig.TokenSource(context.Background(), token)
 	tk, err := tkr.Token()
 

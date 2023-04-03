@@ -50,6 +50,21 @@
         ]
       },
       {
+        "name": "nav",
+        "path": "/settings/nav",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "object": "settings/nav/list",
+            "name": "list",
+            "path": "/settings/nav/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
         "name": "menu",
         "path": "/settings/menu",
         "icon": "",
@@ -300,6 +315,27 @@
             "hide_in_menu": 1
           }
         ]
+      }
+    ]
+  },
+  {
+    "name": "app",
+    "path": "/app",
+    "icon": "",
+    "hide_in_menu": 0,
+    "list_order": 10000,
+    "children": [
+      {
+        "name": "list",
+        "path": "/app/list",
+        "icon": "",
+        "hide_in_menu": 1
+      },
+      {
+        "name": "page",
+        "path": "/app/page/:appId",
+        "icon": "",
+        "hide_in_menu": 1
       }
     ]
   }

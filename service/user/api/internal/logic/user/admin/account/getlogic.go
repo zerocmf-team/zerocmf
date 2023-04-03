@@ -37,8 +37,8 @@ func (l *GetLogic) Get(req *types.ListReq) (resp types.Response) {
 
 	userType := req.UserType
 	if userType != "" {
-		query = append(query,"user_type = ?")
-		queryArgs = append(queryArgs,userType)
+		query = append(query, "user_type = ?")
+		queryArgs = append(queryArgs, userType)
 	}
 
 	userLogin := req.UserLogin

@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/zeromicro/go-zero/rest/router"
-	"net/http"
+	http "net/http"
 	"strings"
 	"zerocmf/common/bootstrap/Init"
 	"zerocmf/service/admin/api/internal/config"
@@ -26,13 +26,13 @@ func main() {
 	r.SetNotFoundHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// 资源映射
 		if strings.HasPrefix(r.URL.Path, "/public") {
-			handler := http.StripPrefix("/public",http.FileServer(http.Dir("public")))
-			handler.ServeHTTP(w, r)
+			httpHandler := http.StripPrefix("/public", http.FileServer(http.Dir("public")))
+			httpHandler.ServeHTTP(w, r)
 		} else {
 			http.NotFound(w, r)
 		}
 	}))
-	server := rest.MustNewServer(c.RestConf,rest.WithRouter(r))
+	server := rest.MustNewServer(c.RestConf, rest.WithRouter(r))
 	defer server.Stop()
 
 	// 初始化

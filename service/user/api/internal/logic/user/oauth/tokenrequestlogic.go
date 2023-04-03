@@ -40,7 +40,7 @@ func (l *TokenRequestLogic) TokenRequest() (resp types.Response) {
 
 	err := srv.HandleTokenRequest(w, r)
 	if err != nil {
-		resp.Error(" token error ",err.Error())
+		resp.Error(" token error ", err.Error())
 	}
 	return
 }

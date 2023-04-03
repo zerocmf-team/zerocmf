@@ -2,9 +2,9 @@ package oauth
 
 import (
 	"context"
+	"github.com/zeromicro/go-zero/core/logx"
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type AuthorizeLogic struct {

@@ -56,7 +56,7 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 	user := model.User{}
 	tx := db.Where("user_login = ?", username).First(&user)
 	if tx.Error != nil {
-		if tx.Error != gorm.ErrRecordNotFound {
+		if tx.Error == gorm.ErrRecordNotFound {
 			resp.Error("查询用户失败", nil)
 			return
 		}

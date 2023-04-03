@@ -41,7 +41,7 @@ func (l *ReplyLogic) Reply(req *types.PostReplyReq) (resp types.Response) {
 
 	var (
 		userData *user.UserReply
-		err error
+		err      error
 	)
 
 	tenant, exist := db.Get("tenantId")

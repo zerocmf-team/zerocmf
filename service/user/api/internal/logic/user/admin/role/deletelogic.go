@@ -2,10 +2,10 @@ package role
 
 import (
 	"context"
+	"strconv"
 	"zerocmf/common/bootstrap/casbin"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/model"
-	"strconv"
 
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"
@@ -70,6 +70,6 @@ func (l *DeleteLogic) Delete(req *types.RoleDelete) (resp types.Response) {
 
 	}
 
-	resp.Success( "删除成功！", nil)
+	resp.Success("删除成功！", nil)
 	return
 }

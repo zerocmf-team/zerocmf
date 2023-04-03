@@ -4,6 +4,7 @@ syntax = "v1"
 type (
     cateGetReq {
         Name string `form:"name,optional"`
+        Status *int `form:"status,optional"`
     }
 
     cateSaveReq {

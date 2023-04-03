@@ -2,10 +2,10 @@ package authAccess
 
 import (
 	"context"
-	"zerocmf/common/bootstrap/casbin"
-	"zerocmf/service/user/model"
 	"gorm.io/gorm"
 	"strconv"
+	"zerocmf/common/bootstrap/casbin"
+	"zerocmf/service/user/model"
 
 	"zerocmf/service/user/api/internal/svc"
 	"zerocmf/service/user/api/internal/types"

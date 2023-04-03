@@ -30,9 +30,9 @@ func (l *EditLogic) Edit(req *types.AccessEdit) (resp types.Response) {
 	role, err := save(form, l.svcCtx)
 
 	if err != nil {
-		resp.Error(err.Error(),nil)
+		resp.Error(err.Error(), nil)
 		return
 	}
-	resp.Success("操作成功！",role)
+	resp.Success("操作成功！", role)
 	return
 }

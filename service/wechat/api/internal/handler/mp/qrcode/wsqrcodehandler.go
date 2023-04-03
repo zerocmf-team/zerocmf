@@ -9,6 +9,6 @@ import (
 func WsQrcodeHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		l := qrcode.NewWsQrcodeLogic(r.Context(), svcCtx)
-		l.WsQrcode(w,r)
+		l.WsQrcode(w, r)
 	}
 }

@@ -4,12 +4,16 @@ package handler
 import (
 	"net/http"
 
+	nav "zerocmf/service/portal/api/internal/handler/nav"
 	navItem "zerocmf/service/portal/api/internal/handler/navItem"
+	portaladminapp "zerocmf/service/portal/api/internal/handler/portal/admin/app"
+	portaladminapp_page "zerocmf/service/portal/api/internal/handler/portal/admin/app_page"
 	portaladminarticle "zerocmf/service/portal/api/internal/handler/portal/admin/article"
 	portaladmincategory "zerocmf/service/portal/api/internal/handler/portal/admin/category"
 	portaladmintag "zerocmf/service/portal/api/internal/handler/portal/admin/tag"
 	portaladmintheme "zerocmf/service/portal/api/internal/handler/portal/admin/theme"
 	portaladminthemeFile "zerocmf/service/portal/api/internal/handler/portal/admin/themeFile"
+	portalappapp_page "zerocmf/service/portal/api/internal/handler/portal/app/app_page"
 	portalappbreadcrumb "zerocmf/service/portal/api/internal/handler/portal/app/breadcrumb"
 	portalappcategory "zerocmf/service/portal/api/internal/handler/portal/app/category"
 	portalappcomment "zerocmf/service/portal/api/internal/handler/portal/app/comment"
@@ -281,6 +285,37 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/",
+				Handler: nav.GetHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: nav.ShowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/",
+				Handler: nav.StoreHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/:id",
+				Handler: nav.EditHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: nav.DeleteHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/admin/nav"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/:navId",
 				Handler: navItem.GetHandler(serverCtx),
 			},
 			{
@@ -350,5 +385,84 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/api/v1/app/comment"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: portaladminapp.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: portaladminapp.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: portaladminapp.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: portaladminapp.EditHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: portaladminapp.DeleteHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/app"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: portaladminapp_page.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: portaladminapp_page.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: portaladminapp_page.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: portaladminapp_page.EditHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: portaladminapp_page.DeleteHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/app_page"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: portalappapp_page.ShowHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/app_page"),
 	)
 }

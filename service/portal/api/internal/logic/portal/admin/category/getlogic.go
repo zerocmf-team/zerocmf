@@ -41,6 +41,12 @@ func (l *GetLogic) Get(req *types.CateGetReq) (resp types.Response) {
 		queryArgs = append(queryArgs, "%"+name+"%")
 	}
 
+	status := req.Status
+	if status != nil {
+		query = append(query, "status = ?")
+		queryArgs = append(queryArgs, status)
+	}
+
 	queryStr := strings.Join(query, " AND ")
 
 	current, pageSize, err := data.NewPaginate(r).Default()

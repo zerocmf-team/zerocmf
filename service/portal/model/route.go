@@ -7,8 +7,8 @@
 package model
 
 import (
-	bspModel "zerocmf/common/bootstrap/model"
 	"gorm.io/gorm"
+	bspModel "zerocmf/common/bootstrap/model"
 )
 
 type Route struct {

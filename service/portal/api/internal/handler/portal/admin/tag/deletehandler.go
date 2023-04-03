@@ -3,10 +3,10 @@ package tag
 import (
 	"net/http"
 
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/portal/api/internal/logic/portal/admin/tag"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {

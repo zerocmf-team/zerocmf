@@ -2,8 +2,8 @@ package navItem
 
 import (
 	"context"
-	"zerocmf/service/portal/model"
 	"strconv"
+	"zerocmf/service/portal/model"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -65,7 +65,8 @@ func (l *OptionsUrlsLogic) OptionsUrls() (resp types.Response) {
 	query := "post_type = ?"
 	queryArgs := []interface{}{"2"}
 
-	pages, err := model.PortalPost{}.PortalList(db, query, queryArgs)
+	post := new(model.PortalPost)
+	pages, err := post.PortalList(db, query, queryArgs)
 
 	pageOptions := make([]Options, 0)
 

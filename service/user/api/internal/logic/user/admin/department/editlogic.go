@@ -33,18 +33,18 @@ func (l *EditLogic) Edit(req *types.DepReq) (resp types.Response) {
 
 	id := req.Id
 	if id <= 0 {
-		resp.Error("参数不合法",nil)
+		resp.Error("参数不合法", nil)
 		return
 	}
 
 	department := model.Department{}
-	tx :=db.Where("id = ?",id).First(&department)
+	tx := db.Where("id = ?", id).First(&department)
 	if tx.Error != nil {
-		if errors.Is(tx.Error,gorm.ErrRecordNotFound) {
-			resp.Error("该部门不存在！",nil)
+		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+			resp.Error("该部门不存在！", nil)
 			return
 		}
-		resp.Error("系统错误",nil)
+		resp.Error("系统错误", nil)
 		return
 	}
 

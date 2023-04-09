@@ -155,6 +155,8 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 		return
 	}
 
+	postData = portal
+
 	if req.Alias != "" {
 		fullUrl := "page/" + strconv.Itoa(postData.Id)
 		url := req.Alias

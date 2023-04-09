@@ -71,6 +71,7 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 	result.Category = category
 
 	result.Extends = post.MoreJson.Extends
+	result.ExtendsObj = post.MoreJson.ExtendsObj
 
 	result.Photos = post.MoreJson.Photos
 	result.Files = post.MoreJson.Files

@@ -6,21 +6,20 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/data"
 	cmfValidator "zerocmf/common/bootstrap/validator"
-	"zerocmf/service/portal/api/internal/logic/nav"
+	"zerocmf/service/portal/api/internal/logic/portal/app/nav"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 )
 
-func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.NavShowReq
+		var req types.NavItemGetReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
 		}
 
-		zhValidator := new(cmfValidator.Zh).Validator()
-		ZhTrans := new(cmfValidator.Zh).Trans()
+		ZhTrans, zhValidator := new(cmfValidator.Zh).Validator()
 		rest := new(data.Rest)
 		err := zhValidator.Struct(req)
 		if err != nil {
@@ -35,8 +34,8 @@ func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := nav.NewDeleteLogic(r.Context(), svcCtx)
-		resp := l.Delete(&req)
+		l := nav.NewListLogic(r.Context(), svcCtx)
+		resp := l.List(&req)
 		httpx.OkJson(w, resp)
 	}
 }

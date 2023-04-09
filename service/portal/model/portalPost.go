@@ -62,15 +62,16 @@ type PortalPost struct {
 }
 
 type More struct {
-	Photos        []Path    `json:"photos"`
-	Files         []Path    `json:"files"`
-	Extends       []Extends `json:"extends"`
-	Audio         string    `json:"audio"`
-	AudioPrevPath string    `json:"audio_prev_path"`
-	Video         string    `json:"video"`
-	VideoPrevPath string    `json:"video_prev_path"`
-	Template      string    `json:"template"`
-	Alias         string    `json:"alias"`
+	Photos        []Path            `json:"photos"`
+	Files         []Path            `json:"files"`
+	Extends       []Extends         `json:"extends"`
+	ExtendsObj    map[string]string `json:"extends_obj"`
+	Audio         string            `json:"audio"`
+	AudioPrevPath string            `json:"audio_prev_path"`
+	Video         string            `json:"video"`
+	VideoPrevPath string            `json:"video_prev_path"`
+	Template      string            `json:"template"`
+	Alias         string            `json:"alias"`
 }
 
 type Extends struct {
@@ -214,7 +215,17 @@ func (model *PortalPost) ListByCategory(db *gorm.DB, current, pageSize int, quer
 
 		m := More{}
 		json.Unmarshal([]byte(v.More), &m)
+
+		extendsObj := map[string]string{}
+		extends := m.Extends
+		for _, extend := range extends {
+			extendsObj[extend.Key] = extend.Value
+		}
+
+		m.ExtendsObj = extendsObj
+
 		portalPostData[k].MoreJson = m
+
 		//data, _ := new(PortalTag).ListByPostId(v.Id)
 		//
 		//portalPostArr[k].Tags = data
@@ -293,6 +304,15 @@ func (model *PortalPost) Show(db *gorm.DB, query string, queryArgs []interface{}
 
 	m := More{}
 	json.Unmarshal([]byte(model.More), &m)
+
+	extendsObj := map[string]string{}
+	extends := m.Extends
+	for _, extend := range extends {
+		extendsObj[extend.Key] = extend.Value
+	}
+
+	m.ExtendsObj = extendsObj
+
 	model.MoreJson = m
 	model.Template = m.Template
 

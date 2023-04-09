@@ -1,4 +1,4 @@
-package app_page
+package nav
 
 import (
 	"github.com/go-playground/validator/v10"
@@ -6,14 +6,14 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/data"
 	cmfValidator "zerocmf/common/bootstrap/validator"
-	"zerocmf/service/portal/api/internal/logic/portal/admin/app_page"
+	"zerocmf/service/portal/api/internal/logic/portal/admin/nav"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 )
 
 func StoreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.AppPageSaveReq
+		var req types.NavSaveReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
@@ -34,7 +34,7 @@ func StoreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := app_page.NewStoreLogic(r.Context(), svcCtx)
+		l := nav.NewStoreLogic(r.Context(), svcCtx)
 		resp := l.Store(&req)
 		httpx.OkJson(w, resp)
 	}

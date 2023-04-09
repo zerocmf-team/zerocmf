@@ -12,7 +12,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/util"
 )
 
@@ -85,25 +84,19 @@ func (model *PortalCategory) recursionByParent(category []PortalCategory, parent
  * @return
  **/
 
-func (model *PortalCategory) Index(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (paginate data.Paginate, err error) {
+func (model *PortalCategory) Index(db *gorm.DB, query string, queryArgs []interface{}) (data []portalTree, err error) {
 	// 获取默认的系统分页
 	// 合并参数合计
-	var total int64 = 0
 	var category []PortalCategory
-	db.Where(query, queryArgs...).Find(&category).Count(&total)
-	tx := db.Where(query, queryArgs...).Limit(pageSize).Offset((current - 1) * pageSize).Find(&category)
+	tx := db.Where(query, queryArgs...).Find(&category)
 	if tx.Error != nil {
 		if !errors.Is(tx.Error, gorm.ErrRecordNotFound) {
-			return data.Paginate{}, tx.Error
+			return
 		}
 	}
 	// 生成树形结构
-	res := model.recursionByParent(category, 0)
-	paginate = data.Paginate{Data: res, Current: current, PageSize: pageSize, Total: total}
-	if len(category) == 0 {
-		paginate.Data = make([]string, 0)
-	}
-	return paginate, nil
+	data = model.recursionChildById(category, 0)
+	return data, nil
 }
 
 /**

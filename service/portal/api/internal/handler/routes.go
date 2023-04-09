@@ -4,12 +4,12 @@ package handler
 import (
 	"net/http"
 
-	nav "zerocmf/service/portal/api/internal/handler/nav"
-	navItem "zerocmf/service/portal/api/internal/handler/navItem"
 	portaladminapp "zerocmf/service/portal/api/internal/handler/portal/admin/app"
 	portaladminapp_page "zerocmf/service/portal/api/internal/handler/portal/admin/app_page"
 	portaladminarticle "zerocmf/service/portal/api/internal/handler/portal/admin/article"
 	portaladmincategory "zerocmf/service/portal/api/internal/handler/portal/admin/category"
+	portaladminnav "zerocmf/service/portal/api/internal/handler/portal/admin/nav"
+	portaladminnavItem "zerocmf/service/portal/api/internal/handler/portal/admin/navItem"
 	portaladmintag "zerocmf/service/portal/api/internal/handler/portal/admin/tag"
 	portaladmintheme "zerocmf/service/portal/api/internal/handler/portal/admin/theme"
 	portaladminthemeFile "zerocmf/service/portal/api/internal/handler/portal/admin/themeFile"
@@ -18,6 +18,7 @@ import (
 	portalappcategory "zerocmf/service/portal/api/internal/handler/portal/app/category"
 	portalappcomment "zerocmf/service/portal/api/internal/handler/portal/app/comment"
 	portalapplist "zerocmf/service/portal/api/internal/handler/portal/app/list"
+	portalappnav "zerocmf/service/portal/api/internal/handler/portal/app/nav"
 	portalapppost "zerocmf/service/portal/api/internal/handler/portal/app/post"
 	portalappthemeFile "zerocmf/service/portal/api/internal/handler/portal/app/themeFile"
 	route "zerocmf/service/portal/api/internal/handler/route"
@@ -285,27 +286,27 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/",
-				Handler: nav.GetHandler(serverCtx),
+				Handler: portaladminnav.GetHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/:id",
-				Handler: nav.ShowHandler(serverCtx),
+				Handler: portaladminnav.ShowHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/",
-				Handler: nav.StoreHandler(serverCtx),
+				Handler: portaladminnav.StoreHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/:id",
-				Handler: nav.EditHandler(serverCtx),
+				Handler: portaladminnav.EditHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodDelete,
 				Path:    "/:id",
-				Handler: nav.DeleteHandler(serverCtx),
+				Handler: portaladminnav.DeleteHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1/admin/nav"),
@@ -316,35 +317,46 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/:navId",
-				Handler: navItem.GetHandler(serverCtx),
+				Handler: portaladminnavItem.GetHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/",
-				Handler: navItem.StoreHandler(serverCtx),
+				Handler: portaladminnavItem.StoreHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/:id",
-				Handler: navItem.EditHandler(serverCtx),
+				Handler: portaladminnavItem.EditHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodDelete,
 				Path:    "/:id",
-				Handler: navItem.DelHandler(serverCtx),
+				Handler: portaladminnavItem.DelHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/urls",
-				Handler: navItem.OptionsUrlsHandler(serverCtx),
+				Handler: portaladminnavItem.OptionsUrlsHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/options",
-				Handler: navItem.OptionsListHandler(serverCtx),
+				Handler: portaladminnavItem.OptionsListHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1/admin/nav_items"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/:navId",
+				Handler: portalappnav.ListHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/nav"),
 	)
 
 	server.AddRoutes(
@@ -427,7 +439,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
-					Path:    "/",
+					Path:    "/all/:appId",
 					Handler: portaladminapp_page.GetHandler(serverCtx),
 				},
 				{
@@ -457,6 +469,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/all/:appId",
+				Handler: portalappapp_page.GetHandler(serverCtx),
+			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/:id",

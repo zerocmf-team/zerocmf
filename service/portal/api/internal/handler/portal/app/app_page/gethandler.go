@@ -1,4 +1,4 @@
-package nav
+package app_page
 
 import (
 	"github.com/go-playground/validator/v10"
@@ -6,21 +6,20 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/data"
 	cmfValidator "zerocmf/common/bootstrap/validator"
-	"zerocmf/service/portal/api/internal/logic/nav"
+	"zerocmf/service/portal/api/internal/logic/portal/app/app_page"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 )
 
-func EditHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.NavSaveReq
+		var req types.AppPageListReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.Error(w, err)
 			return
 		}
 
-		zhValidator := new(cmfValidator.Zh).Validator()
-		ZhTrans := new(cmfValidator.Zh).Trans()
+		ZhTrans, zhValidator := new(cmfValidator.Zh).Validator()
 		rest := new(data.Rest)
 		err := zhValidator.Struct(req)
 		if err != nil {
@@ -35,8 +34,8 @@ func EditHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := nav.NewEditLogic(r.Context(), svcCtx)
-		resp := l.Edit(&req)
+		l := app_page.NewGetLogic(r.Context(), svcCtx)
+		resp := l.Get(&req)
 		httpx.OkJson(w, resp)
 	}
 }

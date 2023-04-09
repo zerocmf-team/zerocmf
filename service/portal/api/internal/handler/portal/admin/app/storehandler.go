@@ -19,8 +19,7 @@ func StoreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		zhValidator := new(cmfValidator.Zh).Validator()
-		ZhTrans := new(cmfValidator.Zh).Trans()
+		ZhTrans, zhValidator := new(cmfValidator.Zh).Validator()
 		rest := new(data.Rest)
 		err := zhValidator.Struct(req)
 		if err != nil {

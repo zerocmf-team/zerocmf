@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/data"
 	cmfValidator "zerocmf/common/bootstrap/validator"
-	"zerocmf/service/portal/api/internal/logic/nav"
+	"zerocmf/service/portal/api/internal/logic/portal/admin/nav"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 )
 
-func ShowHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.NavShowReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -19,8 +19,7 @@ func ShowHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		zhValidator := new(cmfValidator.Zh).Validator()
-		ZhTrans := new(cmfValidator.Zh).Trans()
+		ZhTrans, zhValidator := new(cmfValidator.Zh).Validator()
 		rest := new(data.Rest)
 		err := zhValidator.Struct(req)
 		if err != nil {
@@ -35,8 +34,8 @@ func ShowHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := nav.NewShowLogic(r.Context(), svcCtx)
-		resp := l.Show(&req)
+		l := nav.NewDeleteLogic(r.Context(), svcCtx)
+		resp := l.Delete(&req)
 		httpx.OkJson(w, resp)
 	}
 }

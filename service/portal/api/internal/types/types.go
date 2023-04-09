@@ -206,7 +206,9 @@ type AppSaveReq struct {
 }
 
 type AppPageListReq struct {
+	AppId    int    `path:"appId"`
 	Type     string `form:"type,optional"`
+	IsPublic *int   `form:"isPublic,optional"`
 	Paginate string `form:"paginate,optional"`
 }
 
@@ -227,7 +229,6 @@ type AppPageSaveReq struct {
 	SeoDescription string  `json:"seoDescription,optional"`
 	Type           string  `json:"type"`
 	ListOrder      float64 `json:"listOrder,optional"`
-	Status         int     `json:"status"`
 }
 
 func (r *Response) Success(msg string, data interface{}) {

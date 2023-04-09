@@ -1,7 +1,9 @@
 syntax = "v1"
 
 type appPageListReq {
+    AppId int `path:"appId"`
     Type string `form:"type,optional"`
+    IsPublic *int `form:"isPublic,optional"`
     Paginate string `form:"paginate,optional"`
 }
 
@@ -22,7 +24,6 @@ type appPageSaveReq {
     SeoDescription string `json:"seoDescription,optional"`
     Type string `json:"type"`
     ListOrder float64 `json:"listOrder,optional"`
-    Status int `json:"status"`
 }
 
 @server(
@@ -33,7 +34,7 @@ type appPageSaveReq {
 
 service portal {
     @handler Get
-    get / (appPageListReq) returns (Response)
+    get /all/:appId (appPageListReq) returns (Response)
 
     @handler Show
     get /:id (appPageShowReq) returns (Response)
@@ -54,6 +55,10 @@ service portal {
     prefix: api/v1/app/app_page
 )
 service portal {
+
+    @handler Get
+    get /all/:appId (appPageListReq) returns (Response)
+
     @handler Show
     get /:id (appPageShowReq) returns (Response)
 }

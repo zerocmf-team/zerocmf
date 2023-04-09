@@ -3,7 +3,6 @@ package category
 import (
 	"context"
 	"strings"
-	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/portal/model"
 
 	"zerocmf/service/portal/api/internal/svc"
@@ -29,7 +28,6 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 func (l *GetLogic) Get(req *types.CateGetReq) (resp types.Response) {
 
 	c := l.svcCtx
-	r := c.Request
 	db := c.Db
 
 	query := []string{"delete_at = ?"}
@@ -49,9 +47,7 @@ func (l *GetLogic) Get(req *types.CateGetReq) (resp types.Response) {
 
 	queryStr := strings.Join(query, " AND ")
 
-	current, pageSize, err := data.NewPaginate(r).Default()
-
-	data, err := new(model.PortalCategory).Index(db, current, pageSize, queryStr, queryArgs)
+	data, err := new(model.PortalCategory).Index(db, queryStr, queryArgs)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

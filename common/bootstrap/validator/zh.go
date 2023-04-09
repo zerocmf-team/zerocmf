@@ -10,9 +10,7 @@ import (
 
 type Zh struct{}
 
-var trans ut.Translator
-
-func (rest *Zh) Validator() (validate *validator.Validate) {
+func (rest *Zh) Validator() (trans ut.Translator, validate *validator.Validate) {
 	zh := zh.New()
 	uni := ut.New(zh, zh)
 	// this is usually know or extracted from http 'Accept-Language' header
@@ -30,10 +28,6 @@ func (rest *Zh) Validator() (validate *validator.Validate) {
 	zhTranslations.RegisterDefaultTranslations(validate, trans)
 	translateOverride(trans, validate)
 	return
-}
-
-func (rest *Zh) Trans() (translator ut.Translator) {
-	return trans
 }
 
 func translateOverride(trans ut.Translator, validate *validator.Validate) {

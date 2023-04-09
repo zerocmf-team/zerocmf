@@ -25,7 +25,7 @@ type (
 )
 
 @server(
-    group: navItem
+    group: portal/admin/navItem
     prefix: api/v1/admin/nav_items
 )
 
@@ -59,4 +59,16 @@ service portal {
         handler: OptionsList
     )
     get /options (NavItemOptionsReq) returns (Response)
+}
+
+@server(
+    group: portal/app/nav
+    prefix: api/v1/app/nav
+)
+
+service portal {
+    @server(
+        handler: List
+    )
+    get /:navId (NavItemGetReq) returns (Response)
 }

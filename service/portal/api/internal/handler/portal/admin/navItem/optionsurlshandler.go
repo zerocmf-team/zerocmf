@@ -2,9 +2,9 @@ package navItem
 
 import (
 	"net/http"
+	"zerocmf/service/portal/api/internal/logic/portal/admin/navItem"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"zerocmf/service/portal/api/internal/logic/navItem"
 	"zerocmf/service/portal/api/internal/svc"
 )
 

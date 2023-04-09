@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/data"
 	cmfValidator "zerocmf/common/bootstrap/validator"
-	"zerocmf/service/portal/api/internal/logic/nav"
+	"zerocmf/service/portal/api/internal/logic/portal/admin/nav"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 )
 
-func StoreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func EditHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.NavSaveReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -19,8 +19,7 @@ func StoreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		zhValidator := new(cmfValidator.Zh).Validator()
-		ZhTrans := new(cmfValidator.Zh).Trans()
+		ZhTrans, zhValidator := new(cmfValidator.Zh).Validator()
 		rest := new(data.Rest)
 		err := zhValidator.Struct(req)
 		if err != nil {
@@ -35,8 +34,8 @@ func StoreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := nav.NewStoreLogic(r.Context(), svcCtx)
-		resp := l.Store(&req)
+		l := nav.NewEditLogic(r.Context(), svcCtx)
+		resp := l.Edit(&req)
 		httpx.OkJson(w, resp)
 	}
 }

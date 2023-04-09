@@ -19,7 +19,7 @@ type (
 )
 
 @server(
-    group: nav
+    group: portal/admin/nav
     prefix: api/v1/admin/nav
 )
 

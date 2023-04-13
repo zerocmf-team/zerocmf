@@ -23,6 +23,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
+					Path:    "/current_user",
+					Handler: useradminaccount.CurrentUserHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
 					Path:    "/",
 					Handler: useradminaccount.GetHandler(serverCtx),
 				},
@@ -130,19 +135,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	)
 
 	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthMiddleware},
-			[]rest.Route{
-				{
-					Method:  http.MethodGet,
-					Path:    "/api/v1/current_user",
-					Handler: userapp.CurrentUserHandler(serverCtx),
-				},
-			}...,
-		),
-	)
-
-	server.AddRoutes(
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
@@ -165,6 +157,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: useroauth.ValidationHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/"),
 	)
 
 	server.AddRoutes(

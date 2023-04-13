@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
-	"strings"
 	"zerocmf/common/bootstrap/Init"
 
 	"zerocmf/service/user/api/internal/config"
@@ -44,11 +43,6 @@ func main() {
 			Init.SetDomain(domain)
 			ctx.Request = r
 			ctx.ResponseWriter = w
-			// 处理userId
-			r.ParseForm()
-			userId := strings.Join(r.Form["userId"], "")
-			ctx.Set("userId", userId)
-
 			next(w, r)
 		}
 	})

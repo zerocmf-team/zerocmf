@@ -3,11 +3,11 @@ package oauth
 import (
 	"context"
 	"gorm.io/gorm"
-	"zerocmf/common/bootstrap/apisix"
-	"zerocmf/common/bootstrap/apisix/plugins/authentication"
 	"zerocmf/common/bootstrap/util"
+	"zerocmf/service/user/common"
 	"zerocmf/service/user/model"
 
+	"github.com/jinzhu/copier"
 	"strconv"
 	"time"
 
@@ -15,6 +15,8 @@ import (
 	"zerocmf/service/user/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
+
+	"github.com/go-oauth2/oauth2/v4/server"
 )
 
 type TokenLogic struct {
@@ -49,7 +51,6 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 	c := l.svcCtx
 	r := c.Request
 	db := c.Db
-	conf := c.Config
 
 	// 验证用户账号密码
 	user := model.User{}
@@ -76,13 +77,49 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 	}
 	db.Where("id = ?", user.Id).Updates(&u)
 
-	var exp int64 = 86400
-	userId := strconv.Itoa(user.Id)
-	apisix.NewConsumer(conf.ApiKey).Add(userId, apisix.WithJwtAuth(authentication.JwtAuth{Key: userId, Exp: exp}))
+	tokenExp := "168"
 
-	token, tokenErr := apisix.NewJwt(conf.ApiKey).GetAuthorizeToken(userId)
-	if tokenErr != nil {
-		resp.Error(tokenErr.Error(), nil)
+	exp, err := strconv.Atoi(tokenExp)
+
+	if err != nil {
+		resp.Error("失效时间应该是整数，单位为小时！", nil)
+		return
+	}
+
+	conf := c.Config
+	inConf := common.Config{}
+	copier.Copy(&inConf, &conf)
+
+	oauth := common.NewServer(inConf, "")
+	defer oauth.Store.Close()
+	srv := oauth.Srv
+	oauthConfig := oauth.Config
+
+	duration := time.Duration(exp) * time.Hour
+
+	authReq := &server.AuthorizeRequest{
+		RedirectURI:    oauthConfig.RedirectURL,
+		ResponseType:   "code",
+		ClientID:       oauthConfig.ClientID,
+		State:          "jwt",
+		Scope:          "all",
+		UserID:         strconv.Itoa(user.Id),
+		AccessTokenExp: duration,
+		Request:        r,
+	}
+
+	ti, err := srv.GetAuthorizeToken(l.ctx, authReq)
+
+	if err != nil {
+		resp.Error("系统错误："+err.Error(), nil)
+		return
+	}
+
+	code := ti.GetCode()
+	token, err := oauthConfig.Exchange(context.Background(), code)
+
+	if err != nil {
+		resp.Error("获取失败："+err.Error(), nil)
 		return
 	}
 

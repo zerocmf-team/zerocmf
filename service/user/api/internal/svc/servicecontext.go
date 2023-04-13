@@ -34,12 +34,13 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 数据库迁移
 	model.Migrate("")
 
+	data := new(Init.Data).Context()
 	return &ServiceContext{
 		Config:         c,
 		Db:             db,
-		Data:           new(Init.Data).Context(),
+		Data:           data,
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		AdminRpc:       admin.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
-		AuthMiddleware: middleware.NewAuthMiddleware().Handle,
+		AuthMiddleware: middleware.NewAuthMiddleware(data).Handle,
 	}
 }

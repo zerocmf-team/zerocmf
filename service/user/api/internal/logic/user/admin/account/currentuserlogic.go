@@ -1,7 +1,8 @@
-package app
+package account
 
 import (
 	"context"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"gorm.io/gorm"
 	"zerocmf/service/user/api/internal/svc"
@@ -34,6 +35,8 @@ func NewCurrentUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Curre
 func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 	c := l.svcCtx
 	userId, _ := c.Get("userId")
+
+	fmt.Println("userId", userId)
 
 	db := c.Db
 

@@ -81,6 +81,7 @@ type (
     }
 )
 
+
 // 账号相关
 @server(
     group: user/admin/account
@@ -89,6 +90,10 @@ type (
 )
 
 service user {
+
+    @handler CurrentUser
+    get /current_user returns (Response)
+
     @handler Get
     get / (ListReq) returns (Response)
 
@@ -168,17 +173,8 @@ service user {
 }
 
 @server(
-    group: user/app
-    middleware: AuthMiddleware
-)
-
-service user {
-    @handler CurrentUser
-    get /api/v1/current_user returns (Response)
-}
-
-@server(
     group: user/oauth
+    prefix: /
 )
 
 service user {

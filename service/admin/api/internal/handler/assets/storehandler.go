@@ -2,9 +2,9 @@ package assets
 
 import (
 	"net/http"
+	"zerocmf/service/admin/api/internal/logic/admin/assets"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
-	"zerocmf/service/admin/api/internal/logic/assets"
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
 )

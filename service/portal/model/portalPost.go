@@ -145,7 +145,6 @@ func (model *PortalPost) PortalList(db *gorm.DB, query string, queryArgs []inter
 	query += " AND delete_at = ?"
 	queryArgs = append(queryArgs, 0)
 
-	// 合并参数合计
 	var post []PortalPost
 	tx := db.Where(query, queryArgs...).Order("list_order desc,id desc").Find(&post)
 	for k, v := range post {
@@ -175,7 +174,6 @@ func (model *PortalPost) ListByCategory(db *gorm.DB, current, pageSize int, quer
 		order = "p.post_hits desc," + order
 	}
 
-	// 合并参数合计
 	var total int64 = 0
 	conf := database.Config()
 	prefix := conf.Prefix

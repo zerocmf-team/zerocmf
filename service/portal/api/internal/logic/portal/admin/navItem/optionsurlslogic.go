@@ -3,6 +3,7 @@ package navItem
 import (
 	"context"
 	"strconv"
+	"strings"
 	"zerocmf/service/portal/model"
 
 	"zerocmf/service/portal/api/internal/svc"
@@ -25,14 +26,31 @@ func NewOptionsUrlsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Optio
 	}
 }
 
-type Options struct {
-	Label string `json:"label"`
-	Value string `json:"value"`
+type TreeOption struct {
+	Label    string       `json:"label"`
+	Value    string       `json:"value"`
+	Children []TreeOption `json:"children"`
 }
 
-type OptionsMap struct {
-	Label   string    `json:"label"`
-	Options []Options `json:"options"`
+func recursionTreeOption(data []model.PortalTree) (option []TreeOption) {
+	for _, item := range data {
+		var url = "/list/" + strconv.Itoa(item.Id)
+		if item.Alias != "" {
+			url = "/" + item.Alias
+		}
+		// 单个选项
+		treeSelect := TreeOption{
+			Label:    item.Name,
+			Value:    url,
+			Children: make([]TreeOption, 0),
+		}
+		if len(item.Children) > 0 {
+			children := recursionTreeOption(item.Children)
+			treeSelect.Children = children
+		}
+		option = append(option, treeSelect)
+	}
+	return
 }
 
 func (l *OptionsUrlsLogic) OptionsUrls() (resp types.Response) {
@@ -40,67 +58,54 @@ func (l *OptionsUrlsLogic) OptionsUrls() (resp types.Response) {
 	c := l.svcCtx
 	db := c.Db
 
-	portalCategory, err := new(model.PortalCategory).List(db)
+	query := []string{"delete_at = ?"}
+	queryArgs := []interface{}{"0"}
 
+	queryStr := strings.Join(query, " AND ")
+
+	categoryData, err := new(model.PortalCategory).Index(db, queryStr, queryArgs)
 	if err != nil {
 		resp.Error(err.Error(), nil)
+		return
 	}
 
-	categoryOptions := make([]Options, 0)
+	cateOptions := recursionTreeOption(categoryData)
 
-	for _, v := range portalCategory {
+	tree := make([]TreeOption, 0)
+	tree = append(tree, TreeOption{
+		Label:    "首页",
+		Value:    "/",
+		Children: make([]TreeOption, 0),
+	})
 
-		var url = "/list/" + strconv.Itoa(v.Id)
-		if v.Alias != "" {
-			url = "/" + v.Alias
-		}
-
-		categoryOptions = append(categoryOptions, Options{
-			Label: v.Name,
-			Value: url,
-		})
-
-	}
-
-	query := "post_type = ?"
-	queryArgs := []interface{}{"2"}
-
+	postQuery := "post_type = ?"
+	postQueryArgs := []interface{}{"2"}
 	post := new(model.PortalPost)
-	pages, err := post.PortalList(db, query, queryArgs)
+	pages, pageErr := post.PortalList(db, postQuery, postQueryArgs)
+	if pageErr != nil {
+		resp.Error(pageErr.Error(), nil)
+		return
+	}
 
-	pageOptions := make([]Options, 0)
+	for _, v := range cateOptions {
+		tree = append(tree, TreeOption{
+			Label:    v.Label,
+			Value:    v.Value,
+			Children: v.Children,
+		})
+	}
 
 	for _, v := range pages {
-
 		value := "/page/" + strconv.Itoa(v.Id)
-
 		if v.MoreJson.Alias != "" {
 			value = v.MoreJson.Alias
 		}
-
-		pageOptions = append(pageOptions, Options{
-			Label: v.PostTitle,
-			Value: value,
+		tree = append(tree, TreeOption{
+			Label:    v.PostTitle,
+			Value:    value,
+			Children: make([]TreeOption, 0),
 		})
-
 	}
-
-	var om = []OptionsMap{{
-		Label: "首页",
-		Options: []Options{
-			{
-				Label: "首页",
-				Value: "/",
-			}},
-	}, {
-		Label:   "文章分类",
-		Options: categoryOptions,
-	}, {
-		Label:   "所有页面",
-		Options: pageOptions,
-	}}
-
-	resp.Success("获取成功！", om)
-
+	resp.Success("获取成功！", tree)
 	return
 }

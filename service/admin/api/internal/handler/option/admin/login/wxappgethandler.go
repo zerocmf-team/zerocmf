@@ -3,7 +3,7 @@ package login
 import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
-	"zerocmf/service/admin/api/internal/logic/admin/option/admin/login"
+	"zerocmf/service/admin/api/internal/logic/option/admin/login"
 	"zerocmf/service/admin/api/internal/svc"
 )
 

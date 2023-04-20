@@ -12,6 +12,7 @@ type App struct {
 	Version     string  `gorm:"type:varchar(10);comment:应用版本;not null" json:"version"`
 	Thumbnail   string  `gorm:"type:varchar(255);comment:主题缩略图;not null" json:"thumbnail"`
 	Description string  `gorm:"type:varchar(255);comment:主题描述;not null" json:"description"`
+	UserId      int     `gorm:"type:int(11);comment:用户id;NOT NULL" json:"user_id"`
 	CreateAt    int64   `gorm:"type:bigint(20);comment:创建时间;default:0" json:"createAt"`
 	UpdateAt    int64   `gorm:"type:bigint(20);comment:更新时间;default:0" json:"updateAt"`
 	ListOrder   float64 `gorm:"type:float;comment:排序;default:10000" json:"listOrder"`

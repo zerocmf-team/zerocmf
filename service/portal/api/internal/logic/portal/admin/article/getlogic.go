@@ -51,6 +51,12 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response, err error
 	query = append(query, "p.post_type = ?")
 	queryArgs = append(queryArgs, postType)
 
+	category := req.Category
+	if category != nil {
+		query = append(query, "pc.id = ?")
+		queryArgs = append(queryArgs, category)
+	}
+
 	postStatus := req.PostStatus
 	if postStatus != nil {
 		query = append(query, "p.post_status = ?")

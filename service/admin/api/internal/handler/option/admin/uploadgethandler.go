@@ -2,7 +2,7 @@ package admin
 
 import (
 	"net/http"
-	"zerocmf/service/admin/api/internal/logic/admin/option/admin"
+	"zerocmf/service/admin/api/internal/logic/option/admin"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/admin/api/internal/svc"

@@ -6,10 +6,10 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"zerocmf/common/bootstrap/Init"
+	"zerocmf/common/bootstrap/apisix"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/admin/rpc/admin"
 	"zerocmf/service/user/api/internal/config"
-	"zerocmf/service/user/api/internal/middleware"
 	"zerocmf/service/user/model"
 	"zerocmf/service/user/rpc/types/user"
 	"zerocmf/service/user/rpc/userclient"
@@ -41,6 +41,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Data:           data,
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		AdminRpc:       admin.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
-		AuthMiddleware: middleware.NewAuthMiddleware(data).Handle,
+		AuthMiddleware: apisix.AuthMiddleware(data),
 	}
 }

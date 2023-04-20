@@ -48,10 +48,6 @@ func main() {
 			ctx.Config.App.Domain = domain
 			Init.SetDomain(domain)
 			ctx.Request = r
-			// 处理userId
-			r.ParseForm()
-			userId := strings.Join(r.Form["userId"], "")
-			ctx.Set("userId", userId)
 			next(w, r)
 		}
 	})

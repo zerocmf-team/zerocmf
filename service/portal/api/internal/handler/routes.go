@@ -8,6 +8,7 @@ import (
 	portaladminapp_page "zerocmf/service/portal/api/internal/handler/portal/admin/app_page"
 	portaladminarticle "zerocmf/service/portal/api/internal/handler/portal/admin/article"
 	portaladmincategory "zerocmf/service/portal/api/internal/handler/portal/admin/category"
+	portaladminform "zerocmf/service/portal/api/internal/handler/portal/admin/form"
 	portaladminnav "zerocmf/service/portal/api/internal/handler/portal/admin/nav"
 	portaladminnavItem "zerocmf/service/portal/api/internal/handler/portal/admin/navItem"
 	portaladmintag "zerocmf/service/portal/api/internal/handler/portal/admin/tag"
@@ -481,5 +482,39 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/app/app_page"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: portaladminform.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: portaladminform.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: portaladminform.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: portaladminform.EditHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: portaladminform.DeleteHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/form"),
 	)
 }

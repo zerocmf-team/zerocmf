@@ -115,13 +115,13 @@ func (db *Database) newConn(database string) *gorm.DB {
 	sqlDB, err := gDb.DB()
 
 	// SetMaxIdleConns 设置空闲连接池中连接的最大数量
-	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxIdleConns(500)
 
 	// SetMaxOpenConns 设置打开数据库连接的最大数量。
-	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetMaxOpenConns(2000)
 
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
-	sqlDB.SetConnMaxLifetime(5 * time.Minute)
+	sqlDB.SetConnMaxLifetime(90 * time.Minute)
 	return gDb
 
 }

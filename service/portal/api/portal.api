@@ -24,4 +24,5 @@ import (
 	"api/comment.api"
 	"api/app.api"
 	"api/appPage.api"
+	"api/form.api"
 )

@@ -9,7 +9,7 @@ import (
 
 type AppPage struct {
 	Id             int     `json:"id"`
-	AppId          int     `gorm:"type:int(11);comment:主题id;not null" json:"appId"`
+	AppId          int     `gorm:"type:int(11);comment:渠道id;not null" json:"appId"`
 	IsHome         int     `gorm:"type:tinyint(3);comment:是否是首页;default:0;not null" json:"isHome"`
 	IsPublic       int     `gorm:"type:tinyint(3);comment:是否公共部分;default:0;not null" json:"isPublic"`
 	Name           string  `gorm:"type:varchar(20);comment:页面名称;not null" json:"name"`
@@ -20,6 +20,7 @@ type AppPage struct {
 	SeoDescription string  `gorm:"type:varchar(255);comment:三要素描述;not null" json:"seoDescription"`
 	Schema         string  `gorm:"type:longtext;comment:页面低代码文件" json:"schema"`
 	ListOrder      float64 `gorm:"type:float;comment:排序;default:10000" json:"listOrder"`
+	UserId         int     `gorm:"type:int(11);comment:用户id;NOT NULL" json:"user_id"`
 	CreateAt       int64   `gorm:"type:bigint(20)" json:"createAt"`
 	UpdateAt       int64   `gorm:"type:bigint(20)" json:"updateAt"`
 	Status         int     `gorm:"type:tinyint(3);default:1" json:"status"`
@@ -49,7 +50,7 @@ func (model *AppPage) Index(db *gorm.DB, current, pageSize int, query string, qu
 }
 
 func (model *AppPage) List(db *gorm.DB, query string, queryArgs []interface{}) (data []AppPage, err error) {
-	// 合并参数合计
+
 	tx := db.Where(query, queryArgs...).Find(&data)
 	if util.IsDbErr(tx) != nil {
 		err = tx.Error
@@ -59,7 +60,7 @@ func (model *AppPage) List(db *gorm.DB, query string, queryArgs []interface{}) (
 }
 
 func (model *AppPage) Show(db *gorm.DB, query string, queryArgs []interface{}) error {
-	// 合并参数合计
+
 	tx := db.Where(query, queryArgs...).First(&model)
 	if util.IsDbErr(tx) != nil {
 		return tx.Error

@@ -15,9 +15,11 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+
 	curDb := database.NewDb(c.Database)
 	// 设置为默认的db
 	db := curDb.Db() // 初始化
+	// 数据库迁移
 	model.Migrate("")
 
 	return &ServiceContext{

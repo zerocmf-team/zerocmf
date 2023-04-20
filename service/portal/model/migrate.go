@@ -26,4 +26,7 @@ func Migrate(tenantId string) {
 	new(App).AutoMigrate(curDb)
 	new(AppPage).AutoMigrate(curDb)
 
+	new(Form).AutoMigrate(curDb)
+	new(FormItem).AutoMigrate(curDb)
+
 }

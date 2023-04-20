@@ -319,23 +319,53 @@
     ]
   },
   {
-    "name": "app",
-    "path": "/app",
+    "name": "apps",
+    "path": "/apps",
     "icon": "",
     "hide_in_menu": 0,
     "list_order": 10000,
     "children": [
       {
-        "name": "list",
-        "path": "/app/list",
+        "name": "form",
+        "path": "/apps/form",
         "icon": "",
-        "hide_in_menu": 1
+        "hide_in_menu": 0,
+        "list_order": 10000,
+        "children": [
+          {
+            "name": "list",
+            "path": "/apps/form/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "detail",
+            "path": "/apps/form/detail",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
       },
       {
-        "name": "page",
-        "path": "/app/page/:appId",
+        "name": "app",
+        "path": "/apps/app",
         "icon": "",
-        "hide_in_menu": 1
+        "hide_in_menu": 0,
+        "list_order": 10000,
+        "children": [
+          {
+            "name": "list",
+            "path": "/apps/app/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "page",
+            "path": "/apps/app/page/:appId",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
       }
     ]
   }

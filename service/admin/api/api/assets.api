@@ -12,8 +12,8 @@ type (
 )
 
 @server(
-    group: assets
-    prefix: api/v1
+    group: admin/assets
+    prefix: api/v1/admin
     middleware: AuthMiddleware
 )
 

@@ -1,0 +1,44 @@
+syntax = "v1"
+
+type formListReq {
+
+}
+
+type formShowReq {
+    id int `path:"id"`
+}
+
+type formSaveReq {
+    Id int `path:"id,optional"`
+    Name string `json:"name"`
+    Description string `json:"description,optional"`
+    Schema string `json:"schema,optional"`
+    SeoTitle string `json:"seoTitle,optional"`
+    SeoKeywords string `json:"seoKeywords,optional"`
+    SeoDescription string `json:"seoDescription,optional"`
+    ListOrder float64 `json:"listOrder,optional"`
+}
+
+@server(
+    group: portal/admin/form
+    middleware: AuthMiddleware
+    prefix: api/v1/admin/form
+)
+
+service portal {
+    @handler Get
+    get / (formListReq) returns (Response)
+
+    @handler Show
+    get /:id (formShowReq) returns (Response)
+
+    @handler Store
+    post / (formSaveReq) returns (Response)
+
+    @handler Edit
+    post /:id (formSaveReq) returns (Response)
+
+
+    @handler Delete
+    delete /:id (formShowReq) returns (Response)
+}

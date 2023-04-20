@@ -3,12 +3,12 @@ package handler
 
 import (
 	"net/http"
-
-	adminMenu "zerocmf/service/admin/api/internal/handler/adminMenu"
-	assets "zerocmf/service/admin/api/internal/handler/assets"
-	optionadmin "zerocmf/service/admin/api/internal/handler/option/admin"
-	optionadminlogin "zerocmf/service/admin/api/internal/handler/option/admin/login"
+	"zerocmf/service/admin/api/internal/handler/adminMenu"
+	"zerocmf/service/admin/api/internal/handler/assets"
+	admin2 "zerocmf/service/admin/api/internal/handler/option/admin"
+	login2 "zerocmf/service/admin/api/internal/handler/option/admin/login"
 	optionapp "zerocmf/service/admin/api/internal/handler/option/app"
+
 	"zerocmf/service/admin/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -96,22 +96,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/settings",
-					Handler: optionadmin.GetHandler(serverCtx),
+					Handler: admin2.GetHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/settings",
-					Handler: optionadmin.StoreHandler(serverCtx),
+					Handler: admin2.StoreHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/upload",
-					Handler: optionadmin.UploadGetHandler(serverCtx),
+					Handler: admin2.UploadGetHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/upload",
-					Handler: optionadmin.UploadStoreHandler(serverCtx),
+					Handler: admin2.UploadStoreHandler(serverCtx),
 				},
 			}...,
 		),
@@ -125,22 +125,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/mobile",
-					Handler: optionadminlogin.MobileGetHandler(serverCtx),
+					Handler: login2.MobileGetHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/mobile",
-					Handler: optionadminlogin.MobileStoreHandler(serverCtx),
+					Handler: login2.MobileStoreHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/wxapp",
-					Handler: optionadminlogin.WxappGetHandler(serverCtx),
+					Handler: login2.WxappGetHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/wxapp",
-					Handler: optionadminlogin.WxappStoreHandler(serverCtx),
+					Handler: login2.WxappStoreHandler(serverCtx),
 				},
 			}...,
 		),

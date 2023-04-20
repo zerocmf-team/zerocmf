@@ -2,7 +2,7 @@ package app
 
 import (
 	"net/http"
-	"zerocmf/service/admin/api/internal/logic/admin/option/app"
+	"zerocmf/service/admin/api/internal/logic/option/app"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"zerocmf/service/admin/api/internal/svc"

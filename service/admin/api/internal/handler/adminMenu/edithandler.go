@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/data"
 	cmfValidator "zerocmf/common/bootstrap/validator"
-	"zerocmf/service/admin/api/internal/logic/admin/adminMenu"
+	"zerocmf/service/admin/api/internal/logic/adminMenu"
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
 )

@@ -44,6 +44,7 @@ type ArticleGetReq struct {
 	Title      string `form:"post_title,optional"`
 	PostType   string `form:"post_type,optional"`
 	PostStatus *int   `form:"post_status,optional"`
+	Category   *int   `form:"category,optional"`
 	StartTime  string `form:"start_time,optional"`
 	EndTime    string `form:"end_time,optional"`
 }
@@ -228,6 +229,24 @@ type AppPageSaveReq struct {
 	SeoKeywords    string  `json:"seoKeywords,optional"`
 	SeoDescription string  `json:"seoDescription,optional"`
 	Type           string  `json:"type"`
+	ListOrder      float64 `json:"listOrder,optional"`
+}
+
+type FormListReq struct {
+}
+
+type FormShowReq struct {
+	Id int `path:"id"`
+}
+
+type FormSaveReq struct {
+	Id             int     `path:"id,optional"`
+	Name           string  `json:"name"`
+	Description    string  `json:"description,optional"`
+	Schema         string  `json:"schema,optional"`
+	SeoTitle       string  `json:"seoTitle,optional"`
+	SeoKeywords    string  `json:"seoKeywords,optional"`
+	SeoDescription string  `json:"seoDescription,optional"`
 	ListOrder      float64 `json:"listOrder,optional"`
 }
 

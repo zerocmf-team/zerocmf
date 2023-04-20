@@ -51,7 +51,7 @@ func (model *Nav) AutoMigrate(db *gorm.DB) {
 }
 
 func (model *Nav) Get(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (paginate data.Paginate, err error) {
-	// 合并参数合计
+
 	var total int64 = 0
 	var nav []Nav
 	db.Where(query, queryArgs...).Find(&nav).Count(&total)
@@ -70,7 +70,7 @@ func (model *Nav) Get(db *gorm.DB, current, pageSize int, query string, queryArg
 }
 
 func (model *Nav) Show(db *gorm.DB, query string, queryArgs []interface{}) error {
-	// 合并参数合计
+
 	tx := db.Where(query, queryArgs...).First(&model)
 	if util.IsDbErr(tx) != nil {
 		return tx.Error
@@ -96,7 +96,7 @@ func (model *NavItem) Show(db *gorm.DB, query string, queryArgs []interface{}) (
 }
 
 func (model *NavItem) GetWithChildPaginate(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}) (data.Paginate, error) {
-	// 合并参数合计
+
 	var total int64 = 0
 	var navItem []NavItem
 	tx := db.Where(query, queryArgs...).Find(&navItem).Order("list_order desc").Count(&total)
@@ -113,7 +113,7 @@ func (model *NavItem) GetWithChildPaginate(db *gorm.DB, current, pageSize int, q
 }
 
 func (model *NavItem) GetWithChild(db *gorm.DB, query string, queryArgs []interface{}) (navItem []NavItem, err error) {
-	// 合并参数合计
+
 	tx := db.Where(query, queryArgs...).Order("list_order desc").Find(&navItem)
 	if tx.Error != nil {
 		return navItem, tx.Error

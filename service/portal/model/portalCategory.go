@@ -37,9 +37,9 @@ type PortalCategory struct {
 	TopAlias       string  `gorm:"-" json:"top_alias"`
 }
 
-type portalTree struct {
+type PortalTree struct {
 	PortalCategory
-	Children []portalTree `json:"children"`
+	Children []PortalTree `json:"children"`
 }
 
 type categoryOptions struct {
@@ -59,12 +59,12 @@ func (model *PortalCategory) AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&model)
 }
 
-func (model *PortalCategory) recursionByParent(category []PortalCategory, parentId int) []portalTree {
-	var tree []portalTree
+func (model *PortalCategory) recursionByParent(category []PortalCategory, parentId int) []PortalTree {
+	var tree []PortalTree
 	for _, v := range category {
 		// 当前子项
 		if parentId == v.ParentId {
-			item := portalTree{
+			item := PortalTree{
 				PortalCategory: v,
 			}
 
@@ -84,9 +84,9 @@ func (model *PortalCategory) recursionByParent(category []PortalCategory, parent
  * @return
  **/
 
-func (model *PortalCategory) Index(db *gorm.DB, query string, queryArgs []interface{}) (data []portalTree, err error) {
+func (model *PortalCategory) Index(db *gorm.DB, query string, queryArgs []interface{}) (data []PortalTree, err error) {
 	// 获取默认的系统分页
-	// 合并参数合计
+
 	var category []PortalCategory
 	tx := db.Where(query, queryArgs...).Find(&category)
 	if tx.Error != nil {
@@ -228,7 +228,7 @@ func (model *PortalCategory) recursionPrevious(category []PortalCategory, parent
 			breadcrumbs = append(breadcrumbs, Breadcrumb{
 				Id:    v.Id,
 				Name:  v.Name,
-				Alias: v.GetAlias(),
+				Alias: v.Alias,
 			})
 			childBreadcrumbs := model.recursionPrevious(category, v.ParentId)
 			breadcrumbs = append(childBreadcrumbs, breadcrumbs...)
@@ -352,33 +352,33 @@ func (model *PortalCategoryPost) inArray(inPost PortalCategoryPost, pcp []Portal
 	return false
 }
 
-func (model *PortalCategory) ListWithTree(db *gorm.DB) ([]portalTree, error) {
+func (model *PortalCategory) ListWithTree(db *gorm.DB) ([]PortalTree, error) {
 
 	tree, err := model.List(db)
 	if err != nil {
-		return []portalTree{}, err
+		return []PortalTree{}, err
 	}
 
 	// 生成树形结构
 	data := model.recursionChildById(tree, model.ParentId)
 
 	if len(data) == 0 {
-		data = make([]portalTree, 0)
+		data = make([]PortalTree, 0)
 	}
 
 	return data, nil
 }
 
-func (model *PortalCategory) recursionChildById(category []PortalCategory, parentId int) []portalTree {
+func (model *PortalCategory) recursionChildById(category []PortalCategory, parentId int) []PortalTree {
 
-	var tree []portalTree
+	var tree []PortalTree
 
 	for _, v := range category {
 
 		// 当前子项
 		if parentId == v.ParentId {
 
-			item := portalTree{
+			item := PortalTree{
 				PortalCategory: v,
 			}
 

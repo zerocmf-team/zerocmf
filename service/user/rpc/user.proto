@@ -42,14 +42,14 @@ message  UserReply {
   int32 userStatus = 26;
 }
 
-//
+
 
 message InitRequest {
   string tenantId = 1;
 }
 
 message InitReply {
-  int32 code = 1;
+  int64 code = 1;
 }
 
 // The request message containing the user's name.
@@ -63,21 +63,40 @@ message OauthReply {
   string userId = 1;
 }
 
-message DatabaseRequest {
-
+message menu {
+  int64 id = 1;
+  int64 parentId = 2;
+  int64 menuType = 3;
+  string name = 4;
+  string path = 5;
+  string icon = 6;
+  int64 hideInMenu = 7;
+  double listOrder = 8;
 }
 
-message DatabaseReply {
-  string Type = 1;
-  string Host = 2;
-  string Database = 3;
-  string Username = 4;
-  string Password = 5;
-  int32 Port = 6;
-  string Charset = 7;
-  string Prefix = 8;
-  string AuthCode = 9;
+message NewEnforceRequest {
+  string tenantId = 1;
+  string userId = 2;
+  repeated menu menus = 3;
 }
+
+message  NewEnforcerReply {
+  repeated menu menus = 2;
+}
+
+/*message EnforceRequest {
+  string tenantId = 1;
+  string v0 = 2;
+  string v1 = 3;
+  string v2 = 4;
+  string v3 = 5;
+  string v4 = 6;
+  string v5 = 7;
+}
+
+message EnforcerReply {
+  bool access = 1;
+}*/
 
 service user {
   rpc Get (UserRequest) returns (UserReply) {}
@@ -86,6 +105,8 @@ service user {
 
   rpc ValidationJwt (OauthRequest) returns (OauthReply) {}
 
-  rpc Database (DatabaseRequest) returns (DatabaseReply) {}
+  rpc NewEnforce(NewEnforceRequest) returns (NewEnforcerReply) {}
+
+//  rpc Enforce(EnforceRequest) returns (EnforcerReply) {}
 }
 

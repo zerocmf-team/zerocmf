@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 	"zerocmf/common/bootstrap/data"
-	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/admin/api/internal/svc"
 	"zerocmf/service/admin/api/internal/types"
 	"zerocmf/service/admin/model"
@@ -71,44 +70,22 @@ func (l *GetLogic) Get() (resp *types.Response) {
 		return
 	}
 
+	/* 获取当前用户授权的菜单列表 */
 	userId, _ := l.svcCtx.Get("userId")
 
-	databaseReply, err := userRpc.Database(l.ctx, &user.DatabaseRequest{})
+	rpcMenus := make([]*user.Menu, 0)
+	copier.Copy(&rpcMenus, &menus)
+
+	enforceReply, err := userRpc.NewEnforce(l.ctx, &user.NewEnforceRequest{TenantId: "", UserId: userId.(string), Menus: rpcMenus})
 	if err != nil {
-		resp.Error(err.Error(), nil)
+		resp.Error("系统出错", err.Error())
 		return
 	}
 
-	dbConf := database.Database{}
-	copier.Copy(&dbConf, &databaseReply)
+	var resultMenus []model.AdminMenu
+	copier.Copy(&resultMenus, &enforceReply.Menus)
 
-	//	获取当前用户的全部角色
-	e, err := dbConf.NewEnforcer("")
-	//	存入casbin
-	if err != nil {
-		resp.Error(err.Error(), nil)
-		return
-	}
-
-	var menusResult = make([]model.AdminMenu, 0)
-	var access bool
-	for _, v := range menus {
-
-		path := v.Path
-		if v.ParentId == 0 {
-			path = v.Path
-		}
-		access, err = e.Enforce(userId, path, "*")
-		if err != nil {
-			resp.Error("系统出错", err.Error())
-			// panic(err.Error())
-		}
-		if access {
-			menusResult = append(menusResult, v)
-		}
-	}
-
-	results := recursionMenu(menusResult, 0, "", "")
+	results := recursionMenu(resultMenus, 0, "", "")
 	if len(results) == 0 {
 		results = make([]routers, 0)
 	}

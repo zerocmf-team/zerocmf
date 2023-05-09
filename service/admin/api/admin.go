@@ -6,7 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/rest/router"
 	http "net/http"
 	"strings"
-	"zerocmf/common/bootstrap/Init"
+	"zerocmf/common/bootstrap/middleware"
 	"zerocmf/service/admin/api/internal/config"
 	"zerocmf/service/admin/api/internal/handler"
 	"zerocmf/service/admin/api/internal/svc"
@@ -35,22 +35,8 @@ func main() {
 	server := rest.MustNewServer(c.RestConf, rest.WithRouter(r))
 	defer server.Stop()
 
-	// 初始化
-	server.Use(func(next http.HandlerFunc) http.HandlerFunc {
-		return func(w http.ResponseWriter, r *http.Request) {
-			// 获取请求头域名
-			scheme := "http://"
-			if r.Header.Get("Scheme") == "https" {
-				scheme = "https://"
-			}
-			host := r.Host
-			domain := scheme + host
-			ctx.Config.App.Domain = domain
-			Init.SetDomain(domain)
-			ctx.Request = r
-			next(w, r)
-		}
-	})
+	// 全局中间件
+	server.Use(middleware.NewSiteMiddleware(ctx.Data).Handle)
 
 	handler.RegisterHandlers(server, ctx)
 

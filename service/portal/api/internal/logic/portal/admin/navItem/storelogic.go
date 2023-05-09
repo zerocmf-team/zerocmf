@@ -40,7 +40,8 @@ func save(c *svc.ServiceContext, req *types.NavItemSaveReq) (resp types.Response
 		return
 	}
 
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	editId := req.Id
 

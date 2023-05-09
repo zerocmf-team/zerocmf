@@ -29,7 +29,8 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 func (l *GetLogic) Get(req *types.RoleGet) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	r := c.Request
 
 	// todo: add your logic here and delete this line

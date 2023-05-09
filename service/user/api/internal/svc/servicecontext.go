@@ -8,9 +8,8 @@ import (
 	"zerocmf/common/bootstrap/Init"
 	"zerocmf/common/bootstrap/apisix"
 	"zerocmf/common/bootstrap/database"
-	"zerocmf/service/admin/rpc/admin"
+	"zerocmf/service/admin/rpc/adminclient"
 	"zerocmf/service/user/api/internal/config"
-	"zerocmf/service/user/model"
 	"zerocmf/service/user/rpc/types/user"
 	"zerocmf/service/user/rpc/userclient"
 )
@@ -22,7 +21,7 @@ type ServiceContext struct {
 	ResponseWriter http.ResponseWriter
 	*Init.Data
 	UserRpc        user.UserClient
-	AdminRpc       admin.Admin
+	AdminRpc       adminclient.Admin
 	AuthMiddleware rest.Middleware
 }
 
@@ -32,7 +31,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 设置为默认的db
 	db := curDb.Db() // 初始化
 	// 数据库迁移
-	model.Migrate("")
+	//model.Migrate(db)
 
 	data := new(Init.Data).Context()
 	return &ServiceContext{
@@ -40,7 +39,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Db:             db,
 		Data:           data,
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
-		AdminRpc:       admin.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
+		AdminRpc:       adminclient.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
 		AuthMiddleware: apisix.AuthMiddleware(data),
 	}
 }

@@ -28,7 +28,8 @@ func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
 
 func (l *ShowLogic) Show(req *types.AppPageShowReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	id := req.Id
 	appPage := new(model.AppPage)
 	query := []string{"delete_at = ?"}

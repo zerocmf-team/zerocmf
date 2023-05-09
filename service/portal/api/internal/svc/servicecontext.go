@@ -9,7 +9,6 @@ import (
 	"zerocmf/common/bootstrap/apisix"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/portal/api/internal/config"
-	"zerocmf/service/portal/model"
 	"zerocmf/service/user/rpc/types/user"
 	"zerocmf/service/user/rpc/userclient"
 )
@@ -29,7 +28,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 设置为默认的db
 	db := newDb.Db() // 初始化
 	// 数据库迁移
-	model.Migrate("")
+	//model.Migrate(db)
 
 	data := new(Init.Data).Context()
 	return &ServiceContext{

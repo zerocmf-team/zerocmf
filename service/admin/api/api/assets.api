@@ -13,7 +13,7 @@ type (
 
 @server(
     group: admin/assets
-    prefix: api/v1/admin
+    prefix: api/v1
     middleware: AuthMiddleware
 )
 

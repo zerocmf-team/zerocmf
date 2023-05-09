@@ -29,7 +29,8 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	r := c.Request
 
 	extra := map[string]string{}

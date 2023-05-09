@@ -31,7 +31,8 @@ func NewReplyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ReplyLogic 
 func (l *ReplyLogic) Reply(req *types.PostReplyReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	userRpc := c.UserRpc
 
 	id := req.Id

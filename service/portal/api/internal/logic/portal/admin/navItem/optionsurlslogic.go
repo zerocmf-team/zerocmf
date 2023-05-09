@@ -56,7 +56,8 @@ func recursionTreeOption(data []model.PortalTree) (option []TreeOption) {
 func (l *OptionsUrlsLogic) OptionsUrls() (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	query := []string{"delete_at = ?"}
 	queryArgs := []interface{}{"0"}

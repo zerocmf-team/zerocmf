@@ -27,10 +27,11 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 	}
 }
 
-func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response, err error) {
+func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response) {
 	c := l.svcCtx
 	r := c.Request
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	query := []string{"p.delete_at = ?"}
 	queryArgs := []interface{}{0}
@@ -69,6 +70,7 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response, err error
 	var (
 		startTimeStamp time.Time
 		endTimeStamp   time.Time
+		err            error
 	)
 	if startTime != "" && endTime != "" {
 		startTimeStamp, err = time.ParseInLocation("2006-01-02 15:04:05", startTime, time.Local)

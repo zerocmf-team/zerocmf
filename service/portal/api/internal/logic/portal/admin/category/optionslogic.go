@@ -27,7 +27,8 @@ func NewOptionsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *OptionsLo
 
 func (l *OptionsLogic) Options() (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	category := model.PortalCategory{}
 	var query = []string{"delete_at  = ?"}
 	var queryArgs = []interface{}{0}

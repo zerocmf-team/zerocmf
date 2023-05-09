@@ -34,7 +34,8 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 	userId, _ := strconv.Atoi(req.Id)
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	if len(req.RoleIds) <= 0 {
 		resp.Error("至少选择一项角色！", nil)

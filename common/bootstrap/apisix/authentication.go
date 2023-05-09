@@ -1,13 +1,13 @@
 package apisix
 
 import (
-	"errors"
-	"fmt"
+	"encoding/json"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/zeromicro/go-zero/rest"
 	"net/http"
 	"strings"
 	"zerocmf/common/bootstrap/Init"
+	"zerocmf/common/bootstrap/data"
 )
 
 type MyCustomClaims struct {
@@ -15,7 +15,7 @@ type MyCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func AuthMiddleware(data *Init.Data) rest.Middleware {
+func AuthMiddleware(context *Init.Data) rest.Middleware {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			auth := strings.Join(r.Header["Authorization"], "")
@@ -27,7 +27,9 @@ func AuthMiddleware(data *Init.Data) rest.Middleware {
 			}
 
 			if tokenString == "" {
-				errors.New("token不能为空！")
+				resp := new(data.Rest).Error("token不能为空！", nil)
+				bs, _ := json.Marshal(resp)
+				w.Write(bs)
 				return
 			}
 
@@ -37,16 +39,16 @@ func AuthMiddleware(data *Init.Data) rest.Middleware {
 
 			var userId string
 			if claims, ok := token.Claims.(*MyCustomClaims); ok {
-				fmt.Println("token.Valid", token.Valid)
 				userId = claims.UserId
 			}
 
 			if userId == "" {
-				errors.New("您还没有登录，请先登录")
+				resp := new(data.Rest).Error("您还没有登录，请先登录", nil)
+				bs, _ := json.Marshal(resp)
+				w.Write(bs)
 				return
 			}
-
-			data.Set("userId", userId)
+			context.Set("userId", userId)
 			next(w, r)
 		}
 	}

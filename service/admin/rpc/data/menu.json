@@ -1,0 +1,372 @@
+[
+  {
+    "object": "settings",
+    "name": "settings",
+    "path": "/:siteId/settings",
+    "icon": "",
+    "hide_in_menu": 0,
+    "list_order": 10000,
+    "children": [
+      {
+        "name": "websites",
+        "path": "/:siteId/settings/websites",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "detail",
+            "path": "/:siteId/settings/websites/detail",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "upload",
+        "path": "/:siteId/settings/upload",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "detail",
+            "path": "/:siteId/settings/upload/detail",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "assets",
+        "path": "/:siteId/settings/assets",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/settings/assets/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "nav",
+        "path": "/:siteId/settings/nav",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "object": "settings/nav/list",
+            "name": "list",
+            "path": "/:siteId/settings/nav/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "menu",
+        "path": "/:siteId/settings/menu",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "object": "settings/menu/list",
+            "name": "list",
+            "path": "/:siteId/settings/menu/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "login",
+        "path": "/:siteId/settings/login",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/settings/login/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "mobile",
+            "path": "/:siteId/settings/login/detail/mobile",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "wxapp",
+            "path": "/:siteId/settings/login/detail/wxapp",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "account",
+    "path": "/:siteId/account",
+    "icon": "",
+    "hide_in_menu": 0,
+    "list_order": 10000,
+    "children": [
+      {
+        "name": "user",
+        "path": "/:siteId/account/user",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/account/user/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
+            "path": "/:siteId/account/user/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "edit",
+            "path": "/:siteId/account/user/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "role",
+        "path": "/:siteId/account/role",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/account/role/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
+            "path": "/:siteId/account/role/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "edit",
+            "path": "/:siteId/account/role/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "department",
+        "path": "/:siteId/account/department",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/account/department/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
+            "path": "/:siteId/account/department/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "edit",
+            "path": "/:siteId/account/department/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "customer",
+    "path": "/:siteId/customer",
+    "icon": "",
+    "hide_in_menu": 0,
+    "list_order": 10000,
+    "children": [
+      {
+        "name": "member",
+        "path": "/:siteId/customer/member",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/customer/member/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "portal",
+    "path": "/:siteId/portal",
+    "icon": "",
+    "hide_in_menu": 0,
+    "list_order": 10000,
+    "children": [
+      {
+        "name": "article",
+        "path": "/:siteId/portal/article",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/portal/article/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
+            "path": "/:siteId/portal/article/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "edit",
+            "path": "/:siteId/portal/article/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "category",
+        "path": "/:siteId/portal/category",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/portal/category/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
+            "path": "/:siteId/portal/category/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "edit",
+            "path": "/:siteId/portal/category/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "page",
+        "path": "/:siteId/portal/page",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/portal/page/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "add",
+            "path": "/:siteId/portal/page/add",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "edit",
+            "path": "/:siteId/portal/page/edit/:id",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "tag",
+        "path": "/:siteId/portal/tag",
+        "icon": "",
+        "hide_in_menu": 0,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/portal/tag/list",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "apps",
+    "path": "/:siteId/apps",
+    "icon": "",
+    "hide_in_menu": 0,
+    "list_order": 10000,
+    "children": [
+      {
+        "name": "form",
+        "path": "/:siteId/apps/form",
+        "icon": "",
+        "hide_in_menu": 0,
+        "list_order": 10000,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/apps/form/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "detail",
+            "path": "/:siteId/apps/form/detail",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      },
+      {
+        "name": "app",
+        "path": "/:siteId/apps/app",
+        "icon": "",
+        "hide_in_menu": 0,
+        "list_order": 10000,
+        "children": [
+          {
+            "name": "list",
+            "path": "/:siteId/apps/app/list",
+            "icon": "",
+            "hide_in_menu": 1
+          },
+          {
+            "name": "page",
+            "path": "/:siteId/apps/app/page/:appId",
+            "icon": "",
+            "hide_in_menu": 1
+          }
+        ]
+      }
+    ]
+  }
+]

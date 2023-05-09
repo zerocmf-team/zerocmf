@@ -25,7 +25,8 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 
 func (l *ListLogic) List() (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	category := model.PortalCategory{
 		ParentId: 0,
 	}

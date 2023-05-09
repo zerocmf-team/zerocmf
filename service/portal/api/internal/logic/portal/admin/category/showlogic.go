@@ -23,10 +23,11 @@ func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
 	}
 }
 
-func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
+func (l *ShowLogic) Show(req *types.CateOneReq) (resp types.Response) {
 	id := req.Id
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	portalCategory := new(model.PortalCategory)
 	err := portalCategory.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
 	if err != nil {

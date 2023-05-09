@@ -29,7 +29,8 @@ func NewSearchLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchLogi
 func (l *SearchLogic) Search(req *types.ArticleSearchReq) (resp types.Response) {
 	c := l.svcCtx
 	r := c.Request
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	keywords := req.Keywords
 
 	if strings.TrimSpace(keywords) == "" {

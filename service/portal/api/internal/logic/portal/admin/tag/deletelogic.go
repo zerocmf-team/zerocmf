@@ -28,7 +28,8 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 func (l *DeleteLogic) Delete(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	id := req.Id
 
 	var tag model.PortalTag

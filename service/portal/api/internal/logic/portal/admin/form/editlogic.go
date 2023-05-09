@@ -2,8 +2,6 @@ package form
 
 import (
 	"context"
-	"fmt"
-
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 
@@ -26,8 +24,8 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 
 func (l *EditLogic) Edit(req *types.FormSaveReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	resp = saveForm(db, req, 1)
-	fmt.Println("ressp", resp)
 	return
 }

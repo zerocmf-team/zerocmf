@@ -30,7 +30,8 @@ func NewInitLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InitLogic {
 func (l *InitLogic) Init(req *types.InitReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	theme := model.Theme{
 		Name:      req.Theme,

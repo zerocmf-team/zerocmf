@@ -14,5 +14,8 @@ type Config struct {
 	UserRpc  zrpc.RpcClientConf
 	AdminRpc zrpc.RpcClientConf
 	Database database.Database
-	ApiKey   string `json:"apiKey"`
+	Apisix   struct {
+		ApiKey string `json:"apiKey"`
+		Host   string `json:"host"`
+	}
 }

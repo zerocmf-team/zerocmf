@@ -26,7 +26,8 @@ func NewDeletesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeletesLo
 
 func (l *DeletesLogic) Deletes() (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	r := c.Request
 	r.ParseForm()
 	ids := r.Form["ids[]"]

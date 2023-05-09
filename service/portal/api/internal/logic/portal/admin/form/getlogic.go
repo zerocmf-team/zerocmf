@@ -29,7 +29,8 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 func (l *GetLogic) Get(req *types.FormListReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	r := c.Request
 
 	current, pageSize, err := data.NewPaginate(r).Default()
@@ -40,12 +41,20 @@ func (l *GetLogic) Get(req *types.FormListReq) (resp types.Response) {
 
 	query := []string{"delete_at = ?"}
 	queryArgs := []interface{}{0}
+
+	if req.Name != nil {
+		query = append(query, "name like ?")
+		queryArgs = append(queryArgs, "%"+*req.Name+"%")
+	}
+
+	if req.Status != nil {
+		query = append(query, "status = ?")
+		queryArgs = append(queryArgs, req.Status)
+	}
+
 	queryStr := strings.Join(query, " AND ")
-
 	form := model.Form{}
-
 	res, resErr := form.List(db, current, pageSize, queryStr, queryArgs, true)
-
 	if resErr != nil {
 		resp.Error(err.Error(), nil)
 		return

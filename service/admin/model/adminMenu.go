@@ -9,7 +9,6 @@ package model
 import (
 	"encoding/json"
 	"gorm.io/gorm"
-	"io/ioutil"
 	"os"
 	"time"
 )
@@ -48,7 +47,7 @@ func InitMenus(db *gorm.DB) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			var bytes []byte
-			bytes, err = ioutil.ReadFile("data/menu.json")
+			bytes, err = os.ReadFile("data/menu.json")
 			if err != nil {
 				panic(err.Error())
 			}

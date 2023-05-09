@@ -26,7 +26,8 @@ func NewOptionsListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Optio
 func (l *OptionsListLogic) OptionsList(req *types.NavItemOptionsReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	navId := req.NavId
 	if navId == 0 {

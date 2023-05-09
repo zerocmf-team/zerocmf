@@ -38,7 +38,8 @@ func NewSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveLogic {
 func (l *SaveLogic) Save(req *types.AppSaveReq) (resp types.Response) {
 	c := l.svcCtx
 	userId, _ := c.Get("userId")
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	user := model.User{}
 	err := user.Show(db, "id = ?", []interface{}{userId})
 	if err != nil {

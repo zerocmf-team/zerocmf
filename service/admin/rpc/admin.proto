@@ -23,6 +23,15 @@ message AdminMenu {
   float ListOrder = 8;
 }
 
+message  siteReq {
+  int64 siteId = 1;
+}
+
+message  siteReply {
+
+}
+
 service admin {
-  rpc getMenus(AdminMenuReq) returns(AdminMenuReply);
+//  rpc getMenus(AdminMenuReq) returns(AdminMenuReply);
+  rpc autoMigrate(siteReq) returns(siteReply);
 }

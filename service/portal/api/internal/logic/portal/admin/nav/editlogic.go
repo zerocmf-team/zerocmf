@@ -29,7 +29,8 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 
 func (l *EditLogic) Edit(req *types.NavSaveReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	nav := model.Nav{}
 	copier.Copy(&nav, &req)
 	var tx *gorm.DB

@@ -42,7 +42,8 @@ func (l *StoreLogic) Store(req *types.ArticleSaveReq) (resp types.Response) {
 
 func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response) {
 
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	userRpc := c.UserRpc
 	id := req.Id
 

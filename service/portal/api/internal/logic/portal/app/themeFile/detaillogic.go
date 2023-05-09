@@ -43,7 +43,8 @@ func (l *DetailLogic) Detail(req *types.ThemeFileDetailReq) (resp *types.Respons
 	query := "theme = ? AND file = ?"
 	queryArgs := []interface{}{theme, file}
 
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	data, err := new(model.ThemeFile).Show(db, query, queryArgs)
 

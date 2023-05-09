@@ -22,7 +22,7 @@ type (
         OneTpl string `json:"one_tpl,optional"`
     }
 
-    cateDelReq {
+    cateOneReq {
         Id int `path:"id,optional"`
     }
 )
@@ -39,10 +39,10 @@ service portal {
     get / (cateGetReq) returns (Response)
 
     @handler List
-    get /list (oneReq) returns (Response)
+    get /list () returns (Response)
 
     @handler Show
-    get /:id (oneReq) returns (Response)
+    get /:id (cateOneReq) returns (Response)
 
     @handler Store
     post / (cateSaveReq) returns (Response)
@@ -54,7 +54,7 @@ service portal {
     get /options returns (Response)
 
     @handler Delete
-    delete /:id (cateDelReq) returns (Response)
+    delete /:id (cateOneReq) returns (Response)
 
     @handler Deletes
     delete / returns (Response)

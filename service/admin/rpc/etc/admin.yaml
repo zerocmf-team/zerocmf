@@ -8,6 +8,7 @@ Etcd:
   Key: admin.rpc
 
 Database:
+  name: admin
   Type: mysql
   Host: localhost
   Database: zerocmf_admin

@@ -28,7 +28,8 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 
 func (l *GetLogic) Get(req *types.AppPageListReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	r := c.Request
 
 	current, pageSize, err := data.NewPaginate(r).Default()
@@ -50,6 +51,16 @@ func (l *GetLogic) Get(req *types.AppPageListReq) (resp types.Response) {
 	if isPublic != nil {
 		query = append(query, "is_public = ?")
 		queryArgs = append(queryArgs, isPublic)
+	}
+
+	if req.Name != nil {
+		query = append(query, "name like ?")
+		queryArgs = append(queryArgs, "%"+*req.Name+"%")
+	}
+
+	if req.Status != nil {
+		query = append(query, "status = ?")
+		queryArgs = append(queryArgs, req.Status)
 	}
 
 	queryStr := strings.Join(query, " AND ")

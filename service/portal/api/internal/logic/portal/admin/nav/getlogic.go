@@ -30,7 +30,8 @@ func (l *GetLogic) Get(req *types.NavGetReq) (resp types.Response) {
 
 	c := l.svcCtx
 	r := c.Request
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	var nav = new(model.Nav)
 

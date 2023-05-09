@@ -29,7 +29,8 @@ func (l *GetLogic) Get(req *types.TagGetReq) (resp types.Response) {
 
 	c := l.svcCtx
 	r := c.Request
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	name := req.Name
 

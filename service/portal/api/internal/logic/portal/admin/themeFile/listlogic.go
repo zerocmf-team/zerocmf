@@ -33,7 +33,8 @@ type option struct {
 func (l *ListLogic) List(req *types.ListReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	t := req.Type
 	opt := model.Option{}
 

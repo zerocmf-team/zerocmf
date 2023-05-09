@@ -54,7 +54,8 @@ type access struct {
 func save(req access, c *svc.ServiceContext) (result model.Role, err error) {
 
 	form := req
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	// 角色信息
 	role := model.Role{
 		Name:     form.Name,

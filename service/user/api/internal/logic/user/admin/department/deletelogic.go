@@ -29,7 +29,8 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 func (l *DeleteLogic) Delete(req *types.DepOneReq) (resp *types.Response) {
 	resp = new(types.Response)
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	department := model.Department{}
 	id := req.Id
 	if id <= 0 {

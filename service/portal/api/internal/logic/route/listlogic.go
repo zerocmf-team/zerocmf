@@ -26,7 +26,8 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 
 func (l *ListLogic) List() (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	data, err := new(model.Route).List(db, "", nil)
 	if err != nil {
 		resp.Error(err.Error(), nil)

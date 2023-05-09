@@ -36,7 +36,7 @@ type CateSaveReq struct {
 	OneTpl         string `json:"one_tpl,optional"`
 }
 
-type CateDelReq struct {
+type CateOneReq struct {
 	Id int `path:"id,optional"`
 }
 
@@ -207,10 +207,12 @@ type AppSaveReq struct {
 }
 
 type AppPageListReq struct {
-	AppId    int    `path:"appId"`
-	Type     string `form:"type,optional"`
-	IsPublic *int   `form:"isPublic,optional"`
-	Paginate string `form:"paginate,optional"`
+	Name     *string `form:"name,optional"`
+	AppId    int     `path:"appId"`
+	Type     string  `form:"type,optional"`
+	IsPublic *int    `form:"isPublic,optional"`
+	Paginate string  `form:"paginate,optional"`
+	Status   *int    `form:"status,optional"`
 }
 
 type AppPageShowReq struct {
@@ -230,9 +232,12 @@ type AppPageSaveReq struct {
 	SeoDescription string  `json:"seoDescription,optional"`
 	Type           string  `json:"type"`
 	ListOrder      float64 `json:"listOrder,optional"`
+	Status         *int    `json:"status,optional"`
 }
 
 type FormListReq struct {
+	Name   *string `form:"name,optional"`
+	Status *int    `form:"status,optional"`
 }
 
 type FormShowReq struct {
@@ -244,10 +249,17 @@ type FormSaveReq struct {
 	Name           string  `json:"name"`
 	Description    string  `json:"description,optional"`
 	Schema         string  `json:"schema,optional"`
+	Columns        string  `json:"columns,optional"`
 	SeoTitle       string  `json:"seoTitle,optional"`
 	SeoKeywords    string  `json:"seoKeywords,optional"`
 	SeoDescription string  `json:"seoDescription,optional"`
 	ListOrder      float64 `json:"listOrder,optional"`
+	Status         *int    `json:"status,optional"`
+}
+
+type FormSubmitReq struct {
+	FormId int64  `path:"formId"` //目标id
+	Schema string `json:"schema"`
 }
 
 func (r *Response) Success(msg string, data interface{}) {

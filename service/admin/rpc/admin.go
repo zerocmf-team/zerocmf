@@ -23,9 +23,7 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-
 	Init.SetSalts(c.Database.AuthCode)
-
 	ctx := svc.NewServiceContext(c)
 	svr := server.NewAdminServer(ctx)
 

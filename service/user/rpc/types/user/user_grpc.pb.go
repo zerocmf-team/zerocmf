@@ -25,9 +25,9 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	User_Get_FullMethodName           = "/user.user/Get"
-	User_Init_FullMethodName          = "/user.user/Init"
 	User_ValidationJwt_FullMethodName = "/user.user/ValidationJwt"
 	User_NewEnforce_FullMethodName    = "/user.user/NewEnforce"
+	User_AutoMigrate_FullMethodName   = "/user.user/autoMigrate"
 )
 
 // UserClient is the client API for User service.
@@ -35,9 +35,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
 	Get(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserReply, error)
-	Init(ctx context.Context, in *InitRequest, opts ...grpc.CallOption) (*InitReply, error)
 	ValidationJwt(ctx context.Context, in *OauthRequest, opts ...grpc.CallOption) (*OauthReply, error)
 	NewEnforce(ctx context.Context, in *NewEnforceRequest, opts ...grpc.CallOption) (*NewEnforcerReply, error)
+	AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.CallOption) (*SiteReply, error)
 }
 
 type userClient struct {
@@ -51,15 +51,6 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 func (c *userClient) Get(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserReply, error) {
 	out := new(UserReply)
 	err := c.cc.Invoke(ctx, User_Get_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userClient) Init(ctx context.Context, in *InitRequest, opts ...grpc.CallOption) (*InitReply, error) {
-	out := new(InitReply)
-	err := c.cc.Invoke(ctx, User_Init_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,14 +75,23 @@ func (c *userClient) NewEnforce(ctx context.Context, in *NewEnforceRequest, opts
 	return out, nil
 }
 
+func (c *userClient) AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.CallOption) (*SiteReply, error) {
+	out := new(SiteReply)
+	err := c.cc.Invoke(ctx, User_AutoMigrate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
 type UserServer interface {
 	Get(context.Context, *UserRequest) (*UserReply, error)
-	Init(context.Context, *InitRequest) (*InitReply, error)
 	ValidationJwt(context.Context, *OauthRequest) (*OauthReply, error)
 	NewEnforce(context.Context, *NewEnforceRequest) (*NewEnforcerReply, error)
+	AutoMigrate(context.Context, *SiteReq) (*SiteReply, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -102,14 +102,14 @@ type UnimplementedUserServer struct {
 func (UnimplementedUserServer) Get(context.Context, *UserRequest) (*UserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedUserServer) Init(context.Context, *InitRequest) (*InitReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Init not implemented")
-}
 func (UnimplementedUserServer) ValidationJwt(context.Context, *OauthRequest) (*OauthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidationJwt not implemented")
 }
 func (UnimplementedUserServer) NewEnforce(context.Context, *NewEnforceRequest) (*NewEnforcerReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NewEnforce not implemented")
+}
+func (UnimplementedUserServer) AutoMigrate(context.Context, *SiteReq) (*SiteReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AutoMigrate not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -138,24 +138,6 @@ func _User_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).Get(ctx, req.(*UserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _User_Init_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InitRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).Init(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_Init_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).Init(ctx, req.(*InitRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -196,6 +178,24 @@ func _User_NewEnforce_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_AutoMigrate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SiteReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).AutoMigrate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_AutoMigrate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).AutoMigrate(ctx, req.(*SiteReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -208,16 +208,16 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_Get_Handler,
 		},
 		{
-			MethodName: "Init",
-			Handler:    _User_Init_Handler,
-		},
-		{
 			MethodName: "ValidationJwt",
 			Handler:    _User_ValidationJwt_Handler,
 		},
 		{
 			MethodName: "NewEnforce",
 			Handler:    _User_NewEnforce_Handler,
+		},
+		{
+			MethodName: "autoMigrate",
+			Handler:    _User_AutoMigrate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

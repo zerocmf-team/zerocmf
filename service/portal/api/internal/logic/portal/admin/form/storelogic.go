@@ -2,7 +2,6 @@ package form
 
 import (
 	"context"
-	"fmt"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 	"time"
@@ -30,14 +29,14 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 
 func (l *StoreLogic) Store(req *types.FormSaveReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	resp = saveForm(db, req, 0)
 	return
 }
 
 func saveForm(db *gorm.DB, req *types.FormSaveReq, typ int) (resp types.Response) {
 	form := new(model.Form)
-	form.Status = 1
 	copier.Copy(&form, &req)
 	var tx *gorm.DB
 	if typ == 0 {
@@ -53,6 +52,5 @@ func saveForm(db *gorm.DB, req *types.FormSaveReq, typ int) (resp types.Response
 		return
 	}
 	resp.Success("操作成功", form)
-	fmt.Println("resp", resp)
 	return
 }

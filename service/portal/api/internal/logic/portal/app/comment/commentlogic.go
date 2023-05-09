@@ -27,7 +27,8 @@ func NewCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CommentLo
 
 func (l *CommentLogic) Comment(req *types.PostCommentAddReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	userRpc := c.UserRpc
 
 	topicId := req.Id

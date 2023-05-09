@@ -1,0 +1,17 @@
+Name: portal.rpc
+ListenOn: 127.0.0.1:9002
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: portal.rpc
+Database:
+  name: portal
+  Type: mysql
+  Host: localhost
+  Database: zerocmf_admin
+  Username: root
+  Password: '123456'
+  Port: 3306
+  Charset: utf8mb4
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD

@@ -27,7 +27,8 @@ func (l *SaveLogic) Save(req *types.ThemeFileSaveReq) (resp types.Response) {
 
 	c := l.svcCtx
 	id := req.Id
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	more := req.More
 

@@ -30,7 +30,8 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 func (l *StoreLogic) Store(req *types.AdminStoreReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	form := req
 	if len(form.RoleIds) <= 0 {

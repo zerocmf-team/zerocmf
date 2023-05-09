@@ -27,11 +27,6 @@ func (s *UserServer) Get(ctx context.Context, in *user.UserRequest) (*user.UserR
 	return l.Get(in)
 }
 
-func (s *UserServer) Init(ctx context.Context, in *user.InitRequest) (*user.InitReply, error) {
-	l := logic.NewInitLogic(ctx, s.svcCtx)
-	return l.Init(in)
-}
-
 func (s *UserServer) ValidationJwt(ctx context.Context, in *user.OauthRequest) (*user.OauthReply, error) {
 	l := logic.NewValidationJwtLogic(ctx, s.svcCtx)
 	return l.ValidationJwt(in)
@@ -40,4 +35,9 @@ func (s *UserServer) ValidationJwt(ctx context.Context, in *user.OauthRequest) (
 func (s *UserServer) NewEnforce(ctx context.Context, in *user.NewEnforceRequest) (*user.NewEnforcerReply, error) {
 	l := logic.NewNewEnforceLogic(ctx, s.svcCtx)
 	return l.NewEnforce(in)
+}
+
+func (s *UserServer) AutoMigrate(ctx context.Context, in *user.SiteReq) (*user.SiteReply, error) {
+	l := logic.NewAutoMigrateLogic(ctx, s.svcCtx)
+	return l.AutoMigrate(in)
 }

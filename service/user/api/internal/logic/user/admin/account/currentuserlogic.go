@@ -38,7 +38,8 @@ func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 
 	fmt.Println("userId", userId)
 
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	user := model.User{}
 	tx := db.Where("id = ? and user_type = 1", userId).First(&user)

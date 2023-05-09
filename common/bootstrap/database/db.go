@@ -19,6 +19,7 @@ import (
 
 type Database struct {
 	mu       sync.RWMutex `json:",optional"`
+	Name     string
 	Type     string
 	Host     string
 	Database string
@@ -55,7 +56,7 @@ func (db *Database) Db() (outDb *gorm.DB) {
 	db.mu.Lock()
 	dbName := db.Database
 	outDb = db.newConn(dbName)
-	outDb.Set("tenantId", "")
+	outDb.Set("siteId", "")
 	db.mu.Unlock()
 	return
 }
@@ -67,15 +68,15 @@ func Config() (conf *Database) {
 	return
 }
 
-func (db *Database) ManualDb(tenantId string) (outDb *gorm.DB) {
+func (db *Database) ManualDb(siteId string) (outDb *gorm.DB) {
 	db.mu.Lock()
-	dbName := "tenant_" + tenantId
+	dbName := "site_" + db.Name + "_" + siteId
 	// 未指定则默认为主库
-	if tenantId == "" {
+	if siteId == "" {
 		dbName = db.Database
 	}
 	outDb = db.newConn(dbName)
-	outDb.Set("tenantId", tenantId)
+	outDb.Set("siteId", siteId)
 	db.mu.Unlock()
 	return
 }

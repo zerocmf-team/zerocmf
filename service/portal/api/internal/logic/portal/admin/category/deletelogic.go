@@ -24,10 +24,11 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 	}
 }
 
-func (l *DeleteLogic) Delete(req *types.CateDelReq) (resp types.Response) {
+func (l *DeleteLogic) Delete(req *types.CateOneReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	id := req.Id
 
 	if id == 0 {

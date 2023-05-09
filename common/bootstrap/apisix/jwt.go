@@ -14,13 +14,13 @@ type (
 	}
 )
 
-func NewJwt(apiKey string) (j Jwt) {
-	j = Jwt{apisix{ApiKey: apiKey}}
+func NewJwt(apiKey string, host string) (j Jwt) {
+	j = Jwt{apisix{ApiKey: apiKey, Host: host}}
 	return
 }
 
 func (r Jwt) GetAuthorizeToken(userId string) (token string, err error) {
-	code, resBytes := util.Request("GET", "http://localhost:9080/apisix/plugin/jwt/sign?key="+userId, nil, nil)
+	code, resBytes := util.Request("GET", "http://"+r.Host+":9080/apisix/plugin/jwt/sign?key="+userId, nil, nil)
 	if !strings.HasPrefix(strconv.Itoa(code), "20") {
 		err = errors.New("consumer is expired")
 		fmt.Println("res", string(resBytes))

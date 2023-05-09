@@ -13,21 +13,21 @@ import (
 )
 
 type (
-	InitReply         = user.InitReply
-	InitRequest       = user.InitRequest
 	Menu              = user.Menu
 	NewEnforceRequest = user.NewEnforceRequest
 	NewEnforcerReply  = user.NewEnforcerReply
 	OauthReply        = user.OauthReply
 	OauthRequest      = user.OauthRequest
+	SiteReply         = user.SiteReply
+	SiteReq           = user.SiteReq
 	UserReply         = user.UserReply
 	UserRequest       = user.UserRequest
 
 	User interface {
 		Get(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserReply, error)
-		Init(ctx context.Context, in *InitRequest, opts ...grpc.CallOption) (*InitReply, error)
 		ValidationJwt(ctx context.Context, in *OauthRequest, opts ...grpc.CallOption) (*OauthReply, error)
 		NewEnforce(ctx context.Context, in *NewEnforceRequest, opts ...grpc.CallOption) (*NewEnforcerReply, error)
+		AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.CallOption) (*SiteReply, error)
 	}
 
 	defaultUser struct {
@@ -46,11 +46,6 @@ func (m *defaultUser) Get(ctx context.Context, in *UserRequest, opts ...grpc.Cal
 	return client.Get(ctx, in, opts...)
 }
 
-func (m *defaultUser) Init(ctx context.Context, in *InitRequest, opts ...grpc.CallOption) (*InitReply, error) {
-	client := user.NewUserClient(m.cli.Conn())
-	return client.Init(ctx, in, opts...)
-}
-
 func (m *defaultUser) ValidationJwt(ctx context.Context, in *OauthRequest, opts ...grpc.CallOption) (*OauthReply, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.ValidationJwt(ctx, in, opts...)
@@ -59,4 +54,9 @@ func (m *defaultUser) ValidationJwt(ctx context.Context, in *OauthRequest, opts 
 func (m *defaultUser) NewEnforce(ctx context.Context, in *NewEnforceRequest, opts ...grpc.CallOption) (*NewEnforcerReply, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.NewEnforce(ctx, in, opts...)
+}
+
+func (m *defaultUser) AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.CallOption) (*SiteReply, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.AutoMigrate(ctx, in, opts...)
 }

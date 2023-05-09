@@ -15,6 +15,7 @@ type Form struct {
 	SeoKeywords    string  `gorm:"type:varchar(255);comment:三要素关键字;not null" json:"seoKeywords"`
 	SeoDescription string  `gorm:"type:varchar(255);comment:三要素描述;not null" json:"seoDescription"`
 	Schema         string  `gorm:"type:longtext;comment:页面低代码文件" json:"schema"`
+	Columns        string  `gorm:"type:longtext;comment:表头标识文件" json:"columns"`
 	ListOrder      float64 `gorm:"type:float;comment:排序;default:10000" json:"listOrder"`
 	UserId         int     `gorm:"type:int(11);comment:用户id;NOT NULL" json:"user_id"`
 	CreateAt       int64   `gorm:"type:bigint(20)" json:"createAt"`

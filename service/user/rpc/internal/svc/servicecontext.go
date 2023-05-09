@@ -4,7 +4,6 @@ import (
 	"gorm.io/gorm"
 	"zerocmf/common/bootstrap/Init"
 	"zerocmf/common/bootstrap/database"
-	"zerocmf/service/user/model"
 	"zerocmf/service/user/rpc/internal/config"
 )
 
@@ -20,7 +19,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 设置为默认的db
 	db := curDb.Db() // 初始化
 	// 数据库迁移
-	model.Migrate("")
+	//model.Migrate(db)
 
 	return &ServiceContext{
 		Config: c,

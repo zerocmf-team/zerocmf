@@ -28,7 +28,8 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 
 func (l *EditLogic) Edit(req *types.AppPageSaveReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	id := req.Id
 	appPage := new(model.AppPage)
 	query := []string{"delete_at = ?"}

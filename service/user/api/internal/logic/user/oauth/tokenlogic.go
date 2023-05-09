@@ -48,7 +48,8 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 
 	c := l.svcCtx
 	r := c.Request
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	conf := c.Config
 
 	// 验证用户账号密码
@@ -78,9 +79,9 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 
 	var exp int64 = 86400
 	userId := strconv.Itoa(user.Id)
-	apisix.NewConsumer(conf.ApiKey).Add(userId, apisix.WithJwtAuth(authentication.JwtAuth{Key: userId, Exp: exp}))
+	apisix.NewConsumer(conf.Apisix.ApiKey, conf.Apisix.Host).Add(userId, apisix.WithJwtAuth(authentication.JwtAuth{Key: userId, Exp: exp}))
 
-	token, tokenErr := apisix.NewJwt(conf.ApiKey).GetAuthorizeToken(userId)
+	token, tokenErr := apisix.NewJwt(conf.Apisix.ApiKey, conf.Apisix.Host).GetAuthorizeToken(userId)
 	if tokenErr != nil {
 		resp.Error(tokenErr.Error(), nil)
 		return

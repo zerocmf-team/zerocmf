@@ -28,7 +28,8 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 
 func (l *GetLogic) Get(req *types.AppPageListReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	r := c.Request
 
 	current, pageSize, err := data.NewPaginate(r).Default()

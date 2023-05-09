@@ -1,0 +1,48 @@
+Name: tenant
+Host: 0.0.0.0
+Port: 8803
+
+Database:
+  Name: tenant
+  Type: mysql
+  Host: localhost
+  Database: zerocmf_tenant
+  Username: root
+  Password: '123456'
+  Port: 3306
+  Charset: utf8mb4
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD
+
+AdminRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: admin.rpc
+
+UserRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc
+
+portalRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: portal.rpc
+
+Redis:
+  Enabled: true
+  Host: localhost
+  Database: 0
+  Port: 6379
+  Password: ''
+
+Apisix:
+  ApiKey: edd1c9f034335f136f87ad84b625c8f1
+  Host: localhost
+

@@ -31,7 +31,8 @@ func (l *DeleteLogic) Delete(req *types.RoleDelete) (resp types.Response) {
 
 	c := l.svcCtx
 	ids := req.Ids
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	role := model.Role{}
 	e, err := casbin.NewEnforcer("")
 	if err != nil {

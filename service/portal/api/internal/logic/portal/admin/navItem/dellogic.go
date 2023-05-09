@@ -28,7 +28,8 @@ func NewDelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DelLogic {
 func (l *DelLogic) Del(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	id := req.Id
 

@@ -7,11 +7,11 @@
 package model
 
 import (
-	"zerocmf/common/bootstrap/database"
+	"gorm.io/gorm"
 )
 
-func Migrate(tenantId string) {
-	curDb := database.Conf().ManualDb(tenantId)
+func Migrate(curDb *gorm.DB) {
+
 	new(Option).AutoMigrate(curDb)
 	new(PortalPost).AutoMigrate(curDb)
 	new(PortalCategory).AutoMigrate(curDb)

@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net/http"
 	"zerocmf/common/bootstrap/Init"
+	"zerocmf/common/bootstrap/middleware"
 
 	"zerocmf/service/user/api/internal/config"
 	"zerocmf/service/user/api/internal/handler"
@@ -30,23 +30,8 @@ func main() {
 	defer server.Stop()
 
 	// 初始化
-	server.Use(func(next http.HandlerFunc) http.HandlerFunc {
-		return func(w http.ResponseWriter, r *http.Request) {
-			// 获取请求头域名
-			scheme := "http://"
-			if r.Header.Get("Scheme") == "https" {
-				scheme = "https://"
-			}
-			host := r.Host
-			domain := scheme + host
-			ctx.Config.App.Domain = domain
-			Init.SetDomain(domain)
-			ctx.Request = r
-			ctx.ResponseWriter = w
-			next(w, r)
-		}
-	})
-
+	server.Use(middleware.NewSiteMiddleware(ctx.Data).Handle)
+	
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

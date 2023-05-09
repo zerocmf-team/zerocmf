@@ -1,0 +1,41 @@
+type (
+    siteGetReq {
+
+    }
+
+    siteShowReq {
+        SiteId int `path:"siteId,optional"`
+    }
+
+    siteSaveReq {
+        SiteId int `path:"siteId,optional"`
+        Name string `json:"name"`
+        Desc string `json:"desc,optional"`
+        Dsn string `json:"dsn,optional"`
+        ListOrder float64 `json:"listOrder,optional"`
+        Status *int `json:"status,optional"`
+    }
+)
+
+@server(
+    group: admin/site
+    middleware: AuthMiddleware
+    prefix: /api/v1/admin/site
+)
+
+service tenant {
+    @handler Get
+    get / (siteGetReq) returns (Response)
+
+    @handler Show
+    get /:siteId (siteShowReq) returns (Response)
+
+    @handler Store
+    post / (siteSaveReq) returns (Response)
+
+    @handler Edit
+    post /:siteId (siteSaveReq) returns (Response)
+
+    @handler Delete
+    delete /:siteId (siteShowReq) returns (Response)
+}

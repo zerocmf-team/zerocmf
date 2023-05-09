@@ -35,7 +35,8 @@ func (l *StoreLogic) Store(req *types.CateSaveReq) (resp types.Response) {
 
 func Save(c *svc.ServiceContext, req *types.CateSaveReq) (resp types.Response) {
 
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	editId := req.Id
 	portalCategory := model.PortalCategory{}
 

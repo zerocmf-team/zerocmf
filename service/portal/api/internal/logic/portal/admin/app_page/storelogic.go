@@ -28,14 +28,14 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 
 func (l *StoreLogic) Store(req *types.AppPageSaveReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	resp = savePage(db, req, 0)
 	return
 }
 
 func savePage(db *gorm.DB, req *types.AppPageSaveReq, typ int) (resp types.Response) {
 	appPage := new(model.AppPage)
-	appPage.Status = 1
 	copier.Copy(&appPage, &req)
 	var tx *gorm.DB
 	if typ == 0 {

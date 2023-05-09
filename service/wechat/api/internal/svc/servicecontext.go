@@ -13,7 +13,6 @@ import (
 	weData "zerocmf/service/wechat/api/data"
 	"zerocmf/service/wechat/api/internal/config"
 	"zerocmf/service/wechat/api/internal/middleware"
-	"zerocmf/service/wechat/model"
 )
 
 type ServiceContext struct {
@@ -33,7 +32,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	database := database.NewDb(c.Database)
 	db := database.Db() // 初始化
 	// autoMigrate
-	model.Migrate("")
+	// model.Migrate("")
 	redis := redis.NewRedis(c.Redis)
 	store := sessions.NewStore()
 

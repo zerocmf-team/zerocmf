@@ -34,6 +34,15 @@ func StoreHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
+		// 获取请求头域名
+		scheme := "http://"
+		if r.Header.Get("Scheme") == "https" {
+			scheme = "https://"
+		}
+		host := r.Host
+		domain := scheme + host
+		svcCtx.Config.App.Domain = domain
+		svcCtx.Request = r
 		l := department.NewStoreLogic(r.Context(), svcCtx)
 		resp := l.Store(&req)
 		httpx.OkJson(w, resp)

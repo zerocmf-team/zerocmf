@@ -19,7 +19,7 @@ type (
 
 @server(
     group: admin/adminMenu
-    prefix: api/v1/admin
+    prefix: api/v1
     middleware: AuthMiddleware
 )
 

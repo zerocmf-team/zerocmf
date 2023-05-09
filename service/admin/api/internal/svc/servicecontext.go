@@ -9,7 +9,6 @@ import (
 	"zerocmf/common/bootstrap/apisix"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/admin/api/internal/config"
-	"zerocmf/service/admin/model"
 	"zerocmf/service/user/rpc/userclient"
 )
 
@@ -27,8 +26,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	database := database.NewDb(c.Database)
 	// 数据库迁移
 	curDb := database.Db()
-	model.Migrate("", true)
-
 	data := new(Init.Data).Context()
 
 	return &ServiceContext{

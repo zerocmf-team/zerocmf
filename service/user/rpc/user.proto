@@ -42,16 +42,6 @@ message  UserReply {
   int32 userStatus = 26;
 }
 
-
-
-message InitRequest {
-  string tenantId = 1;
-}
-
-message InitReply {
-  int64 code = 1;
-}
-
 // The request message containing the user's name.
 message OauthRequest {
   string token = 1;
@@ -84,29 +74,21 @@ message  NewEnforcerReply {
   repeated menu menus = 2;
 }
 
-/*message EnforceRequest {
-  string tenantId = 1;
-  string v0 = 2;
-  string v1 = 3;
-  string v2 = 4;
-  string v3 = 5;
-  string v4 = 6;
-  string v5 = 7;
+message  siteReq {
+  int64 siteId = 1;
 }
 
-message EnforcerReply {
-  bool access = 1;
-}*/
+message  siteReply {
+
+}
 
 service user {
   rpc Get (UserRequest) returns (UserReply) {}
-
-  rpc Init (InitRequest) returns (InitReply) {} // 初始化服务调用
 
   rpc ValidationJwt (OauthRequest) returns (OauthReply) {}
 
   rpc NewEnforce(NewEnforceRequest) returns (NewEnforcerReply) {}
 
-//  rpc Enforce(EnforceRequest) returns (EnforcerReply) {}
+  rpc autoMigrate(siteReq) returns(siteReply);
 }
 

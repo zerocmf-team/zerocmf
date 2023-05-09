@@ -51,7 +51,7 @@ type (
 )
 
 @server(
-    group: option/admin
+    group: admin/option/site
     prefix: api/v1
     middleware: AuthMiddleware
 )
@@ -79,7 +79,7 @@ service admin {
 }
 
 @server(
-    group: option/admin/login // 登录设置
+    group: admin/option/login // 登录设置
     prefix: api/v1/settings
     middleware: AuthMiddleware
 )
@@ -107,7 +107,7 @@ service admin {
 }
 
 @server(
-    group: option/app
+    group: app/option
     prefix: api/v1/app
 )
 

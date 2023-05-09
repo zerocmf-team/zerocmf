@@ -18,6 +18,7 @@ AdminRpc:
     Key: admin.rpc
 
 Database:
+  Name: admin
   Type: mysql
   Host: localhost
   Database: zerocmf_admin

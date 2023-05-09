@@ -38,7 +38,8 @@ func (l *ListLogic) List(req *types.ThemeFileListReq) (resp types.Response) {
 	query := "theme = ? AND is_public = ?"
 	queryArgs := []interface{}{theme, isPublic}
 
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	data, err := new(model.ThemeFile).List(db, query, queryArgs)
 

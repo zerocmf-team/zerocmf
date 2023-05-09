@@ -18,6 +18,7 @@ import (
 	portalappbreadcrumb "zerocmf/service/portal/api/internal/handler/portal/app/breadcrumb"
 	portalappcategory "zerocmf/service/portal/api/internal/handler/portal/app/category"
 	portalappcomment "zerocmf/service/portal/api/internal/handler/portal/app/comment"
+	portalappform "zerocmf/service/portal/api/internal/handler/portal/app/form"
 	portalapplist "zerocmf/service/portal/api/internal/handler/portal/app/list"
 	portalappnav "zerocmf/service/portal/api/internal/handler/portal/app/nav"
 	portalapppost "zerocmf/service/portal/api/internal/handler/portal/app/post"
@@ -516,5 +517,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/api/v1/admin/form"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/:formId",
+				Handler: portalappform.StoreHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/form"),
 	)
 }

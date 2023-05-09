@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package portal;
+
+option go_package = "./portal";
+
+message  siteReq {
+  int64 siteId = 1;
+}
+
+message  siteReply {
+
+}
+
+service portal {
+  rpc autoMigrate(siteReq) returns(siteReply);
+}

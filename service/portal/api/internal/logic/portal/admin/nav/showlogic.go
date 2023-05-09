@@ -28,7 +28,8 @@ func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
 func (l *ShowLogic) Show(req *types.NavShowReq) (resp types.Response) {
 
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	var nav = new(model.Nav)
 	var query = []string{"id = ?"}
 	var queryArgs = []interface{}{req.Id}

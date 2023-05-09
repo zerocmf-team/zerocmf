@@ -27,7 +27,8 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 func (l *GetLogic) Get(req *types.DepListReq) (resp *types.Response) {
 	resp = new(types.Response)
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 	query := make([]string, 0)
 	var queryArgs = make([]interface{}, 0)
 	name := req.Name

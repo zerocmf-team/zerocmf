@@ -15,6 +15,7 @@ AdminRpc:
       - 127.0.0.1:2379
     Key: admin.rpc
 Database:
+  name: user
   Type: mysql
   Host: localhost
   Database: zerocmf_user
@@ -24,4 +25,6 @@ Database:
   Charset: utf8mb4
   Prefix: cmf_
   AuthCode: KFHlk2ubIlMr5ltqaD
-ApiKey: edd1c9f034335f136f87ad84b625c8f1
+Apisix:
+  ApiKey: edd1c9f034335f136f87ad84b625c8f1
+  Host: localhost

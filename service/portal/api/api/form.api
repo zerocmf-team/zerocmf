@@ -1,7 +1,8 @@
 syntax = "v1"
 
 type formListReq {
-
+    Name *string `form:"name,optional"`
+    Status *int `form:"status,optional"`
 }
 
 type formShowReq {
@@ -13,10 +14,17 @@ type formSaveReq {
     Name string `json:"name"`
     Description string `json:"description,optional"`
     Schema string `json:"schema,optional"`
+    Columns string `json:"columns,optional"`
     SeoTitle string `json:"seoTitle,optional"`
     SeoKeywords string `json:"seoKeywords,optional"`
     SeoDescription string `json:"seoDescription,optional"`
     ListOrder float64 `json:"listOrder,optional"`
+    Status *int `json:"status,optional"`
+}
+
+type formSubmitReq {
+    FormId int64 `path:"formId"` //目标id
+    Schema string `json:"schema"`
 }
 
 @server(
@@ -41,4 +49,14 @@ service portal {
 
     @handler Delete
     delete /:id (formShowReq) returns (Response)
+}
+
+@server(
+    group: portal/app/form
+    prefix: api/v1/app/form
+)
+
+service portal {
+    @handler Store
+    post /:formId (formSubmitReq) returns (Response)
 }

@@ -26,7 +26,8 @@ func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
 
 func (l *ListLogic) List(req *types.NavItemGetReq) (resp types.Response) {
 	c := l.svcCtx
-	db := c.Db
+	siteId, _ := c.Get("siteId")
+	db := c.Config.Database.ManualDb(siteId.(string))
 
 	query := "id = ?"
 	queryArgs := []interface{}{req.NavId}

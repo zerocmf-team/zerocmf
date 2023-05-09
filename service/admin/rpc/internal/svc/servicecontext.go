@@ -3,7 +3,6 @@ package svc
 import (
 	"gorm.io/gorm"
 	"zerocmf/common/bootstrap/database"
-	"zerocmf/service/admin/model"
 	"zerocmf/service/admin/rpc/internal/config"
 )
 
@@ -18,7 +17,9 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	// 数据库迁移
 	curDb := database.Db()
 
-	model.Migrate("", false)
+	//model.Migrate(database.ManualDb("1161514444"))
+
+	//model.Migrate(curDb)
 
 	return &ServiceContext{
 		Config: c,

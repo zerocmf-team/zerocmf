@@ -11,6 +11,7 @@ UserRpc:
     Key: user.rpc
 
 Database:
+  name: portal
   Type: mysql
   Host: localhost
   Database: zerocmf_portal

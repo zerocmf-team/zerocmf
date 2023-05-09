@@ -7,15 +7,12 @@
 package model
 
 import (
-	"zerocmf/common/bootstrap/database"
+	"gorm.io/gorm"
 	"zerocmf/common/bootstrap/model"
 )
 
-func Migrate(tenantId string, api bool) {
-	curDb := database.Conf().ManualDb(tenantId)
-	if api {
-		new(AdminMenu).AutoMigrate(curDb)
-	}
+func Migrate(curDb *gorm.DB) {
+	new(AdminMenu).AutoMigrate(curDb)
 	new(Option).AutoMigrate(curDb)
 	new(Assets).AutoMigrate(curDb)
 	new(model.Route).AutoMigrate(curDb)

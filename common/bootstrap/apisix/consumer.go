@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
@@ -30,8 +29,8 @@ type (
 	}
 )
 
-func NewConsumer(apiKey string) (c consumer) {
-	c = consumer{apisix{ApiKey: apiKey}}
+func NewConsumer(apiKey string, host string) (c consumer) {
+	c = consumer{apisix{ApiKey: apiKey, Host: host}}
 	return
 }
 
@@ -64,7 +63,6 @@ func WithJwtAuth(jwtPlugin authentication.JwtAuth) pluginOption {
 }
 
 func (c consumer) Add(username string, opts ...pluginOption) (err error) {
-
 	data := new(Data)
 	data.Username = username
 	data.Plugins = make(map[string]interface{}, 0)
@@ -81,10 +79,10 @@ func (c consumer) Add(username string, opts ...pluginOption) (err error) {
 	}
 
 	header := map[string]string{"X-API-KEY": c.ApiKey}
-	code, resBytes := util.Request("PUT", "http://localhost:9180/apisix/admin/consumers", &body, header)
+	host := c.Host
+	code, resBytes := util.Request("PUT", "http://"+host+":9180/apisix/admin/consumers", &body, header)
 	if !strings.HasPrefix(strconv.Itoa(code), "20") {
 		err = errors.New("errcode:" + strconv.Itoa(code) + string(resBytes))
-		fmt.Println("res", string(resBytes))
 		return
 	}
 	return

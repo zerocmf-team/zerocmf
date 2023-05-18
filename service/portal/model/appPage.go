@@ -20,7 +20,7 @@ type AppPage struct {
 	SeoDescription string  `gorm:"type:varchar(255);comment:三要素描述;not null" json:"seoDescription"`
 	Schema         string  `gorm:"type:longtext;comment:页面低代码文件" json:"schema"`
 	ListOrder      float64 `gorm:"type:float;comment:排序;default:10000" json:"listOrder"`
-	UserId         int     `gorm:"type:int(11);comment:用户id;NOT NULL" json:"user_id"`
+	UserId         int64   `gorm:"type:bigint(20);comment:用户id;NOT NULL" json:"user_id"`
 	CreateAt       int64   `gorm:"type:bigint(20)" json:"createAt"`
 	UpdateAt       int64   `gorm:"type:bigint(20)" json:"updateAt"`
 	Status         int     `gorm:"type:tinyint(3);default:1" json:"status"`

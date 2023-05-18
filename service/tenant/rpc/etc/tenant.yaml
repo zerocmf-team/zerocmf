@@ -1,0 +1,19 @@
+Name: tenant.rpc
+ListenOn: 0.0.0.0:8701
+
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: tenant.rpc
+
+Database:
+  Name: tenant
+  Type: mysql
+  Host: localhost
+  Database: zerocmf_tenant
+  Username: root
+  Password: '123456'
+  Port: 3306
+  Charset: utf8mb4
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD

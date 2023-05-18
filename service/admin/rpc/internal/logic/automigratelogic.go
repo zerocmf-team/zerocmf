@@ -34,7 +34,7 @@ func (l *AutoMigrateLogic) AutoMigrate(in *admin.SiteReq) (*admin.SiteReply, err
 	if siteId > 0 {
 		// todo dsn 初始化
 		siteStr := strconv.FormatInt(siteId, 10)
-		dbORM := db.ManualDb("admin_" + siteStr)
+		dbORM := db.ManualDb(siteStr)
 		model.Migrate(dbORM)
 	}
 

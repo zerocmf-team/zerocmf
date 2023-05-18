@@ -11,10 +11,11 @@ type Config struct {
 	App struct {
 		Domain string `json:",optional"`
 	}
-	UserRpc  zrpc.RpcClientConf
-	AdminRpc zrpc.RpcClientConf
-	Database database.Database
-	Apisix   struct {
+	UserRpc   zrpc.RpcClientConf
+	AdminRpc  zrpc.RpcClientConf
+	TenantRpc zrpc.RpcClientConf
+	Database  database.Database
+	Apisix    struct {
 		ApiKey string `json:"apiKey"`
 		Host   string `json:"host"`
 	}

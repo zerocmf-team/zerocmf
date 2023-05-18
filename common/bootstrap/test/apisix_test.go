@@ -15,7 +15,12 @@ func TestConsumer(t *testing.T) {
 }
 
 func TestJwt(t *testing.T) {
-	token, err := apisix.NewJwt("edd1c9f034335f136f87ad84b625c8f1", "localhost").GetAuthorizeToken("aaa")
+	//payload := map[string]interface{}{
+	//	"tenantId": "1111",
+	//	"oid":      "1",
+	//}
+
+	token, err := apisix.NewJwt("localhost").GetAuthorizeToken("1")
 	if err != nil {
 		fmt.Println("err", err)
 	}

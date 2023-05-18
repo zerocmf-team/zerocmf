@@ -9,6 +9,9 @@ import (
 
 type Config struct {
 	rest.RestConf
+	App struct {
+		Domain string `json:",optional"`
+	}
 	AdminRpc  zrpc.RpcClientConf
 	UserRpc   zrpc.RpcClientConf
 	PortalRpc zrpc.RpcClientConf

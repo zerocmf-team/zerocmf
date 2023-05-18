@@ -8,7 +8,7 @@ Database:
   name: portal
   Type: mysql
   Host: localhost
-  Database: zerocmf_admin
+  Database: zerocmf_portal
   Username: root
   Password: '123456'
   Port: 3306

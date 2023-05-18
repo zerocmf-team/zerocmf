@@ -78,7 +78,7 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 	userId := strconv.FormatInt(user.Uid, 10)
 	apisix.NewConsumer(conf.Apisix.ApiKey, conf.Apisix.Host).Add(userId, apisix.WithJwtAuth(authentication.JwtAuth{Key: userId, Exp: exp}))
 
-	token, tokenErr := apisix.NewJwt(conf.Apisix.ApiKey, conf.Apisix.Host).GetAuthorizeToken(userId)
+	token, tokenErr := apisix.NewJwt(conf.Apisix.Host).GetAuthorizeToken(userId)
 	if tokenErr != nil {
 		resp.Error(tokenErr.Error(), nil)
 		return

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	adminsite "zerocmf/service/tenant/api/internal/handler/admin/site"
+	appsite "zerocmf/service/tenant/api/internal/handler/app/site"
 	oauth "zerocmf/service/tenant/api/internal/handler/oauth"
 	"zerocmf/service/tenant/api/internal/svc"
 
@@ -52,6 +53,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Handler: adminsite.ShowHandler(serverCtx),
 				},
 				{
+					Method:  http.MethodGet,
+					Path:    "/migrate/:siteId",
+					Handler: adminsite.AutoMigrateHandler(serverCtx),
+				},
+				{
 					Method:  http.MethodPost,
 					Path:    "/",
 					Handler: adminsite.StoreHandler(serverCtx),
@@ -69,5 +75,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/api/v1/admin/site"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/domain/:domain",
+				Handler: appsite.DomainHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/site"),
 	)
 }

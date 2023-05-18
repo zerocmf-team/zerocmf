@@ -33,6 +33,7 @@ func (l *GetLogic) Get(req *types.SiteGetReq) (resp types.Response) {
 
 	var result []struct {
 		SiteId     int64   `gorm:"type:bigint(20);comment;站点唯一编号" json:"siteId"`
+		Domain     string  `gorm:"type:varchar(100);comment:站点名称" json:"domain"`
 		Name       string  `gorm:"type:varchar(32);comment:站点名称" json:"name"`
 		Desc       string  `gorm:"type:varchar(255);comment:站点描述" json:"desc"`
 		Status     int     `gorm:"type:tinyint(3);default:1;comment:文件状态" json:"status"`
@@ -52,7 +53,7 @@ func (l *GetLogic) Get(req *types.SiteGetReq) (resp types.Response) {
 
 	var total int64 = 0
 
-	tx := db.Select("s.site_id,s.name,s.desc,s.status,s.create_at,su.oid,su.is_owner").Table(prefix+"site s").Joins("left join "+prefix+"site_user su on s.site_id = su.site_id").
+	tx := db.Select("s.site_id,s.name,s.domain,s.desc,s.status,s.create_at,su.oid,su.is_owner").Table(prefix+"site s").Joins("left join "+prefix+"site_user su on s.site_id = su.site_id").
 		Joins("inner join "+prefix+"user u on u.uid = su.uid").
 		Where("u.uid = ? AND s.delete_at = ?", userId, 0).Scan(&result).Count(&total)
 
@@ -62,7 +63,7 @@ func (l *GetLogic) Get(req *types.SiteGetReq) (resp types.Response) {
 	}
 
 	//获取当用户信息
-	tx = db.Select("s.site_id,s.name,s.desc,s.status,s.create_at,su.oid,su.is_owner,su.list_order").Table(prefix+"site s").Joins("left join "+prefix+"site_user su on s.site_id = su.site_id").
+	tx = db.Select("s.site_id,s.name,s.domain,s.desc,s.status,s.create_at,su.oid,su.is_owner,su.list_order").Table(prefix+"site s").Joins("left join "+prefix+"site_user su on s.site_id = su.site_id").
 		Joins("inner join "+prefix+"user u on u.uid = su.uid").
 		Where("u.uid = ? AND s.delete_at = ?", userId, 0).Offset((current - 1) * pageSize).Order("su.list_order desc").Scan(&result)
 

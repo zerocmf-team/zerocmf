@@ -45,6 +45,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		AdminRpc:       adminclient.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		PortalRpc:      portalclient.NewPortal(zrpc.MustNewClient(c.PortalRpc)),
-		AuthMiddleware: apisix.AuthMiddleware(data),
+		AuthMiddleware: apisix.AuthMiddleware(data, nil),
 	}
 }

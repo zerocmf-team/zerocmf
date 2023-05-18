@@ -1,0 +1,19 @@
+syntax = "proto3";
+package tenant;
+option go_package = "./tenant";
+
+message CurrentUserReq {
+  int64 uid = 1;
+  int64 siteId = 2;
+}
+
+message  UserReply {
+  int64 id = 1;
+  int64 uid = 2;
+  int64 siteId = 3;
+  int64 oid = 4;
+}
+
+service tenant {
+  rpc Get (CurrentUserReq) returns (UserReply) {}
+}

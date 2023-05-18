@@ -9,6 +9,7 @@ type Site struct {
 	Id     int64  `json:"id"`
 	SiteId int64  `gorm:"type:bigint(20);comment;站点唯一编号" json:"siteId"`
 	Name   string `gorm:"type:varchar(32);comment:站点名称" json:"name"`
+	Domain string `gorm:"type:varchar(100);comment:站点域名" json:"domain"`
 	Desc   string `gorm:"type:varchar(255);comment:站点描述" json:"desc"`
 	Dsn    string `gorm:"type:varchar(32);comment:数据库配置" json:"dsn"`
 	Status int    `gorm:"type:tinyint(3);default:1;comment:文件状态" json:"status"`

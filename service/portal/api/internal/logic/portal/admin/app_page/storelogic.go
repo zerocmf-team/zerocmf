@@ -38,6 +38,21 @@ func savePage(db *gorm.DB, req *types.AppPageSaveReq, typ int) (resp types.Respo
 	appPage := new(model.AppPage)
 	copier.Copy(&appPage, &req)
 	var tx *gorm.DB
+
+	// 查询公共头是否存在
+	if req.Type == "1" {
+		page := new(model.AppPage)
+		tx = db.Where("is_public = ? AND name = ?", req.IsPublic, req.Name).First(&page)
+		if tx.Error != nil {
+			resp.Error("系统错误", tx.Error)
+			return
+		}
+		if page.Id != 0 {
+			appPage.Id = page.Id
+			typ = 1
+		}
+	}
+
 	if typ == 0 {
 		appPage.CreateAt = time.Now().Unix()
 		tx = db.Create(&appPage)

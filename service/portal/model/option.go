@@ -6,7 +6,10 @@
 
 package model
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+	"gorm.io/gorm"
+)
 
 type Option struct {
 	Id          int    `json:"id"`
@@ -16,5 +19,8 @@ type Option struct {
 }
 
 func (_ *Option) AutoMigrate(db *gorm.DB) {
-	db.AutoMigrate(&Option{})
+	err := db.AutoMigrate(&Option{})
+	if err != nil {
+		fmt.Println("Option AutoMigrate err", err.Error())
+	}
 }

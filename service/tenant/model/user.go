@@ -24,6 +24,7 @@ type User struct {
 	LastLoginAt   int64  `gorm:"type:bigint(20);comment:最后登录时间" json:"lastLoginAt"`
 	LastLoginTime string `gorm:"-" json:"last_loginTime"`
 	DeleteAt      int64  `gorm:"type:bigint(20);comment:删除时间" json:"deleteAt"`
+	Access        int    `gorm:"-" json:"access"`
 	model.Time
 }
 

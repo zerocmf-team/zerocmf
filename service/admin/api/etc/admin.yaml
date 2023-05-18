@@ -10,12 +10,13 @@ UserRpc:
     Hosts:
       - 127.0.0.1:2379
     Key: user.rpc
-AdminRpc:
+
+TenantRpc:
   Timeout: 30000
   Etcd:
     Hosts:
       - 127.0.0.1:2379
-    Key: admin.rpc
+    Key: tenant.rpc
 
 Database:
   Name: admin

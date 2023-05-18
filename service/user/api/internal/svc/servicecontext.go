@@ -9,6 +9,7 @@ import (
 	"zerocmf/common/bootstrap/apisix"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/admin/rpc/adminclient"
+	"zerocmf/service/tenant/rpc/tenantclient"
 	"zerocmf/service/user/api/internal/config"
 	"zerocmf/service/user/rpc/types/user"
 	"zerocmf/service/user/rpc/userclient"
@@ -34,12 +35,13 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	//model.Migrate(db)
 
 	data := new(Init.Data).Context()
+	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 	return &ServiceContext{
 		Config:         c,
 		Db:             db,
 		Data:           data,
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		AdminRpc:       adminclient.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
-		AuthMiddleware: apisix.AuthMiddleware(data),
+		AuthMiddleware: apisix.AuthMiddleware(data, tenantRpc),
 	}
 }

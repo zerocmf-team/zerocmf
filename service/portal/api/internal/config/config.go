@@ -11,6 +11,7 @@ type Config struct {
 	App struct {
 		Domain string `json:",optional"`
 	}
-	UserRpc  zrpc.RpcClientConf
-	Database database.Database
+	UserRpc   zrpc.RpcClientConf
+	TenantRpc zrpc.RpcClientConf
+	Database  database.Database
 }

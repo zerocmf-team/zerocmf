@@ -6,8 +6,7 @@ ENV TZ Asia/Shanghai
 
 WORKDIR /app
 
-COPY service/admin/api/etc /app/etc
-COPY service/admin/api/data /app/data
-COPY service/admin/api/main /app/main
+COPY service/tenant/api/etc /app/etc
+COPY service/tenant/api/main /app/main
 
-CMD ["./main", "-f", "etc/admin.yaml"]
+CMD ["./main", "-f", "etc/tenant.yaml"]

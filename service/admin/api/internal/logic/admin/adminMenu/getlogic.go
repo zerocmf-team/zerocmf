@@ -64,16 +64,15 @@ func (l *GetLogic) Get() (resp *types.Response) {
 	userRpc := c.UserRpc
 	var menus []model.AdminMenu
 	siteId, _ := c.Get("siteId")
+
 	db := c.Config.Database.ManualDb(siteId.(string))
 	tx := db.Where("path <> ?", "").Order("list_order, id").Find(&menus)
 	if tx.RowsAffected == 0 {
 		resp.Error("暂无菜单，请和联系管理员添加！", nil)
 		return
 	}
-
 	/* 获取当前用户授权的菜单列表 */
-	userId, _ := l.svcCtx.Get("userId")
-
+	userId, _ := c.Get("userId")
 	rpcMenus := make([]*user.Menu, 0)
 	copier.Copy(&rpcMenus, &menus)
 

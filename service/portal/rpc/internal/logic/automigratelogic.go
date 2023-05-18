@@ -34,7 +34,7 @@ func (l *AutoMigrateLogic) AutoMigrate(in *portal.SiteReq) (*portal.SiteReply, e
 	if siteId > 0 {
 		// todo dsn 初始化
 		siteStr := strconv.FormatInt(siteId, 10)
-		dbORM := db.ManualDb("portal_" + siteStr)
+		dbORM := db.ManualDb(siteStr)
 		model.Migrate(dbORM)
 	}
 	return &portal.SiteReply{}, nil

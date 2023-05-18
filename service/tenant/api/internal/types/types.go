@@ -21,16 +21,21 @@ type SiteGetReq struct {
 }
 
 type SiteShowReq struct {
-	SiteId int `path:"siteId,optional"`
+	SiteId int64 `path:"siteId,optional"`
 }
 
 type SiteSaveReq struct {
 	SiteId    int     `path:"siteId,optional"`
 	Name      string  `json:"name"`
 	Desc      string  `json:"desc,optional"`
+	Domain    string  `json:"domain,optional"`
 	Dsn       string  `json:"dsn,optional"`
 	ListOrder float64 `json:"listOrder,optional"`
 	Status    *int    `json:"status,optional"`
+}
+
+type SiteDomainReq struct {
+	Domain string `path:"domain"`
 }
 
 func (r *Response) Success(msg string, data interface{}) {

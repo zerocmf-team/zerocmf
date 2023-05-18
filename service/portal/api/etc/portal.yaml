@@ -10,6 +10,13 @@ UserRpc:
       - 127.0.0.1:2379
     Key: user.rpc
 
+TenantRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: tenant.rpc
+
 Database:
   name: portal
   Type: mysql

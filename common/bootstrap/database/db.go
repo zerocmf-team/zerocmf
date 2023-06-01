@@ -8,17 +8,16 @@ package database
 
 import (
 	"database/sql"
+	"github.com/jinzhu/copier"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"os"
 	"strconv"
-	"sync"
 	"time"
 )
 
 type Database struct {
-	mu       sync.RWMutex `json:",optional"`
 	Name     string
 	Type     string
 	Host     string
@@ -31,53 +30,29 @@ type Database struct {
 	AuthCode string
 }
 
-var (
-	curDb *Database
-	mu    sync.RWMutex
-)
-
-func Conf() *Database {
-
-	if curDb == nil {
-		curDb = new(Database)
-	}
-
-	return curDb
-}
-
-func NewDb(database Database) *Database {
-	mu.Lock()
-	curDb = &database
-	mu.Unlock()
-	return curDb
-}
-
-func (db *Database) Db() (outDb *gorm.DB) {
-	db.mu.Lock()
+func NewGormDb(db Database) (gormDb *gorm.DB) {
 	dbName := db.Database
-	outDb = db.newConn(dbName)
-	outDb.Set("siteId", "")
-	db.mu.Unlock()
+	gormDb = db.newConn(dbName)
+	gormDb.Set("siteId", "")
 	return
 }
 
-func Config() (conf *Database) {
-	mu.Lock()
-	conf = curDb
-	mu.Unlock()
+func (db *Database) NewConf(siteId string) (conf Database) {
+	copier.Copy(&conf, &db)
+	if siteId != "" {
+		conf.Database = "site_" + db.Name + "_" + siteId
+	}
 	return
 }
 
 func (db *Database) ManualDb(siteId string) (outDb *gorm.DB) {
-	db.mu.Lock()
 	dbName := "site_" + db.Name + "_" + siteId
 	// 未指定则默认为主库
 	if siteId == "" {
 		dbName = db.Database
 	}
-	outDb = db.newConn(dbName)
-	outDb.Set("siteId", siteId)
-	db.mu.Unlock()
+	gormDb := db.newConn(dbName)
+	gormDb.Set("siteId", siteId)
 	return
 }
 
@@ -112,6 +87,8 @@ func (db *Database) newConn(database string) *gorm.DB {
 	if err != nil {
 		panic("failed to connect Database：" + err.Error())
 	}
+
+	gDb.Set("prefix", prefix)
 
 	sqlDB, err := gDb.DB()
 

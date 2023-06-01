@@ -14,7 +14,7 @@ import (
 
 func TestPost(t *testing.T) {
 
-	newDb := database.NewDb(database.Database{
+	db := database.NewGormDb(database.Database{
 		Type:     "mysql",
 		Host:     "localhost",
 		Database: "zerocmf_portal",
@@ -25,8 +25,6 @@ func TestPost(t *testing.T) {
 		Prefix:   "cmf_",
 		AuthCode: "KFHlk2ubIlMr5ltqaD",
 	})
-
-	db := newDb.Db()
 
 	c := colly.NewCollector(
 		colly.DetectCharset(),

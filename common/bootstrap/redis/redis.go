@@ -14,6 +14,7 @@ import (
 )
 
 type Redis struct {
+	client   *redis.Client `json:",optional"`
 	Enabled  bool
 	Host     string
 	Database int
@@ -21,22 +22,17 @@ type Redis struct {
 	Port     int
 }
 
-var (
-	curRedis *redis.Client
-)
-
-func NewRedis(database Redis) *redis.Client {
-	if curRedis == nil {
-		curRedis = redis.NewClient(&redis.Options{
-			Addr:     database.Host + ":" + strconv.Itoa(database.Port),
-			Password: database.Password, // no password set
-			DB:       database.Database, // use default DB
-		})
-	}
+func NewRedis(database Redis) Redis {
+	curRedis := redis.NewClient(&redis.Options{
+		Addr:     database.Host + ":" + strconv.Itoa(database.Port),
+		Password: database.Password, // no password set
+		DB:       database.Database, // use default DB
+	})
 	result, err := curRedis.Ping().Result()
 	if err != nil {
 		logx.Error("redis异常", err.Error())
 	}
 	fmt.Println("redis连接状态：", result)
-	return curRedis
+	database.client = curRedis
+	return database
 }

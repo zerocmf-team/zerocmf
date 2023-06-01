@@ -1,0 +1,38 @@
+syntax = "v1"
+
+type formDatasReq {
+    formId string `path:"formId,optional"`
+}
+
+type formDataShowReq {
+    formId string `path:"formId,optional"`
+}
+
+type formDataSaveReq {
+    Id string `path:"Id,optional"`
+    formId string `json:"formId"`
+    formDataJson string `json:"formDataJson"`
+}
+
+@server(
+    group: admin/formData
+    middleware: AuthMiddleware,SiteMiddleware
+    prefix: api/v1/admin/formData
+)
+
+service lowcode {
+    @handler Get
+    get / (formDatasReq) returns (Response)
+
+    @handler Show
+    get /:id (formDataShowReq) returns (Response)
+
+    @handler Store
+    post / (formDataSaveReq) returns (Response)
+
+    @handler Edit
+    post /:id (formDataSaveReq) returns (Response)
+
+    @handler Delete
+    delete /:id (formDataShowReq) returns (Response)
+}

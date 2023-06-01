@@ -24,16 +24,14 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	database := database.NewDb(c.Database)
-	// 数据库迁移
-	curDb := database.Db()
+	db := database.NewGormDb(c.Database)
 	data := new(Init.Data).Context()
 	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 
 	return &ServiceContext{
 		Config:         c,
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
-		Db:             curDb,
+		Db:             db,
 		Data:           data,
 		AuthMiddleware: apisix.AuthMiddleware(data, tenantRpc),
 	}

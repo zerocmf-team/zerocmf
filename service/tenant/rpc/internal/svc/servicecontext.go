@@ -13,12 +13,9 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	database := database.NewDb(c.Database)
-	// 数据库迁移
-	curDb := database.Db()
-
+	db := database.NewGormDb(c.Database)
 	return &ServiceContext{
 		Config: c,
-		Db:     curDb,
+		Db:     db,
 	}
 }

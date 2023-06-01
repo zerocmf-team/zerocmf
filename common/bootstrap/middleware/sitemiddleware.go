@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 	"zerocmf/common/bootstrap/Init"
@@ -29,6 +30,7 @@ func (m *SiteMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		m.Set("siteId", siteId)
+		fmt.Println("Handle siteId", siteId)
 		next(w, r)
 	}
 }

@@ -12,10 +12,10 @@ import (
 )
 
 type Time struct {
-	CreateAt   int64  `gorm:"type:bigint(20);NOT NULL" json:"create_at"`
-	UpdateAt   int64  `gorm:"type:bigint(20);NOT NULL" json:"update_at"`
-	CreateTime string `gorm:"-" json:"create_time"`
-	UpdateTime string `gorm:"-" json:"update_time"`
+	CreateAt   int64  `bson:"createAt" gorm:"type:bigint(20);NOT NULL" json:"createAt"`
+	UpdateAt   int64  `bson:"updateAt" gorm:"type:bigint(20);NOT NULL" json:"updateAt"`
+	CreateTime string `gorm:"-" bson:"-" json:"createTime"`
+	UpdateTime string `gorm:"-" bson:"-" json:"updateTime"`
 }
 
 func (model *Time) AfterFind(tx *gorm.DB) (err error) {

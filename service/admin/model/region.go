@@ -7,7 +7,7 @@
 package model
 
 import (
-	"zerocmf/common/bootstrap/database"
+	"gorm.io/gorm"
 )
 
 type Region struct {
@@ -17,7 +17,6 @@ type Region struct {
 	ParentId int    `gorm:"type:mediumint;not null;default:0;comment:父级行政编码" json:"parent_id"`
 }
 
-func (_ Region) AutoMigrate() {
-	curDb := database.Conf().Db()
-	curDb.AutoMigrate(&Region{})
+func (_ Region) AutoMigrate(db *gorm.DB) {
+	db.AutoMigrate(&Region{})
 }

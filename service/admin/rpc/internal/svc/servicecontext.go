@@ -13,10 +13,8 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	database := database.NewDb(c.Database)
+	curDb := database.NewGormDb(c.Database)
 	// 数据库迁移
-	curDb := database.Db()
-
 	//model.Migrate(database.ManualDb("1161514444"))
 
 	//model.Migrate(curDb)

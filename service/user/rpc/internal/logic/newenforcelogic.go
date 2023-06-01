@@ -26,9 +26,9 @@ func NewNewEnforceLogic(ctx context.Context, svcCtx *svc.ServiceContext) *NewEnf
 func (l *NewEnforceLogic) NewEnforce(in *user.NewEnforceRequest) (reply *user.NewEnforcerReply, err error) {
 	reply = new(user.NewEnforcerReply)
 	c := l.svcCtx
-	dbConf := c.Config.Database
+	dbConf := c.Config.Database.NewConf(in.TenantId)
 	var e *casbin.Enforcer
-	e, err = dbConf.NewEnforcer(in.TenantId)
+	e, err = dbConf.NewEnforcer()
 	//	存入casbin
 	if err != nil {
 		return

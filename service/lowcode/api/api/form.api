@@ -1,0 +1,47 @@
+syntax = "v1"
+
+type (
+    formGetReq {
+
+    }
+
+    formShowReq {
+        formId string `path:"formId,optional"`
+    }
+
+    formSaveReq {
+        id string `json:"id,optional"`
+        ParentId string `json:"parentId,optional"`
+        Name string `json:"name"`
+        Icon string `json:"icon,optional"`
+        MenuType int `json:"menuType,optional"`
+        HideInMenu int `json:"hideInMenu,optional"`
+        Description string `json:"description,optional"`
+        Schema string `json:"schema,optional"`
+        ListOrder float64 `json:"listOrder,optional"`
+        Status int `json:"status,optional"`
+    }
+)
+
+@server(
+    group: admin/form
+    middleware: AuthMiddleware,SiteMiddleware
+    prefix: api/v1/admin/form
+)
+
+service lowcode {
+    @handler Get
+    get / (formGetReq) returns (Response)
+
+    @handler Show
+    get /:formId (formShowReq) returns (Response)
+
+    @handler Store
+    post / (formSaveReq) returns (Response)
+
+    @handler Edit
+    post /:formId (formSaveReq) returns (Response)
+
+    @handler Delete
+    delete /:formId (formShowReq) returns (Response)
+}

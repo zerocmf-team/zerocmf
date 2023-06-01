@@ -1,0 +1,17 @@
+syntax = "v1"
+
+type (
+    regionGetReq {
+
+    }
+)
+
+@server(
+    group: app/region
+    prefix: api/v1/app/region
+)
+
+service lowcode {
+    @handler Get
+    get / (regionGetReq) returns (Response)
+}

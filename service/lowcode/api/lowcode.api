@@ -1,0 +1,15 @@
+syntax = "v1"
+type (
+	Response {
+		Code int         `json:"code"`
+		Msg  string      `json:"msg"`
+		Data interface{} `json:"data"`
+	}
+)
+
+import "api/site.api"
+import "api/form.api"
+import "api/formData.api"
+import "api/region.api"
+import "api/user.api"
+import "api/role.api"

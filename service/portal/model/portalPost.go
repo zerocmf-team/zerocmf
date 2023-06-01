@@ -12,7 +12,6 @@ import (
 	"gorm.io/gorm"
 	"time"
 	"zerocmf/common/bootstrap/data"
-	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/model"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/rpc/types/user"
@@ -168,15 +167,13 @@ func (model *PortalPost) PortalList(db *gorm.DB, query string, queryArgs []inter
  **/
 
 func (model *PortalPost) ListByCategory(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}, extra map[string]string) (result data.Paginate, err error) {
-
 	order := "p.list_order desc,p.id desc"
 	if extra["hot"] == "1" {
 		order = "p.post_hits desc," + order
 	}
-
 	var total int64 = 0
-	conf := database.Config()
-	prefix := conf.Prefix
+	iPrefix, _ := db.Get("prefix")
+	prefix := iPrefix.(string)
 	db.Table(prefix+"portal_post p").Distinct("p.id").
 		Joins("LEFT JOIN "+prefix+"portal_category_post cp ON p.id = cp.post_id").
 		Joins("LEFT JOIN "+prefix+"portal_category pc ON pc.id = cp.category_id").
@@ -248,12 +245,9 @@ func (model *PortalPost) ListByCategory(db *gorm.DB, current, pageSize int, quer
  **/
 
 func (model *PortalCategory) FindPostCategory(db *gorm.DB, query string, queryArgs []interface{}) ([]PortalCategory, error) {
-
 	var category []PortalCategory
-
-	conf := database.Config()
-	prefix := conf.Prefix
-
+	iPrefix, _ := db.Get("prefix")
+	prefix := iPrefix.(string)
 	result := db.Table(prefix+"portal_post p").Select("pc.*").
 		Joins("INNER JOIN "+prefix+"portal_category_post pcp ON pcp.post_id = p.id").
 		Joins("INNER JOIN "+prefix+"portal_category pc ON pc.id = pcp.category_id").

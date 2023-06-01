@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm"
 	"strconv"
 	"time"
-	"zerocmf/common/bootstrap/casbin"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/model"
 
@@ -55,6 +54,7 @@ func save(req access, c *svc.ServiceContext) (result model.Role, err error) {
 
 	form := req
 	siteId, _ := c.Get("siteId")
+
 	db := c.Config.Database.ManualDb(siteId.(string))
 	// 角色信息
 	role := model.Role{
@@ -63,7 +63,8 @@ func save(req access, c *svc.ServiceContext) (result model.Role, err error) {
 		CreateAt: time.Now().Unix(),
 		Status:   1,
 	}
-	e, err := casbin.NewEnforcer("")
+	adapter := c.Config.Database.NewConf(siteId.(string))
+	e, err := adapter.NewEnforcer()
 	//	存入casbin
 	if err != nil {
 		return

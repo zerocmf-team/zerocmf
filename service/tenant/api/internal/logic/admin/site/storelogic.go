@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/jinzhu/copier"
 	"time"
-	"zerocmf/common/bootstrap/redis"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/admin/rpc/adminclient"
 	"zerocmf/service/portal/rpc/portalclient"
@@ -41,6 +40,8 @@ func (l *StoreLogic) Store(req *types.SiteSaveReq) (resp types.Response) {
 func save(c *svc.ServiceContext, context context.Context, req *types.SiteSaveReq) (resp types.Response) {
 	db := c.Db
 	userId, _ := c.Get("userId")
+
+	redis := c.Redis()
 
 	user := model.User{}
 	tx := db.Where("id", userId).First(&user)

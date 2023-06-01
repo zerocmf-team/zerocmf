@@ -13,7 +13,7 @@ import (
  ** 日期 + 当天排号数量
  */
 
-func EncryptUid(key string, salt int) (uid int64, err error) {
+func (r Redis) EncryptUid(key string, salt int) (uid int64, err error) {
 
 	t1 := time.Now()
 	date := t1.Format("20060102")
@@ -22,6 +22,10 @@ func EncryptUid(key string, salt int) (uid int64, err error) {
 	// 设置当天失效时间
 	year, month, day := t1.Date()
 	today := time.Date(year, month, day, 23, 59, 59, 59, time.Local)
+	curRedis := r.client
+	if curRedis == nil {
+		panic("redis 链接失败")
+	}
 	curRedis.ExpireAt(key, today)
 	val, valErr := curRedis.Incr(key).Result()
 	if valErr != nil {

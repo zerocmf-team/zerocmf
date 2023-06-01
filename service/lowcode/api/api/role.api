@@ -1,0 +1,44 @@
+syntax = "v1"
+type (
+    UserAdminRoleList {
+        Name string `form:"name,optional"`
+        Status *int `form:"status,optional"`
+        NoPagination *int `form:"noPagination,optional"`
+    }
+
+    UserAdminRoleShow {
+        Id string `path:"id"`
+    }
+
+    UserAdminRoleSave {
+        Id string `path:"id,optional"`
+        Name string `json:"name"`
+        Remark string `json:"remark,optional"`
+        Status *int `json:"status,optional"`
+        Access []string `json:"access,optional"`
+    }
+)
+
+// 账号相关
+@server(
+    group: admin/role
+    prefix: /api/v1/admin/role
+    middleware: AuthMiddleware,SiteMiddleware
+)
+
+service lowcode {
+    @handler Get
+    get / (UserAdminRoleList) returns (Response)
+
+    @handler Show
+    get /:id (UserAdminRoleShow) returns (Response)
+
+    @handler Store
+    post / (UserAdminRoleSave) returns (Response)
+
+    @handler Edit
+    post /:id (UserAdminRoleSave) returns (Response)
+
+    @handler Delete
+    delete /:id (UserAdminRoleShow) returns (Response)
+}

@@ -25,9 +25,8 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	newDb := database.NewDb(c.Database)
 	// 设置为默认的db
-	db := newDb.Db() // 初始化
+	db := database.NewGormDb(c.Database)
 	// 数据库迁移
 	//model.Migrate(db)
 

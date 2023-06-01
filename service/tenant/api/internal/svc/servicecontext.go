@@ -1,7 +1,6 @@
 package svc
 
 import (
-	goRedis "github.com/go-redis/redis"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/gorm"
@@ -20,7 +19,7 @@ import (
 type ServiceContext struct {
 	Config  config.Config
 	Db      *gorm.DB
-	Redis   *goRedis.Client
+	Redis   func() redis.Redis
 	Request *http.Request
 	*Init.Data
 	AdminRpc       adminclient.Admin
@@ -30,17 +29,18 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
-	curDb := database.NewDb(c.Database)
 	// 设置为默认的db
-	db := curDb.Db() // 初始化
+	db := database.NewGormDb(c.Database)
 	// 数据库迁移
-	model.Migrate("")
-	client := redis.NewRedis(c.Redis)
+	model.Migrate(db)
+
 	data := new(Init.Data).Context()
 	return &ServiceContext{
-		Config:         c,
-		Db:             db,
-		Redis:          client,
+		Config: c,
+		Db:     db,
+		Redis: func() redis.Redis {
+			return redis.NewRedis(c.Redis)
+		},
 		Data:           data,
 		AdminRpc:       adminclient.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),

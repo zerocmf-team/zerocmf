@@ -4,7 +4,6 @@ import (
 	"context"
 	"gorm.io/gorm"
 	"strconv"
-	"zerocmf/common/bootstrap/casbin"
 	"zerocmf/service/user/model"
 
 	"zerocmf/service/user/api/internal/svc"
@@ -36,10 +35,10 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 	if id == "" {
 		resp.Error("角色id不能为空！", nil)
 	}
-	e, err := casbin.NewEnforcer("")
-	//	存入casbin
+
+	adapter := c.Config.Database.NewConf(siteId.(string))
+	e, err := adapter.NewEnforcer()
 	if err != nil {
-		resp.Error(err.Error(), nil)
 		return
 	}
 	role := model.Role{}

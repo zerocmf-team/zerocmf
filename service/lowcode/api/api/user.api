@@ -1,0 +1,48 @@
+syntax = "v1"
+
+type (
+    UserAdminListReq {
+        UserType string `form:"userType,optional"`
+        UserLogin string `form:"userLogin,optional"`
+        UserNickname string `form:"userNickname,optional"`
+        UserEmail string `form:"userEmail,optional"`
+    }
+
+    UserAdminShowReq {
+        Id string `path:"id,optional"`
+    }
+
+    UserAdminSaveReq {
+        Id string `path:"id,optional"`
+        UserLogin string `json:"userLogin,optional"`
+        UserPass *string `json:"userPass,optional"`
+        UserEmail string `json:"userEmail,optional"`
+        Mobile string `json:"mobile,optional"`
+        UserRealname string `json:"userRealname,optional"`
+        RoleIds []string `json:"roleIds,optional"`
+    }
+)
+
+// 账号相关
+@server(
+    group: admin/account
+    prefix: /api/v1/admin/account
+    middleware: AuthMiddleware,SiteMiddleware
+)
+
+service lowcode {
+    @handler Get
+    get / (UserAdminListReq) returns (Response)
+
+    @handler Show
+    get /:id (UserAdminShowReq) returns (Response)
+
+    @handler Store
+    post / (UserAdminSaveReq) returns (Response)
+
+    @handler Edit
+    post /:id (UserAdminSaveReq) returns (Response)
+
+    @handler Delete
+    delete /:id (UserAdminShowReq) returns (Response)
+}

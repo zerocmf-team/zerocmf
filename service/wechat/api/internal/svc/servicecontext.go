@@ -29,8 +29,7 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	database := database.NewDb(c.Database)
-	db := database.Db() // 初始化
+	db := database.NewGormDb(c.Database)
 	// autoMigrate
 	// model.Migrate("")
 	redis := redis.NewRedis(c.Redis)

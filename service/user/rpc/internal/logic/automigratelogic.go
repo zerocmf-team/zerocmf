@@ -29,13 +29,13 @@ func NewAutoMigrateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AutoM
 func (l *AutoMigrateLogic) AutoMigrate(in *user.SiteReq) (*user.SiteReply, error) {
 	c := l.svcCtx
 	dbConf := c.Config.Database
-	db := database.NewDb(dbConf)
+	dbORM := database.NewGormDb(dbConf)
 	siteId := in.SiteId
 	if siteId > 0 {
 		// todo dsn 初始化
 		siteStr := strconv.FormatInt(siteId, 10)
-		dbORM := db.ManualDb(siteStr)
-		model.Migrate(dbORM)
+		dbORM = dbConf.ManualDb(siteStr)
 	}
+	model.Migrate(dbORM)
 	return &user.SiteReply{}, nil
 }

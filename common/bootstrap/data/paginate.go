@@ -13,10 +13,10 @@ import (
 )
 
 type Paginate struct {
-	Data     interface{} `json:"data"`
-	Current  int         `json:"current"`
-	PageSize int         `json:"page_size"`
-	Total    int64       `json:"total"`
+	Data     interface{} `bson:"data" json:"data"`
+	Current  int         `bson:"current" json:"current"`
+	PageSize int         `bson:"pageSize" json:"pageSize"`
+	Total    int64       `bson:"total" json:"total"`
 }
 
 type paginate struct {

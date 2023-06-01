@@ -1,0 +1,28 @@
+Name: lowcode
+Host: 0.0.0.0
+Port: 8600
+
+MongoDB:
+  name: admin
+  Host: localhost
+  dbName: tenant
+  Username: root
+  Password: '123456'
+  Port: 27017
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD
+
+Redis:
+  Enabled: true
+  Host: localhost
+  Database: 0
+  Port: 6379
+  Password: ''
+
+TenantRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: tenant.rpc
+

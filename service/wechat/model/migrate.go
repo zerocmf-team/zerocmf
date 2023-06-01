@@ -11,6 +11,6 @@ import (
 )
 
 func Migrate(tenantId string) {
-	curDb := database.Conf().ManualDb(tenantId)
+	curDb := database.DbConf().ManualDb(tenantId)
 	new(Option).AutoMigrate(curDb)
 }

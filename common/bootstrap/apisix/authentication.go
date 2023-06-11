@@ -24,7 +24,6 @@ func AuthMiddleware(context *Init.Data, tenantRpc tenantclient.Tenant) rest.Midd
 			auth := strings.Join(r.Header["Authorization"], "")
 			prefix := "Bearer "
 			tokenString := ""
-
 			if auth != "" && strings.HasPrefix(auth, prefix) {
 				tokenString = auth[len(prefix):]
 			}
@@ -48,20 +47,17 @@ func AuthMiddleware(context *Init.Data, tenantRpc tenantclient.Tenant) rest.Midd
 				w.Write(bs)
 				return
 			}
-			uid, _ := strconv.ParseInt(userId, 10, 64)
 			siteId, exist := context.Get("siteId")
 			context.Set("userId", userId)
 			if exist && tenantRpc != nil {
-				sid, _ := strconv.ParseInt(siteId.(string), 10, 64)
 				//根据uid获取当前oid
-				tenantReply, err := tenantRpc.Get(r.Context(), &tenant.CurrentUserReq{Uid: uid, SiteId: sid})
+				tenantReply, err := tenantRpc.Get(r.Context(), &tenant.CurrentUserReq{Uid: userId, SiteId: siteId.(string)})
 				if err != nil {
 					resp := new(data.Rest).Error("系统错误", err.Error())
 					bs, _ := json.Marshal(resp)
 					w.Write(bs)
 					return
 				}
-
 				userId = strconv.FormatInt(tenantReply.Oid, 10)
 				context.Set("userId", userId)
 			}

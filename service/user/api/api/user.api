@@ -84,7 +84,7 @@ type (
 
 // 账号相关
 @server(
-    group: user/admin/account
+    group: admin/account
     prefix: /api/v1/admin/account
     middleware: AuthMiddleware
 )
@@ -112,7 +112,7 @@ service user {
 
 // 角色相关
 @server(
-    group: user/admin/role
+    group: admin/role
     prefix: /api/v1/admin/role
     middleware: AuthMiddleware
 )
@@ -130,7 +130,7 @@ service user {
 
 // 权限相关
 @server(
-    group: user/admin/authorize
+    group: admin/authorize
     prefix: /api/v1/admin/authorize
     middleware: AuthMiddleware
 )
@@ -143,7 +143,7 @@ service user {
 // 权限相关
 
 @server(
-    group: user/admin/authAccess
+    group: admin/authAccess
     prefix: /api/v1/admin/auth_access
     middleware: AuthMiddleware
 )
@@ -160,7 +160,7 @@ service user {
 }
 
 @server(
-    group: user/app
+    group: app
     prefix: /api/v1/app
 )
 
@@ -173,7 +173,7 @@ service user {
 }
 
 @server(
-    group: user/oauth
+    group: oauth
     prefix: /
 )
 

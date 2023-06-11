@@ -16,7 +16,7 @@ type appSaveReq {
 }
 
 @server(
-    group: portal/admin/app
+    group: admin/app
     middleware: AuthMiddleware
     prefix: api/v1/admin/app
 )

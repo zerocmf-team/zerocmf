@@ -22,6 +22,11 @@ func NewAdminServer(svcCtx *svc.ServiceContext) *AdminServer {
 	}
 }
 
+func (s *AdminServer) GetMenus(ctx context.Context, in *admin.AdminMenuReq) (*admin.AdminMenuReply, error) {
+	l := logic.NewGetMenusLogic(ctx, s.svcCtx)
+	return l.GetMenus(in)
+}
+
 func (s *AdminServer) AutoMigrate(ctx context.Context, in *admin.SiteReq) (*admin.SiteReply, error) {
 	l := logic.NewAutoMigrateLogic(ctx, s.svcCtx)
 	return l.AutoMigrate(in)

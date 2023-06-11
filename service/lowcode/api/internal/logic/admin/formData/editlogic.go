@@ -24,6 +24,7 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 }
 
 func (l *EditLogic) Edit(req *types.FormDataSaveReq) (resp types.Response) {
-	// todo: add your logic here and delete this line
+	c := l.svcCtx
+	resp = save(c, req)
 	return
 }

@@ -10,7 +10,7 @@ type (
 )
 
 @server(
-    group: portal/admin/theme
+    group: admin/theme
     middleware: AuthMiddleware
     prefix: api/v1/admin/theme
 )

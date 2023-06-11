@@ -54,6 +54,10 @@ service tenant {
 )
 
 service tenant {
+
+    @handler Show
+    get /:siteId (siteShowReq) returns (Response)
+
     @handler Domain
     get /domain/:domain (siteDomainReq) returns (Response)
 }

@@ -29,7 +29,7 @@ func (l *GetLogic) Get(in *tenant.CurrentUserReq) (reply *tenant.UserReply, err 
 	db := c.Db
 	uid := in.Uid
 	siteId := in.SiteId
-	if uid == 0 {
+	if uid == "" {
 		err = errors.New("参数错误")
 		return
 	}

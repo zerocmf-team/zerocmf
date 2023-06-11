@@ -30,6 +30,11 @@ type Database struct {
 	AuthCode string
 }
 
+type GormDB struct {
+	Database Database
+	Db       *gorm.DB
+}
+
 func NewGormDb(db Database) (gormDb *gorm.DB) {
 	dbName := db.Database
 	gormDb = db.newConn(dbName)
@@ -40,19 +45,20 @@ func NewGormDb(db Database) (gormDb *gorm.DB) {
 func (db *Database) NewConf(siteId string) (conf Database) {
 	copier.Copy(&conf, &db)
 	if siteId != "" {
-		conf.Database = "site_" + db.Name + "_" + siteId
+		conf.Database = "site_" + siteId + "_" + db.Name
 	}
+	//db.Db = db.newConn(conf.Database)
 	return
 }
 
 func (db *Database) ManualDb(siteId string) (outDb *gorm.DB) {
-	dbName := "site_" + db.Name + "_" + siteId
+	dbName := "site_" + siteId + "_" + db.Name
 	// 未指定则默认为主库
 	if siteId == "" {
 		dbName = db.Database
 	}
-	gormDb := db.newConn(dbName)
-	gormDb.Set("siteId", siteId)
+	outDb = db.newConn(dbName)
+	outDb.Set("siteId", siteId)
 	return
 }
 

@@ -27,7 +27,6 @@ func main() {
 
 	handler.RegisterHandlers(server, ctx)
 
-	// 初始化
 	server.Use(middleware.NewSiteMiddleware(ctx.Data).Handle)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

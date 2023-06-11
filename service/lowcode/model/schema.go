@@ -1,9 +1,15 @@
 package model
 
+type ComponentProps struct {
+	Label string   `json:"label"`
+	Name  string   `json:"name"`
+	Rules []SRules `json:"rules,omitempty"`
+}
+
 type ComponentsTree struct {
 	ComponentName string           `json:"componentName"`
 	FileName      string           `json:"fileName"`
-	Props         interface{}      `json:"props"`
+	Props         ComponentProps   `json:"props"`
 	CSS           string           `json:"css"`
 	Children      []ComponentsTree `json:"children"`
 }

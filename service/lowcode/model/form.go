@@ -18,8 +18,23 @@ type SRules struct {
 	Message  string `bson:"message,omitempty" json:"message,omitempty"`
 }
 
-type SProps struct {
-	Rules []SRules `json:"rules"`
+type FieldData struct {
+	Text  string      `json:"text,omitempty" bson:"text,omitempty"`
+	Value interface{} `json:"value,omitempty" bson:"value,omitempty"`
+}
+
+type Options struct {
+	Label string `json:"label" bson:"label,omitempty"`
+	Value string `json:"value" bson:"value,omitempty"`
+}
+
+type ColumnsProps struct {
+	FieldId       string     `json:"fieldId" bson:"fieldId"`
+	Label         string     `json:"label" bson:"label"`
+	ComponentName string     `json:"componentName" bson:"componentName"`
+	Rules         []SRules   `json:"rules,omitempty" bson:"rules,omitempty"`
+	FieldData     *FieldData `json:"fieldData,omitempty" bson:"fieldData,omitempty"`
+	Options       []Options  `json:"options,omitempty" bson:"options,omitempty"`
 }
 
 type Form struct {
@@ -32,7 +47,7 @@ type Form struct {
 	HideInMenu  int                `bson:"hideInMenu,omitempty" json:"hideInMenu"`
 	Description string             `bson:"description,omitempty" json:"description"`
 	Schema      string             `bson:"schema,omitempty" json:"schema"`
-	Rules       []SRules           `bson:"rules" json:"rules"`
+	Columns     []ColumnsProps     `bson:"columns" json:"columns"`
 	ListOrder   float64            `bson:"listOrder,omitempty" json:"listOrder"`
 	Status      int                `bson:"status,omitempty" json:"status"`
 	DeleteAt    int64              `bson:"deleteAt,omitempty" json:"deleteAt"`

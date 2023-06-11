@@ -4,13 +4,13 @@ package handler
 import (
 	"net/http"
 
-	useradminaccount "zerocmf/service/user/api/internal/handler/user/admin/account"
-	useradminauthAccess "zerocmf/service/user/api/internal/handler/user/admin/authAccess"
-	useradminauthorize "zerocmf/service/user/api/internal/handler/user/admin/authorize"
-	useradmindepartment "zerocmf/service/user/api/internal/handler/user/admin/department"
-	useradminrole "zerocmf/service/user/api/internal/handler/user/admin/role"
-	userapp "zerocmf/service/user/api/internal/handler/user/app"
-	useroauth "zerocmf/service/user/api/internal/handler/user/oauth"
+	adminaccount "zerocmf/service/user/api/internal/handler/admin/account"
+	adminauthAccess "zerocmf/service/user/api/internal/handler/admin/authAccess"
+	adminauthorize "zerocmf/service/user/api/internal/handler/admin/authorize"
+	admindepartment "zerocmf/service/user/api/internal/handler/admin/department"
+	adminrole "zerocmf/service/user/api/internal/handler/admin/role"
+	app "zerocmf/service/user/api/internal/handler/app"
+	oauth "zerocmf/service/user/api/internal/handler/oauth"
 	"zerocmf/service/user/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -24,32 +24,32 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/current_user",
-					Handler: useradminaccount.CurrentUserHandler(serverCtx),
+					Handler: adminaccount.CurrentUserHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/",
-					Handler: useradminaccount.GetHandler(serverCtx),
+					Handler: adminaccount.GetHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/:id",
-					Handler: useradminaccount.ShowHandler(serverCtx),
+					Handler: adminaccount.ShowHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/",
-					Handler: useradminaccount.StoreHandler(serverCtx),
+					Handler: adminaccount.StoreHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/:id",
-					Handler: useradminaccount.EditHandler(serverCtx),
+					Handler: adminaccount.EditHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
 					Path:    "/:id",
-					Handler: useradminaccount.DeleteHandler(serverCtx),
+					Handler: adminaccount.DeleteHandler(serverCtx),
 				},
 			}...,
 		),
@@ -63,17 +63,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/",
-					Handler: useradminrole.GetHandler(serverCtx),
+					Handler: adminrole.GetHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/:id",
-					Handler: useradminrole.ShowHandler(serverCtx),
+					Handler: adminrole.ShowHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
 					Path:    "/:id",
-					Handler: useradminrole.DeleteHandler(serverCtx),
+					Handler: adminrole.DeleteHandler(serverCtx),
 				},
 			}...,
 		),
@@ -87,7 +87,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/",
-					Handler: useradminauthorize.GetHandler(serverCtx),
+					Handler: adminauthorize.GetHandler(serverCtx),
 				},
 			}...,
 		),
@@ -101,17 +101,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/:id",
-					Handler: useradminauthAccess.ShowHandler(serverCtx),
+					Handler: adminauthAccess.ShowHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/",
-					Handler: useradminauthAccess.StoreHandler(serverCtx),
+					Handler: adminauthAccess.StoreHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/:id",
-					Handler: useradminauthAccess.EditHandler(serverCtx),
+					Handler: adminauthAccess.EditHandler(serverCtx),
 				},
 			}...,
 		),
@@ -123,12 +123,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/",
-				Handler: userapp.IndexHandler(serverCtx),
+				Handler: app.IndexHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/save",
-				Handler: userapp.SaveHandler(serverCtx),
+				Handler: app.SaveHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api/v1/app"),
@@ -139,22 +139,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/api/oauth/token",
-				Handler: useroauth.TokenHandler(serverCtx),
+				Handler: oauth.TokenHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/api/oauth/refresh",
-				Handler: useroauth.RefreshHandler(serverCtx),
+				Handler: oauth.RefreshHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/token",
-				Handler: useroauth.TokenRequestHandler(serverCtx),
+				Handler: oauth.TokenRequestHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/api/validation/token",
-				Handler: useroauth.ValidationHandler(serverCtx),
+				Handler: oauth.ValidationHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/"),
@@ -167,27 +167,27 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/",
-					Handler: useradmindepartment.GetHandler(serverCtx),
+					Handler: admindepartment.GetHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/:id",
-					Handler: useradmindepartment.ShowHandler(serverCtx),
+					Handler: admindepartment.ShowHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/",
-					Handler: useradmindepartment.StoreHandler(serverCtx),
+					Handler: admindepartment.StoreHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/:id",
-					Handler: useradmindepartment.EditHandler(serverCtx),
+					Handler: admindepartment.EditHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
 					Path:    "/:id",
-					Handler: useradmindepartment.DeleteHandler(serverCtx),
+					Handler: admindepartment.DeleteHandler(serverCtx),
 				},
 			}...,
 		),

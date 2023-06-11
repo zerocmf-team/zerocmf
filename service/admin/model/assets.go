@@ -58,13 +58,13 @@ func (model *Assets) Get(db *gorm.DB, current int, pageSize int, query string, q
 	var total int64 = 0
 
 	tx := db.Where(query, queryArgs...).Find(&assets).Count(&total)
-	if err := util.IsDbErr(tx); err != nil {
+	if err = util.IsDbErr(tx); err != nil {
 		return paginateData, errors.New("数据库连接出错：" + err.Error())
 	}
 
 	tx = db.Where(query, queryArgs...).Limit(pageSize).Offset((current - 1) * pageSize).Order("id desc").Find(&assets)
 
-	if err := util.IsDbErr(tx); err != nil {
+	if err = util.IsDbErr(tx); err != nil {
 		return paginateData, errors.New("数据库连接出错：" + err.Error())
 	}
 

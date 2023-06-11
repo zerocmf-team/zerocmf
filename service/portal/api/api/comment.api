@@ -22,7 +22,7 @@ type (
 )
 
 @server(
-    group: portal/app/comment
+    group: app/comment
     prefix: api/v1/app/comment
 )
 
@@ -32,7 +32,7 @@ service portal {
 }
 
 @server(
-    group: portal/app/comment
+    group: app/comment
     middleware: AuthMiddleware
     prefix: api/v1/app/comment
 )

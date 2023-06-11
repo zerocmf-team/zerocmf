@@ -12,23 +12,6 @@ type Response struct {
 	Data interface{} `json:"data"`
 }
 
-type SiteGetReq struct {
-}
-
-type SiteShowReq struct {
-	SiteId int64 `path:"siteId,optional"`
-}
-
-type SiteSaveReq struct {
-	SiteId    int     `path:"siteId,optional"`
-	Name      string  `json:"name"`
-	Desc      string  `json:"desc,optional"`
-	Domain    string  `json:"domain,optional"`
-	Dsn       string  `json:"dsn,optional"`
-	ListOrder float64 `json:"listOrder,optional"`
-	Status    *int    `json:"status,optional"`
-}
-
 type FormGetReq struct {
 }
 
@@ -50,59 +33,22 @@ type FormSaveReq struct {
 }
 
 type FormDatasReq struct {
-	FormId string `path:"formId,optional"`
+	FormId   string `form:"formId,optional"`
+	Current  *int   `form:"current,optional"`
+	PageSize *int   `form:"pageSize,optional"`
 }
 
 type FormDataShowReq struct {
-	FormId string `path:"formId,optional"`
+	Id string `path:"id"`
 }
 
 type FormDataSaveReq struct {
-	Id           string `path:"Id,optional"`
+	Id           string `path:"id,optional"`
 	FormId       string `json:"formId"`
 	FormDataJson string `json:"formDataJson"`
 }
 
 type RegionGetReq struct {
-}
-
-type UserAdminListReq struct {
-	UserType     string `form:"userType,optional"`
-	UserLogin    string `form:"userLogin,optional"`
-	UserNickname string `form:"userNickname,optional"`
-	UserEmail    string `form:"userEmail,optional"`
-}
-
-type UserAdminShowReq struct {
-	Id string `path:"id,optional"`
-}
-
-type UserAdminSaveReq struct {
-	Id           string   `path:"id,optional"`
-	UserLogin    string   `json:"userLogin,optional"`
-	UserPass     *string  `json:"userPass,optional"`
-	UserEmail    string   `json:"userEmail,optional"`
-	Mobile       string   `json:"mobile,optional"`
-	UserRealname string   `json:"userRealname,optional"`
-	RoleIds      []string `json:"roleIds,optional"`
-}
-
-type UserAdminRoleList struct {
-	Name         string `form:"name,optional"`
-	Status       *int   `form:"status,optional"`
-	NoPagination *int   `form:"noPagination,optional"`
-}
-
-type UserAdminRoleShow struct {
-	Id string `path:"id"`
-}
-
-type UserAdminRoleSave struct {
-	Id     string   `path:"id,optional"`
-	Name   string   `json:"name"`
-	Remark string   `json:"remark,optional"`
-	Status *int     `json:"status,optional"`
-	Access []string `json:"access,optional"`
 }
 
 func (r *Response) Success(msg string, data interface{}) {

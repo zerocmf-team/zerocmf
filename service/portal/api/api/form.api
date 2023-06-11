@@ -28,7 +28,7 @@ type formSubmitReq {
 }
 
 @server(
-    group: portal/admin/form
+    group: admin/form
     middleware: AuthMiddleware
     prefix: api/v1/admin/form
 )
@@ -52,7 +52,7 @@ service portal {
 }
 
 @server(
-    group: portal/app/form
+    group: app/form
     prefix: api/v1/app/form
 )
 

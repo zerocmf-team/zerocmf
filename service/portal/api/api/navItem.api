@@ -25,7 +25,7 @@ type (
 )
 
 @server(
-    group: portal/admin/navItem
+    group: admin/navItem
     prefix: api/v1/admin/nav_items
 )
 
@@ -62,7 +62,7 @@ service portal {
 }
 
 @server(
-    group: portal/app/nav
+    group: app/nav
     prefix: api/v1/app/nav
 )
 

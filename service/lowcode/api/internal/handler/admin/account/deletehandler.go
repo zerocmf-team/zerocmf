@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/data"
 	cmfValidator "zerocmf/common/bootstrap/validator"
-	"zerocmf/service/lowcode/api/internal/logic/admin/account"
 	"zerocmf/service/lowcode/api/internal/svc"
 	"zerocmf/service/lowcode/api/internal/types"
 )
@@ -43,7 +42,7 @@ func DeleteHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		domain := scheme + host
 		svcCtx.Config.App.Domain = domain
 		svcCtx.Request = r
-		l := account.NewDeleteLogic(r.Context(), svcCtx)
+		l := account_bak.NewDeleteLogic(r.Context(), svcCtx)
 		resp := l.Delete(&req)
 		httpx.OkJson(w, resp)
 	}

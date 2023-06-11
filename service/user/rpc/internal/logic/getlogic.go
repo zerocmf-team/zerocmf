@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
+	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/model"
 	"zerocmf/service/user/rpc/internal/svc"
@@ -26,7 +27,10 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 
 func (l *GetLogic) Get(in *user.UserRequest) (userReply *user.UserReply, err error) {
 	c := l.svcCtx
-	db := c.Db
+
+	conf := c.Config.Database.NewConf(in.GetSiteId())
+	db := database.NewGormDb(conf)
+
 	id := in.GetUserId()
 	userModel := model.User{}
 	tx := db.Where("id = ?", id).First(&userModel)

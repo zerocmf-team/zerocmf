@@ -10,12 +10,12 @@ package user;
 option go_package = "./user";
 
 message UserRequest {
-  int64 userId = 1;
-  string tenantId = 2;
+  string userId = 1;
+  string siteId = 2;
 }
 
 message  UserReply {
-  int32 id = 1;
+  int64 id = 1;
   int32 userType = 2;
   int32 gender = 3;
   int64 birthday = 4;

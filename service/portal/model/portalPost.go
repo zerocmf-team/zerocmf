@@ -12,6 +12,7 @@ import (
 	"gorm.io/gorm"
 	"time"
 	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/model"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/user/rpc/types/user"
@@ -166,14 +167,14 @@ func (model *PortalPost) PortalList(db *gorm.DB, query string, queryArgs []inter
  * @return
  **/
 
-func (model *PortalPost) ListByCategory(db *gorm.DB, current, pageSize int, query string, queryArgs []interface{}, extra map[string]string) (result data.Paginate, err error) {
+func (model *PortalPost) ListByCategory(gormDB database.GormDB, current, pageSize int, query string, queryArgs []interface{}, extra map[string]string) (result data.Paginate, err error) {
 	order := "p.list_order desc,p.id desc"
 	if extra["hot"] == "1" {
 		order = "p.post_hits desc," + order
 	}
 	var total int64 = 0
-	iPrefix, _ := db.Get("prefix")
-	prefix := iPrefix.(string)
+	prefix := gormDB.Database.Prefix
+	db := gormDB.Db
 	db.Table(prefix+"portal_post p").Distinct("p.id").
 		Joins("LEFT JOIN "+prefix+"portal_category_post cp ON p.id = cp.post_id").
 		Joins("LEFT JOIN "+prefix+"portal_category pc ON pc.id = cp.category_id").
@@ -181,7 +182,7 @@ func (model *PortalPost) ListByCategory(db *gorm.DB, current, pageSize int, quer
 		Order(order).
 		Count(&total)
 
-	var portalPostData []PortalPost
+	var portalPostData = make([]PortalPost, 0)
 	tx := db.Table(prefix+"portal_post p").Select("p.*,pc.name").
 		Joins("LEFT JOIN "+prefix+"portal_category_post cp ON p.id = cp.post_id").
 		Joins("LEFT JOIN "+prefix+"portal_category pc ON pc.id = cp.category_id").
@@ -196,7 +197,7 @@ func (model *PortalPost) ListByCategory(db *gorm.DB, current, pageSize int, quer
 	for k, v := range portalPostData {
 		portalPostData[k].ThumbPrevPath = util.FileUrl(v.Thumbnail)
 		category := PortalCategory{}
-		categoryItem, _ := category.FindPostCategory(db, "p.id = ? AND  p.delete_at = ?", []interface{}{v.Id, 0})
+		categoryItem, _ := category.FindPostCategory(gormDB, "p.id = ? AND  p.delete_at = ?", []interface{}{v.Id, 0})
 		portalPostData[k].Category = categoryItem
 
 		createTime := time.Unix(v.CreateAt, 0).Format("2006-01-02 15:04:05")
@@ -244,10 +245,10 @@ func (model *PortalPost) ListByCategory(db *gorm.DB, current, pageSize int, quer
  * @return
  **/
 
-func (model *PortalCategory) FindPostCategory(db *gorm.DB, query string, queryArgs []interface{}) ([]PortalCategory, error) {
+func (model *PortalCategory) FindPostCategory(gormDB database.GormDB, query string, queryArgs []interface{}) ([]PortalCategory, error) {
 	var category []PortalCategory
-	iPrefix, _ := db.Get("prefix")
-	prefix := iPrefix.(string)
+	prefix := gormDB.Database.Prefix
+	db := gormDB.Db
 	result := db.Table(prefix+"portal_post p").Select("pc.*").
 		Joins("INNER JOIN "+prefix+"portal_category_post pcp ON pcp.post_id = p.id").
 		Joins("INNER JOIN "+prefix+"portal_category pc ON pc.id = pcp.category_id").

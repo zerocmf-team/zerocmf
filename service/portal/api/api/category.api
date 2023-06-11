@@ -29,7 +29,7 @@ type (
 
 // 分类相关
 @server(
-    group: portal/admin/category
+    group: admin/category
     prefix: api/v1/admin/category
     middleware: AuthMiddleware
 )
@@ -39,7 +39,7 @@ service portal {
     get / (cateGetReq) returns (Response)
 
     @handler List
-    get /list () returns (Response)
+    get /list returns (Response)
 
     @handler Show
     get /:id (cateOneReq) returns (Response)
@@ -62,7 +62,7 @@ service portal {
 
 // 前台门户相关
 @server(
-    group: portal/app/list
+    group: app/list
     prefix: api/v1/app/list
 )
 
@@ -73,7 +73,7 @@ service portal {
 
 // 门户面包屑相关
 @server(
-    group: portal/app/breadcrumb
+    group: app/breadcrumb
     prefix: api/v1/app/breadcrumb
 )
 
@@ -84,7 +84,7 @@ service portal {
 
 // 门户分类树
 @server(
-    group: portal/app/category
+    group: app/category
     prefix: api/v1/app/category/trees
 )
 

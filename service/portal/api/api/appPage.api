@@ -30,7 +30,7 @@ type appPageSaveReq {
 }
 
 @server(
-    group: portal/admin/app_page
+    group: admin/app_page
     middleware: AuthMiddleware
     prefix: api/v1/admin/app_page
 )
@@ -54,7 +54,7 @@ service portal {
 }
 
 @server(
-    group: portal/app/app_page
+    group: app/app_page
     prefix: api/v1/app/app_page
 )
 service portal {

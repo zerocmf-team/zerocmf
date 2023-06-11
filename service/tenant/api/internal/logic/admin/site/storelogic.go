@@ -108,6 +108,10 @@ func save(c *svc.ServiceContext, context context.Context, req *types.SiteSaveReq
 			SiteId: siteId,
 		})
 
+		//c.LowcodeRpc.AutoMigrate(context, &lowcodeclient.SiteReq{
+		//	SiteId: siteId,
+		//})
+
 	} else {
 		tx = db.Where("site_id", req.SiteId).First(&site)
 		if util.IsDbErr(tx) != nil {

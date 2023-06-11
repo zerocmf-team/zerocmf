@@ -1,22 +1,24 @@
 syntax = "v1"
 
 type formDatasReq {
-    formId string `path:"formId,optional"`
+    formId string `form:"formId,optional"`
+    current *int `form:"current,optional"`
+    pageSize *int `form:"pageSize,optional"`
 }
 
 type formDataShowReq {
-    formId string `path:"formId,optional"`
+    id string `path:"id"`
 }
 
 type formDataSaveReq {
-    Id string `path:"Id,optional"`
+    id string `path:"id,optional"`
     formId string `json:"formId"`
     formDataJson string `json:"formDataJson"`
 }
 
 @server(
     group: admin/formData
-    middleware: AuthMiddleware,SiteMiddleware
+    middleware: SiteMiddleware,AuthMiddleware
     prefix: api/v1/admin/formData
 )
 

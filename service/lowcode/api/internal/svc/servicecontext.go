@@ -11,14 +11,17 @@ import (
 	"zerocmf/service/lowcode/api/internal/config"
 	"zerocmf/service/lowcode/api/internal/middleware"
 	"zerocmf/service/tenant/rpc/tenantclient"
+	"zerocmf/service/user/rpc/userclient"
 )
 
 type ServiceContext struct {
 	Config  config.Config
+	UserRpc userclient.User
 	MongoDB func(dbName ...string) (db database.MongoDB, err error)
 	Redis   func() redis.Redis
 	Request *http.Request
 	*Init.Data
+
 	AuthMiddleware rest.Middleware
 	SiteMiddleware rest.Middleware
 }
@@ -29,7 +32,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 
 	return &ServiceContext{
-		Config: c,
+		Config:  c,
+		UserRpc: userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		MongoDB: func(dbName ...string) (db database.MongoDB, err error) {
 			name := ""
 			if len(dbName) > 0 {

@@ -4,11 +4,8 @@ package handler
 import (
 	"net/http"
 
-	adminaccount "zerocmf/service/lowcode/api/internal/handler/admin/account"
 	adminform "zerocmf/service/lowcode/api/internal/handler/admin/form"
 	adminformData "zerocmf/service/lowcode/api/internal/handler/admin/formData"
-	adminrole "zerocmf/service/lowcode/api/internal/handler/admin/role"
-	adminsite "zerocmf/service/lowcode/api/internal/handler/admin/site"
 	appregion "zerocmf/service/lowcode/api/internal/handler/app/region"
 	"zerocmf/service/lowcode/api/internal/svc"
 
@@ -18,41 +15,7 @@ import (
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthMiddleware},
-			[]rest.Route{
-				{
-					Method:  http.MethodGet,
-					Path:    "/",
-					Handler: adminsite.GetHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/:siteId",
-					Handler: adminsite.ShowHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/",
-					Handler: adminsite.StoreHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/:siteId",
-					Handler: adminsite.EditHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodDelete,
-					Path:    "/:siteId",
-					Handler: adminsite.DeleteHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/api/v1/admin/site"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthMiddleware, serverCtx.SiteMiddleware},
+			[]rest.Middleware{serverCtx.SiteMiddleware, serverCtx.AuthMiddleware},
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
@@ -86,7 +49,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthMiddleware, serverCtx.SiteMiddleware},
+			[]rest.Middleware{serverCtx.SiteMiddleware, serverCtx.AuthMiddleware},
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
@@ -127,73 +90,5 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/app/region"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthMiddleware, serverCtx.SiteMiddleware},
-			[]rest.Route{
-				{
-					Method:  http.MethodGet,
-					Path:    "/",
-					Handler: adminaccount.GetHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/:id",
-					Handler: adminaccount.ShowHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/",
-					Handler: adminaccount.StoreHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/:id",
-					Handler: adminaccount.EditHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodDelete,
-					Path:    "/:id",
-					Handler: adminaccount.DeleteHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/api/v1/admin/account"),
-	)
-
-	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.AuthMiddleware, serverCtx.SiteMiddleware},
-			[]rest.Route{
-				{
-					Method:  http.MethodGet,
-					Path:    "/",
-					Handler: adminrole.GetHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/:id",
-					Handler: adminrole.ShowHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/",
-					Handler: adminrole.StoreHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/:id",
-					Handler: adminrole.EditHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodDelete,
-					Path:    "/:id",
-					Handler: adminrole.DeleteHandler(serverCtx),
-				},
-			}...,
-		),
-		rest.WithPrefix("/api/v1/admin/role"),
 	)
 }

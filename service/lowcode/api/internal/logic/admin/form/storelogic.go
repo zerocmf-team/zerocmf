@@ -57,14 +57,20 @@ func save(c *svc.ServiceContext, req *types.FormSaveReq) (resp types.Response) {
 	json.Unmarshal([]byte(formSchema), &schemaData)
 	components := model.FindComponents(schemaData.ComponentsTree, "Form.Item")
 
-	var rules []model.SRules
+	var columns []model.ColumnsProps
 	for _, component := range components {
-		_props := component.Props
-		propsBytes, _ := json.Marshal(_props)
-		var props model.SProps
-		json.Unmarshal(propsBytes, &props)
-		if len(props.Rules) > 0 {
-			rules = append(rules, props.Rules...)
+
+		props := component.Props
+
+		column := model.ColumnsProps{
+			FieldId:       props.Name,
+			Label:         props.Label,
+			ComponentName: component.ComponentName,
+			Rules:         props.Rules,
+		}
+
+		if column.FieldId != "" {
+			columns = append(columns, column)
 		}
 	}
 
@@ -74,6 +80,7 @@ func save(c *svc.ServiceContext, req *types.FormSaveReq) (resp types.Response) {
 		//新增表单
 		form := model.Form{
 			ParentId:  primitive.ObjectID{},
+			Columns:   columns,
 			UserId:    userIdInt,
 			ListOrder: 10000,
 			Status:    1,
@@ -109,7 +116,7 @@ func save(c *svc.ServiceContext, req *types.FormSaveReq) (resp types.Response) {
 			resp.Error("form表单不存在", err.Error())
 			return
 		}
-		form.Rules = rules
+		form.Columns = columns
 		form.UpdateAt = time.Now().Unix()
 		copier.Copy(&form, &req)
 		var bsonM bson.M

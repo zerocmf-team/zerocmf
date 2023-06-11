@@ -10,6 +10,7 @@ import (
 type Config struct {
 	rest.RestConf
 	TenantRpc zrpc.RpcClientConf
+	UserRpc   zrpc.RpcClientConf
 	MongoDB   database.Mongo
 	Redis     redis.Redis
 	App       struct {

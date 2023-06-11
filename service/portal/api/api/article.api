@@ -71,7 +71,7 @@ type (
 
 // 分类相关
 @server(
-    group: portal/admin/article
+    group: admin/article
     middleware: AuthMiddleware
     prefix: api/v1/admin/article
 )
@@ -99,7 +99,7 @@ service portal {
 
 // 分类相关
 @server(
-    group: portal/app/list
+    group: app/list
     prefix: api/v1/app/list
 )
 
@@ -114,7 +114,7 @@ service portal {
 
 // 文章详情
 @server(
-    group: portal/app/post
+    group: app/post
     prefix: api/v1/app/post
 )
 
@@ -125,7 +125,7 @@ service portal {
 
 // 点赞收藏相关
 @server(
-    group: portal/app/post
+    group: app/post
     prefix: api/v1/app/post
 )
 

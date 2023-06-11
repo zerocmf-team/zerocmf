@@ -81,6 +81,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
+				Path:    "/:siteId",
+				Handler: appsite.ShowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
 				Path:    "/domain/:domain",
 				Handler: appsite.DomainHandler(serverCtx),
 			},

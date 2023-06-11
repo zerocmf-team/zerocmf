@@ -3,7 +3,6 @@ package svc
 import (
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
-	"gorm.io/gorm"
 	"net/http"
 	"zerocmf/common/bootstrap/Init"
 	"zerocmf/common/bootstrap/apisix"
@@ -16,7 +15,7 @@ import (
 
 type ServiceContext struct {
 	Config  config.Config
-	Db      *gorm.DB
+	NewDb   func(siteId ...string) database.GormDB
 	Request *http.Request
 	*Init.Data
 	AuthMiddleware rest.Middleware
@@ -26,15 +25,24 @@ type ServiceContext struct {
 func NewServiceContext(c config.Config) *ServiceContext {
 
 	// 设置为默认的db
-	db := database.NewGormDb(c.Database)
+
 	// 数据库迁移
 	//model.Migrate(db)
-
 	data := new(Init.Data).Context()
 	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 	return &ServiceContext{
-		Config:         c,
-		Db:             db,
+		Config: c,
+		NewDb: func(siteId ...string) (gormDB database.GormDB) {
+			name := ""
+			if len(siteId) > 0 {
+				name = "site_" + siteId[0] + "_" + c.Name
+			}
+			c.Database.Database = name
+			db := database.NewGormDb(c.Database)
+			gormDB.Db = db
+			gormDB.Database = c.Database
+			return
+		},
 		Data:           data,
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		AuthMiddleware: apisix.AuthMiddleware(data, tenantRpc),

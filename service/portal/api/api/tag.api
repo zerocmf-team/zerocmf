@@ -6,7 +6,7 @@ type (
 )
 
 @server(
-    group: portal/admin/tag
+    group: admin/tag
     middleware: AuthMiddleware
     prefix: api/v1/admin/tag
 )

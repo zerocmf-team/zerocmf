@@ -27,7 +27,7 @@ type (
 
 // 部门相关
 @server(
-    group: user/admin/department
+    group: admin/department
     prefix: /api/v1/admin/department
     middleware: AuthMiddleware
 )

@@ -6,6 +6,13 @@ Etcd:
     - 127.0.0.1:2379
   Key: tenant.rpc
 
+AdminRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: admin.rpc
+
 Database:
   Name: tenant
   Type: mysql

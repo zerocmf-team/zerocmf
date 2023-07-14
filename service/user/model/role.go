@@ -80,6 +80,15 @@ func (model *Role) Paginate(db *gorm.DB, current, pageSize int, query string, qu
 
 }
 
+func (model *Role) List(db *gorm.DB, query string, queryArgs []interface{}) (role []Role, err error) {
+	tx := db.Where(query, queryArgs...).Find(&role)
+	if util.IsDbErr(tx) != nil {
+		err = tx.Error
+		return
+	}
+	return role, nil
+}
+
 func (model *Role) Show(db *gorm.DB, query string, queryArgs []interface{}) error {
 	tx := db.Where(query, queryArgs...).First(&model)
 	if util.IsDbErr(tx) != nil {

@@ -25,6 +25,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	User_Get_FullMethodName           = "/user.user/Get"
+	User_RamLogin_FullMethodName      = "/user.user/RamLogin"
 	User_ValidationJwt_FullMethodName = "/user.user/ValidationJwt"
 	User_NewEnforce_FullMethodName    = "/user.user/NewEnforce"
 	User_AutoMigrate_FullMethodName   = "/user.user/autoMigrate"
@@ -35,6 +36,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserClient interface {
 	Get(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserReply, error)
+	RamLogin(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*UserReply, error)
 	ValidationJwt(ctx context.Context, in *OauthRequest, opts ...grpc.CallOption) (*OauthReply, error)
 	NewEnforce(ctx context.Context, in *NewEnforceRequest, opts ...grpc.CallOption) (*NewEnforcerReply, error)
 	AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.CallOption) (*SiteReply, error)
@@ -51,6 +53,15 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 func (c *userClient) Get(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserReply, error) {
 	out := new(UserReply)
 	err := c.cc.Invoke(ctx, User_Get_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) RamLogin(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*UserReply, error) {
+	out := new(UserReply)
+	err := c.cc.Invoke(ctx, User_RamLogin_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -89,6 +100,7 @@ func (c *userClient) AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.
 // for forward compatibility
 type UserServer interface {
 	Get(context.Context, *UserRequest) (*UserReply, error)
+	RamLogin(context.Context, *LoginReq) (*UserReply, error)
 	ValidationJwt(context.Context, *OauthRequest) (*OauthReply, error)
 	NewEnforce(context.Context, *NewEnforceRequest) (*NewEnforcerReply, error)
 	AutoMigrate(context.Context, *SiteReq) (*SiteReply, error)
@@ -101,6 +113,9 @@ type UnimplementedUserServer struct {
 
 func (UnimplementedUserServer) Get(context.Context, *UserRequest) (*UserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedUserServer) RamLogin(context.Context, *LoginReq) (*UserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RamLogin not implemented")
 }
 func (UnimplementedUserServer) ValidationJwt(context.Context, *OauthRequest) (*OauthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidationJwt not implemented")
@@ -138,6 +153,24 @@ func _User_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).Get(ctx, req.(*UserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_RamLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).RamLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_RamLogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).RamLogin(ctx, req.(*LoginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -206,6 +239,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _User_Get_Handler,
+		},
+		{
+			MethodName: "RamLogin",
+			Handler:    _User_RamLogin_Handler,
 		},
 		{
 			MethodName: "ValidationJwt",

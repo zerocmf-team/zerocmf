@@ -8,6 +8,12 @@ type (
         UserEmail string `form:"user_email,optional"`
     }
 
+    ListByRoleReq {
+        roleIds []string `form:"roleIds"`
+        current int `form:"current,optional"`
+        pageSize int `form:"pageSize,optional"`
+    }
+
     OneReq {
         Id string `path:"id,optional"`
     }
@@ -18,7 +24,7 @@ type (
         UserEmail string `json:"user_email,optional"`
         Mobile string `json:"mobile,optional"`
         UserRealname string `json:"user_realname,optional"`
-        RoleIds []string `json:"role_ids,optional"`
+        RoleIds []int `json:"role_ids,optional"`
     }
 
     AdminSaveReq {
@@ -28,12 +34,12 @@ type (
         UserEmail string `json:"user_email,optional"`
         Mobile string `json:"mobile,optional"`
         UserRealname string `json:"user_realname,optional"`
-        RoleIds []string `json:"role_ids,optional"`
+        RoleIds []int `json:"role_ids,optional"`
     }
 
     RoleGet {
-        Status string `json:"status,optional"`
-        Name string `json:"name,optional"`
+        Status string `form:"status,optional"`
+        Name string `form:"name,optional"`
     }
 
     RoleDelete {
@@ -90,12 +96,14 @@ type (
 )
 
 service user {
-
     @handler CurrentUser
     get /current_user returns (Response)
 
     @handler Get
     get / (ListReq) returns (Response)
+
+    @handler GetListByRole
+    get /role/list (ListByRoleReq) returns (Response)
 
     @handler Show
     get /:id (OneReq) returns (Response)
@@ -105,6 +113,9 @@ service user {
 
     @handler Edit
     post /:id (AdminSaveReq) returns (Response)
+
+    @handler FirstOrCreate
+    post /firstOrCreate (AdminStoreReq) returns (Response)
 
     @handler Delete
     delete /:id (OneReq) returns (Response)

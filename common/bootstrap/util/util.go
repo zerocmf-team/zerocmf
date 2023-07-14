@@ -11,6 +11,7 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"gorm.io/gorm"
+	"strconv"
 	"strings"
 	"zerocmf/common/bootstrap/Init"
 )
@@ -58,11 +59,34 @@ func FileUrl(path string) string {
  * @return
  **/
 
-func ToLowerInArray(search string, target []string) bool {
+/*func ToLowerInArray(search string, target []string) bool {
 	for _, item := range target {
 		if strings.ToLower(search) == strings.ToLower(item) {
 			return true
 		}
 	}
+	return false
+}*/
+
+func ToLowerInArray(search string, target interface{}) bool {
+
+	switch target.(type) {
+	case []int:
+		targetArr := target.([]int)
+		for _, item := range targetArr {
+			itemStr := strconv.Itoa(item)
+			if strings.ToLower(search) == strings.ToLower(itemStr) {
+				return true
+			}
+		}
+	case []string:
+		targetArr := target.([]string)
+		for _, item := range targetArr {
+			if strings.ToLower(search) == strings.ToLower(item) {
+				return true
+			}
+		}
+	}
+
 	return false
 }

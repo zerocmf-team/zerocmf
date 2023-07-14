@@ -111,15 +111,9 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	portal.PostType = postType
 	portal.UserId = userIdInt
 
-	tenant, exist := db.Get("tenantId")
-	tenantId := ""
-	if exist {
-		tenantId = tenant.(string)
-	}
-
 	userReply, err := userRpc.Get(context.Background(), &user.UserRequest{
-		UserId:   int64(userIdInt),
-		TenantId: tenantId,
+		UserId: userId.(string),
+		SiteId: siteId.(string),
 	})
 
 	if err != nil {

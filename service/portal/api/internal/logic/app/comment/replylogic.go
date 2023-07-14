@@ -3,7 +3,6 @@ package comment
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"strconv"
 	"time"
 	"zerocmf/common/bootstrap/model"
 	"zerocmf/service/user/rpc/types/user"
@@ -38,24 +37,17 @@ func (l *ReplyLogic) Reply(req *types.PostReplyReq) (resp types.Response) {
 	id := req.Id
 
 	userId, _ := c.Get("userId")
-	userIdInt, _ := strconv.Atoi(userId.(string))
 
 	var (
 		userData *user.UserReply
 		err      error
 	)
 
-	tenant, exist := db.Get("tenantId")
-	tenantId := ""
-	if exist {
-		tenantId = tenant.(string)
-	}
-
 	if userId != "" {
 
 		userData, err = userRpc.Get(context.Background(), &user.UserRequest{
-			UserId:   int64(userIdInt),
-			TenantId: tenantId,
+			UserId: userId.(string),
+			SiteId: siteId.(string),
 		})
 
 		if err != nil {
@@ -85,8 +77,8 @@ func (l *ReplyLogic) Reply(req *types.PostReplyReq) (resp types.Response) {
 	if toUserId != 0 {
 
 		userData, err = userRpc.Get(context.Background(), &user.UserRequest{
-			UserId:   int64(userIdInt),
-			TenantId: tenantId,
+			UserId: userId.(string),
+			SiteId: siteId.(string),
 		})
 
 		if err != nil {

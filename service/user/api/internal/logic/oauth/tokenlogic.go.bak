@@ -49,7 +49,7 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 	}
 
 	c := l.svcCtx
-	r := c.Request
+	u := c.Request
 	siteId, _ := c.Get("siteId")
 gormDB := c.Config.Database.ManualDb(siteId.(string))
 
@@ -73,7 +73,7 @@ gormDB := c.Config.Database.ManualDb(siteId.(string))
 
 	// 更新最后登录记录
 	u := model.User{
-		LastLoginIp: r.RemoteAddr,
+		LastLoginIp: u.RemoteAddr,
 		LastLoginAt: time.Now().Unix(),
 	}
 	gormDB.Where("id = ?", user.Id).Updates(&u)
@@ -106,7 +106,7 @@ gormDB := c.Config.Database.ManualDb(siteId.(string))
 		Scope:          "all",
 		UserID:         strconv.Itoa(user.Id),
 		AccessTokenExp: duration,
-		Request:        r,
+		Request:        u,
 	}
 
 	ti, err := srv.GetAuthorizeToken(l.ctx, authReq)

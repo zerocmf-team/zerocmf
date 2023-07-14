@@ -13,15 +13,18 @@ import (
 )
 
 type (
-	AdminMenu      = admin.AdminMenu
-	AdminMenuReply = admin.AdminMenuReply
-	AdminMenuReq   = admin.AdminMenuReq
-	SiteReply      = admin.SiteReply
-	SiteReq        = admin.SiteReq
+	AdminMenu       = admin.AdminMenu
+	AdminMenuReply  = admin.AdminMenuReply
+	AdminMenuReq    = admin.AdminMenuReq
+	EncryptUidReply = admin.EncryptUidReply
+	EncryptUidReq   = admin.EncryptUidReq
+	SiteReply       = admin.SiteReply
+	SiteReq         = admin.SiteReq
 
 	Admin interface {
 		GetMenus(ctx context.Context, in *AdminMenuReq, opts ...grpc.CallOption) (*AdminMenuReply, error)
 		AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.CallOption) (*SiteReply, error)
+		EncryptUid(ctx context.Context, in *EncryptUidReq, opts ...grpc.CallOption) (*EncryptUidReply, error)
 	}
 
 	defaultAdmin struct {
@@ -43,4 +46,9 @@ func (m *defaultAdmin) GetMenus(ctx context.Context, in *AdminMenuReq, opts ...g
 func (m *defaultAdmin) AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.CallOption) (*SiteReply, error) {
 	client := admin.NewAdminClient(m.cli.Conn())
 	return client.AutoMigrate(ctx, in, opts...)
+}
+
+func (m *defaultAdmin) EncryptUid(ctx context.Context, in *EncryptUidReq, opts ...grpc.CallOption) (*EncryptUidReply, error) {
+	client := admin.NewAdminClient(m.cli.Conn())
+	return client.EncryptUid(ctx, in, opts...)
 }

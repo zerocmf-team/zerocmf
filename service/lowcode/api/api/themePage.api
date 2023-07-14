@@ -1,0 +1,70 @@
+syntax = "v1"
+
+type themePageListReq {
+    themeKey string `path:"themeKey"`
+    Name *string `form:"name,optional"`
+    Type string `form:"type,optional"`
+    IsPublic *int `form:"isPublic,optional"`
+    current *int `form:"current,optional"`
+    pageSize *int `form:"pageSize,optional"`
+    Status *int `form:"status,optional"`
+}
+
+type themePageShowReq {
+    Id string `path:"id"`
+    themeKey string `form:"themeKey,optional"`
+    Type string `form:"type,optional"`
+}
+
+type themePageSaveReq {
+    Id string `path:"id,optional"`
+    themeKey string `json:"themeKey"`
+    IsPublic int `json:"isPublic,optional"`
+    Name string `json:"name"`
+    Alias string `json:"alias,optional"`
+    Description string `json:"description,optional"`
+    Schema string `json:"schema,optional"`
+    SeoTitle string `json:"seoTitle,optional"`
+    SeoKeywords string `json:"seoKeywords,optional"`
+    SeoDescription string `json:"seoDescription,optional"`
+    Type string `json:"type"`
+    ListOrder float64 `json:"listOrder,optional"`
+    Status *int `json:"status,optional"`
+}
+
+@server(
+    group: admin/themePage
+    middleware: SiteMiddleware,AuthMiddleware
+    prefix: api/v1/admin/theme_page
+)
+
+service lowcode {
+    @handler Get
+    get /all/:themeKey (themePageListReq) returns (Response)
+
+    @handler Show
+    get /:id (themePageShowReq) returns (Response)
+
+    @handler Store
+    post / (themePageSaveReq) returns (Response)
+
+    @handler Edit
+    post /:id (themePageSaveReq) returns (Response)
+
+
+    @handler Delete
+    delete /:id (themePageShowReq) returns (Response)
+}
+
+@server(
+    group: app/themePage
+    middleware: SiteMiddleware
+    prefix: api/v1/app/theme_page
+)
+service lowcode {
+    @handler Get
+    get /all/:themeKey (themePageListReq) returns (Response)
+
+    @handler Show
+    get /:id (themePageShowReq) returns (Response)
+}

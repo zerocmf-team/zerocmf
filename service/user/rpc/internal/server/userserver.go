@@ -27,6 +27,11 @@ func (s *UserServer) Get(ctx context.Context, in *user.UserRequest) (*user.UserR
 	return l.Get(in)
 }
 
+func (s *UserServer) RamLogin(ctx context.Context, in *user.LoginReq) (*user.UserReply, error) {
+	l := logic.NewRamLoginLogic(ctx, s.svcCtx)
+	return l.RamLogin(in)
+}
+
 func (s *UserServer) ValidationJwt(ctx context.Context, in *user.OauthRequest) (*user.OauthReply, error) {
 	l := logic.NewValidationJwtLogic(ctx, s.svcCtx)
 	return l.ValidationJwt(in)

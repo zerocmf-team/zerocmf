@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"time"
 	bsModel "zerocmf/common/bootstrap/model"
-	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/lowcode/model"
 
 	"zerocmf/service/lowcode/api/internal/svc"
@@ -55,7 +54,8 @@ func save(c *svc.ServiceContext, req *types.FormSaveReq) (resp types.Response) {
 	var schemaData model.Schema
 	formSchema := req.Schema
 	json.Unmarshal([]byte(formSchema), &schemaData)
-	components := model.FindComponents(schemaData.ComponentsTree, "Form.Item")
+	formComponents := model.FindComponents(schemaData.ComponentsTree, "Form")
+	components := model.FindComponents(formComponents, "Form.Item")
 
 	var columns []model.ColumnsProps
 	for _, component := range components {
@@ -65,6 +65,7 @@ func save(c *svc.ServiceContext, req *types.FormSaveReq) (resp types.Response) {
 		column := model.ColumnsProps{
 			FieldId:       props.Name,
 			Label:         props.Label,
+			Unique:        props.Unique,
 			ComponentName: component.ComponentName,
 			Rules:         props.Rules,
 		}
@@ -90,7 +91,9 @@ func save(c *svc.ServiceContext, req *types.FormSaveReq) (resp types.Response) {
 		}
 		copier.Copy(&form, &req)
 		var parentId primitive.ObjectID
-		parentId, err = primitive.ObjectIDFromHex(req.ParentId)
+		if req.ParentId != nil {
+			parentId, err = primitive.ObjectIDFromHex(*req.ParentId)
+		}
 		form.ParentId = parentId
 		//	选择表单
 		var one *mongo.InsertOneResult
@@ -118,17 +121,26 @@ func save(c *svc.ServiceContext, req *types.FormSaveReq) (resp types.Response) {
 		}
 		form.Columns = columns
 		form.UpdateAt = time.Now().Unix()
-		copier.Copy(&form, &req)
-		var bsonM bson.M
-		bsonM, err = util.AtoBsonM(form)
-		if err != nil {
-			resp.Error("AtoBsonM err", err.Error())
+
+		parentId := ""
+		if req.ParentId != nil {
+			parentId = *req.ParentId
+		}
+
+		parentObjectId, _ := primitive.ObjectIDFromHex(parentId)
+
+		if parentObjectId == form.Id {
+			resp.Error("父级不能为自己本身！", nil)
 			return
 		}
 
+		copier.Copy(&form, &req)
+
+		form.ParentId = parentObjectId
+
 		// 设置更新内容
 		update := bson.M{
-			"$set": bsonM,
+			"$set": form,
 		}
 
 		// 设置更新选项

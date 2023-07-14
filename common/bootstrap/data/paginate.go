@@ -7,7 +7,6 @@
 package data
 
 import (
-	"errors"
 	"net/http"
 	"strconv"
 )
@@ -53,11 +52,7 @@ func (page *paginate) Default() (current int, pageSize int, err error) {
 	pageSize, _ = strconv.Atoi(qPageSize)
 
 	if current <= 0 {
-		return 0, 0, errors.New("当前页码需大于0！")
-	}
-
-	if pageSize <= 0 {
-		return 0, 0, errors.New("每页数需大于0！")
+		current = 1
 	}
 
 	return current, pageSize, nil

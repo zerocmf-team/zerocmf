@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
 	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/tenant/api/internal/svc"
 	"zerocmf/service/tenant/api/internal/types"
 )
@@ -53,21 +54,21 @@ func (l *GetLogic) Get(req *types.SiteGetReq) (resp types.Response) {
 
 	var total int64 = 0
 
-	tx := db.Select("s.site_id,s.name,s.domain,s.desc,s.status,s.create_at,su.oid,su.is_owner").Table(prefix+"site s").Joins("left join "+prefix+"site_user su on s.site_id = su.site_id").
+	tx := db.Select("s.site_id,s.name,s.desc,s.status,s.create_at,su.oid,su.is_owner").Table(prefix+"site s").Joins("left join "+prefix+"site_user su on s.site_id = su.site_id").
 		Joins("inner join "+prefix+"user u on u.uid = su.uid").
 		Where("u.uid = ? AND s.delete_at = ?", userId, 0).Scan(&result).Count(&total)
 
-	if tx.Error != nil {
-		err = tx.Error
+	if util.IsDbErr(tx) != nil {
+		resp.Error("操作失败！", tx.Error.Error())
 		return
 	}
 
 	//获取当用户信息
-	tx = db.Select("s.site_id,s.name,s.domain,s.desc,s.status,s.create_at,su.oid,su.is_owner,su.list_order").Table(prefix+"site s").Joins("left join "+prefix+"site_user su on s.site_id = su.site_id").
+	tx = db.Select("s.site_id,s.name,s.desc,s.status,s.create_at,su.oid,su.is_owner,su.list_order").Table(prefix+"site s").Joins("left join "+prefix+"site_user su on s.site_id = su.site_id").
 		Joins("inner join "+prefix+"user u on u.uid = su.uid").
 		Where("u.uid = ? AND s.delete_at = ?", userId, 0).Offset((current - 1) * pageSize).Order("su.list_order desc").Scan(&result)
 
-	if tx.Error != nil {
+	if util.IsDbErr(tx) != nil {
 		resp.Error("操作失败！", tx.Error.Error())
 		return
 	}

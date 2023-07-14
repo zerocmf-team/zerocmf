@@ -28,6 +28,47 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
+	routes := []apisix.Route{
+		{
+			URI:       "/api/v1/lowcode/admin/*",
+			Name:      "lowcode-api-admin",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				JWTAuth: &apisix.JWTAuth{
+					Meta: apisix.Meta{
+						Disable: false,
+					},
+				},
+				ProxyRewrite: &apisix.ProxyRewrite{
+					RegexURI: []string{
+						"^/api/v1/lowcode/admin/(.*)",
+						"/api/v1/admin/$1",
+					},
+				},
+			},
+			Status: 1,
+		},
+		{
+			URI:       "/api/v1/lowcode/app/*",
+			Name:      "lowcode-api-app",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				ProxyRewrite: &apisix.ProxyRewrite{
+					RegexURI: []string{
+						"^/api/v1/lowcode/app/(.*)",
+						"/api/v1/app/$1",
+					},
+				},
+			},
+			Status: 1,
+		},
+	}
+
+	err := c.Apisix.Register(routes)
+	if err != nil {
+		panic(err)
+	}
+
 	data := new(Init.Data).Context()
 	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 

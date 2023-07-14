@@ -19,32 +19,38 @@ type ListReq struct {
 	UserEmail    string `form:"user_email,optional"`
 }
 
+type ListByRoleReq struct {
+	RoleIds  []string `form:"roleIds"`
+	Current  int      `form:"current,optional"`
+	PageSize int      `form:"pageSize,optional"`
+}
+
 type OneReq struct {
 	Id string `path:"id,optional"`
 }
 
 type AdminStoreReq struct {
-	UserLogin    string   `json:"user_login,optional"`
-	UserPass     string   `json:"user_pass,optional"`
-	UserEmail    string   `json:"user_email,optional"`
-	Mobile       string   `json:"mobile,optional"`
-	UserRealname string   `json:"user_realname,optional"`
-	RoleIds      []string `json:"role_ids,optional"`
+	UserLogin    string `json:"user_login,optional"`
+	UserPass     string `json:"user_pass,optional"`
+	UserEmail    string `json:"user_email,optional"`
+	Mobile       string `json:"mobile,optional"`
+	UserRealname string `json:"user_realname,optional"`
+	RoleIds      []int  `json:"role_ids,optional"`
 }
 
 type AdminSaveReq struct {
-	Id           string   `path:"id,optional"`
-	UserLogin    string   `json:"user_login,optional"`
-	UserPass     string   `json:"user_pass,optional"`
-	UserEmail    string   `json:"user_email,optional"`
-	Mobile       string   `json:"mobile,optional"`
-	UserRealname string   `json:"user_realname,optional"`
-	RoleIds      []string `json:"role_ids,optional"`
+	Id           string `path:"id,optional"`
+	UserLogin    string `json:"user_login,optional"`
+	UserPass     string `json:"user_pass,optional"`
+	UserEmail    string `json:"user_email,optional"`
+	Mobile       string `json:"mobile,optional"`
+	UserRealname string `json:"user_realname,optional"`
+	RoleIds      []int  `json:"role_ids,optional"`
 }
 
 type RoleGet struct {
-	Status string `json:"status,optional"`
-	Name   string `json:"name,optional"`
+	Status string `form:"status,optional"`
+	Name   string `form:"name,optional"`
 }
 
 type RoleDelete struct {

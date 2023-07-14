@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"gorm.io/gorm"
+	"strconv"
+	"zerocmf/service/tenant/rpc/tenantclient"
 	"zerocmf/service/user/model"
 
 	"zerocmf/service/user/api/internal/svc"
@@ -30,7 +32,12 @@ func (l *DeleteLogic) Delete(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
+
+	siteIdInt, _ := strconv.ParseInt(siteId.(string), 10, 64)
+
 	db := c.Config.Database.ManualDb(siteId.(string))
+
+	tenantRpc := c.TenantRpc
 
 	id := req.Id
 
@@ -55,6 +62,16 @@ func (l *DeleteLogic) Delete(req *types.OneReq) (resp types.Response) {
 		resp.Error("系统错误", nil)
 		return
 	}
+
+	_, err := tenantRpc.RemoveSiteUser(l.ctx, &tenantclient.RemoveSiteUserReq{
+		SiteId: siteIdInt,
+		Mobile: user.UserLogin,
+	})
+	if err != nil {
+		resp.Error("系统错误", err.Error())
+		return
+	}
+
 	resp.Success("删除成功！", user)
 	return
 }

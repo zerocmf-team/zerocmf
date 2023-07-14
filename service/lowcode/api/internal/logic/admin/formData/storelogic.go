@@ -3,6 +3,8 @@ package formData
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"github.com/jinzhu/copier"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -10,6 +12,7 @@ import (
 	"zerocmf/service/lowcode/api/internal/svc"
 	"zerocmf/service/lowcode/api/internal/types"
 	"zerocmf/service/lowcode/model"
+	userModel "zerocmf/service/user/model"
 	"zerocmf/service/user/rpc/userclient"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -88,14 +91,55 @@ func save(c *svc.ServiceContext, req *types.FormDataSaveReq) (resp types.Respons
 
 	columns := form.Columns
 
+	// 唯一提交规则
+	uniqueQuery := make([]bson.M, 0)
+	uniqueLabel := make([]string, 0)
+
+	uniqueMap := make(map[string]interface{}, 0)
+
 	for ck, cv := range columns {
 		// todo rules 规则校验
 		inVal := schema[cv.FieldId]
+		if cv.Unique {
+			bsonM := bson.M{
+				"schema.fieldId":         cv.FieldId,
+				"schema.fieldData.value": inVal,
+			}
+			uniqueMap[cv.FieldId] = inVal
+			uniqueQuery = append(uniqueQuery, bsonM)
+			uniqueLabel = append(uniqueLabel, cv.Label)
+		}
 		if columns[ck].FieldData == nil {
 			columns[ck].FieldData = new(model.FieldData)
 		}
 		columns[ck].FieldData.Text = cv.Label
 		columns[ck].FieldData.Value = inVal
+	}
+
+	if len(uniqueQuery) > 0 {
+		existData := model.FormData{}
+		err = db.FindOne(collection, bson.M{
+			"$or": uniqueQuery,
+		}, &existData)
+		if err != nil && !errors.Is(err, mongo.ErrNoDocuments) {
+			resp.Error("唯一查询系统错误", err.Error())
+			return
+		}
+
+		if existData.Id.IsZero() == false {
+
+			for _, v := range existData.Schema {
+				if req.Id == "" && v.Unique && uniqueMap[v.FieldId] == v.FieldData.Value {
+					resp.Error(v.FieldData.Text+"已存在！", nil)
+					return
+				}
+			}
+
+			//label := strings.Join(uniqueLabel, "或")
+			//resp.Error(label+"已存在！", nil)
+			//return
+		}
+
 	}
 
 	//err = bson.UnmarshalExtJSON([]byte(req.FormDataJson), true, &schema)
@@ -104,15 +148,18 @@ func save(c *svc.ServiceContext, req *types.FormDataSaveReq) (resp types.Respons
 	//	return
 	//}
 
+	user := userModel.User{}
+	copier.Copy(&user, &reply)
+
 	formData := model.FormData{
-		FormId:    formId,
-		Schema:    columns,
-		UserId:    reply.Id,
-		UserLogin: reply.UserLogin,
+		FormId: formId,
+		Schema: columns,
+		User:   user,
 	}
 
 	if req.Id == "" {
 		formData.CreateAt = time.Now().Unix()
+		formData.UpdateAt = time.Now().Unix()
 		var one *mongo.InsertOneResult
 		one, err = db.InsertOne(collection, formData)
 		if err != nil {
@@ -122,6 +169,8 @@ func save(c *svc.ServiceContext, req *types.FormDataSaveReq) (resp types.Respons
 		formData.Id = one.InsertedID.(primitive.ObjectID)
 
 	} else {
+
+		// todo 验证表单的合法性，是否有权限操作
 
 		formData.UpdateAt = time.Now().Unix()
 

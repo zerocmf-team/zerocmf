@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	adminsite "zerocmf/service/tenant/api/internal/handler/admin/site"
+	appapisix "zerocmf/service/tenant/api/internal/handler/app/apisix"
 	appsite "zerocmf/service/tenant/api/internal/handler/app/site"
 	oauth "zerocmf/service/tenant/api/internal/handler/oauth"
 	"zerocmf/service/tenant/api/internal/svc"
@@ -91,5 +92,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/app/site"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: appapisix.InitHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/app/apisix"),
 	)
 }

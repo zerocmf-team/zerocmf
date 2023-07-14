@@ -31,7 +31,17 @@ message  siteReply {
 
 }
 
+message encryptUidReq {
+  string key = 1;
+  int64 salt = 2;
+}
+
+message  encryptUidReply {
+  int64 uid = 1;
+}
+
 service admin {
   rpc getMenus(AdminMenuReq) returns(AdminMenuReply);
   rpc autoMigrate(siteReq) returns(siteReply);
+  rpc EncryptUid(encryptUidReq) returns(encryptUidReply);
 }

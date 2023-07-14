@@ -147,11 +147,13 @@ func (db *Database) CreateTable(dbName string) {
 	host = db.Host
 
 	dataSource := user + ":" + pwd + "@tcp(" + host + ":" + port + ")/"
+
 	sqlDb, tempErr := sql.Open(typ, dataSource)
 	if tempErr != nil {
 		panic(new(error))
 	}
-	_, err := sqlDb.Exec("CREATE DATABASE IF NOT EXISTS " + dbName + " CHARACTER set utf8mb4 COLLATE utf8mb4_general_ci")
+
+	_, err := sqlDb.Exec("CREATE DATABASE IF NOT EXISTS `" + dbName + "` CHARACTER set utf8mb4 COLLATE utf8mb4_general_ci")
 	if err != nil {
 		panic(err)
 	}

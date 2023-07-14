@@ -1,0 +1,42 @@
+syntax = "v1"
+
+type themeListReq {
+    current *int `form:"current,optional"`
+    pageSize *int `form:"pageSize,optional"`
+}
+
+type themeShowReq {
+    id int `json:"id"`
+}
+
+type themeSaveReq {
+    Id int `path:"id,optional"`
+    Key string `json:"key"`
+    Name string `json:"name"`
+    Description string `json:"description,optional"`
+    Version string `json:"version"`
+}
+
+@server(
+    group: admin/theme
+    middleware: SiteMiddleware,AuthMiddleware
+    prefix: api/v1/admin/themes
+)
+
+service lowcode {
+    @handler Get
+    get / (themeListReq) returns (Response)
+
+    @handler Show
+    get /:id (themeShowReq) returns (Response)
+
+    @handler Store
+    post / (themeSaveReq) returns (Response)
+
+    @handler Edit
+    post /:id (themeSaveReq) returns (Response)
+
+
+    @handler Delete
+    delete /:id (themeShowReq) returns (Response)
+}

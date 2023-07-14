@@ -33,6 +33,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodGet,
+					Path:    "/role/list",
+					Handler: adminaccount.GetListByRoleHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
 					Path:    "/:id",
 					Handler: adminaccount.ShowHandler(serverCtx),
 				},
@@ -45,6 +50,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/:id",
 					Handler: adminaccount.EditHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/firstOrCreate",
+					Handler: adminaccount.FirstOrCreateHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,

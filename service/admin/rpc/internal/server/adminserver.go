@@ -31,3 +31,8 @@ func (s *AdminServer) AutoMigrate(ctx context.Context, in *admin.SiteReq) (*admi
 	l := logic.NewAutoMigrateLogic(ctx, s.svcCtx)
 	return l.AutoMigrate(in)
 }
+
+func (s *AdminServer) EncryptUid(ctx context.Context, in *admin.EncryptUidReq) (*admin.EncryptUidReply, error) {
+	l := logic.NewEncryptUidLogic(ctx, s.svcCtx)
+	return l.EncryptUid(in)
+}

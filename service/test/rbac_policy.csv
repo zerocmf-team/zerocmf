@@ -1,6 +1,6 @@
 
-p, admin, settings/index, route
-p, admin, settings/websites, route
+p, admin, settings/index, Route
+p, admin, settings/websites, Route
 
 p, admin,settings/index:api/settings/test, get
 p, admin,settings/index:api/settings/test, post

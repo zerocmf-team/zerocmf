@@ -23,14 +23,56 @@ type ServiceContext struct {
 	*Init.Data
 	UserRpc        user.UserClient
 	AdminRpc       adminclient.Admin
+	TenantRpc      tenantclient.Tenant
 	AuthMiddleware rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
+	routes := []apisix.Route{
+		{
+			URI:       "/api/v1/user/admin/*",
+			Name:      "user-api-admin",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				JWTAuth: &apisix.JWTAuth{
+					Meta: apisix.Meta{
+						Disable: false,
+					},
+				},
+				ProxyRewrite: &apisix.ProxyRewrite{
+					RegexURI: []string{
+						"^/api/v1/user/admin/(.*)",
+						"/api/v1/admin/$1",
+					},
+				},
+			},
+			Status: 1,
+		},
+		{
+			URI:       "/api/v1/user/app/*",
+			Name:      "user-api-app",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				ProxyRewrite: &apisix.ProxyRewrite{
+					RegexURI: []string{
+						"^/api/v1/user/app/(.*)",
+						"/api/v1/app/$1",
+					},
+				},
+			},
+			Status: 1,
+		},
+	}
+
+	err := c.Apisix.Register(routes)
+	if err != nil {
+		panic(err)
+	}
+
 	db := database.NewGormDb(c.Database)
 	// 设置为默认的db
-	// 数据库迁移
+	// 数据库迁
 	//model.Migrate(db)
 
 	data := new(Init.Data).Context()
@@ -41,6 +83,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Data:           data,
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		AdminRpc:       adminclient.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
+		TenantRpc:      tenantRpc,
 		AuthMiddleware: apisix.AuthMiddleware(data, tenantRpc),
 	}
 }

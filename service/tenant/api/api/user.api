@@ -1,27 +1,6 @@
 type (
-    TokenReq {
-        Usermame string `json:"username,optional"`
+    RegisterReq {
+        Mobile string `json:"mobile"`
         Password string `json:"password,optional"`
     }
 )
-
-@server(
-    group: oauth
-    prefix: /
-)
-
-service tenant {
-    @handler Token
-    post /api/oauth/token (TokenReq) returns (Response)
-}
-
-@server(
-    group: oauth
-    middleware: AuthMiddleware
-    prefix: /
-)
-
-service tenant {
-    @handler currentUser
-    get /api/current_user returns (Response)
-}

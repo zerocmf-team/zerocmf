@@ -1,0 +1,30 @@
+type (
+    tokenReq {
+        loginType string `json:"loginType,optional"`
+        siteId string `json:"siteId,optional"`
+        userLogin string `json:"userLogin"`
+        code string `json:"code,optional"`
+        password string `json:"password"`
+    }
+)
+
+@server(
+    group: oauth
+    prefix: /
+)
+
+service tenant {
+    @handler Token
+    post /api/oauth/token (tokenReq) returns (Response)
+}
+
+@server(
+    group: oauth
+    middleware: AuthMiddleware
+    prefix: /
+)
+
+service tenant {
+    @handler currentUser
+    get /api/current_user returns (Response)
+}

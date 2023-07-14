@@ -44,7 +44,7 @@ func save(c *svc.ServiceContext, context context.Context, req *types.SiteSaveReq
 	redis := c.Redis()
 
 	user := model.User{}
-	tx := db.Where("id", userId).First(&user)
+	tx := db.Where("uid", userId).First(&user)
 	if tx.Error != nil {
 		resp.Error("操作失败！", tx.Error.Error())
 		return

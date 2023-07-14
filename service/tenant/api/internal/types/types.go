@@ -13,8 +13,11 @@ type Response struct {
 }
 
 type TokenReq struct {
-	Usermame string `json:"username,optional"`
-	Password string `json:"password,optional"`
+	LoginType string `json:"loginType,optional"`
+	SiteId    string `json:"siteId,optional"`
+	UserLogin string `json:"userLogin"`
+	Code      string `json:"code,optional"`
+	Password  string `json:"password"`
 }
 
 type SiteGetReq struct {
@@ -36,6 +39,9 @@ type SiteSaveReq struct {
 
 type SiteDomainReq struct {
 	Domain string `path:"domain"`
+}
+
+type ApisixReq struct {
 }
 
 func (r *Response) Success(msg string, data interface{}) {

@@ -75,6 +75,12 @@ func (l *GetLogic) Get(req *types.FormDatasReq) (resp types.Response) {
 			"$facet": bson.M{
 				"data": []bson.M{
 					{
+						"$sort": bson.M{
+							"_id":      1,
+							"createAt": -1,
+						},
+					},
+					{
 						"$skip": skip,
 					},
 					{
@@ -89,7 +95,13 @@ func (l *GetLogic) Get(req *types.FormDatasReq) (resp types.Response) {
 	} else {
 		pipeline = append(pipeline, bson.M{
 			"$facet": bson.M{
-				"data": []bson.M{},
+				"data": []bson.M{
+					{
+						"$sort": bson.M{
+							"createAt": -1,
+						},
+					},
+				},
 			},
 		})
 	}
@@ -133,12 +145,11 @@ func (l *GetLogic) Get(req *types.FormDatasReq) (resp types.Response) {
 			for _, kItem := range item.Schema {
 				fieldId := kItem.FieldId
 				mapFormData[fieldId] = kItem.FieldData.Value
-				mapFormData["id"] = item.Id
-				mapFormData["userId"] = item.UserId
-				mapFormData["userLogin"] = item.UserLogin
-				mapFormData["createTime"] = time.Unix(item.CreateAt, 0).Format("2006-01-02 15:04:05")
-				mapFormData["updateTime"] = time.Unix(item.UpdateAt, 0).Format("2006-01-02 15:04:05")
 			}
+			mapFormData["user"] = item.User
+			mapFormData["createTime"] = time.Unix(item.CreateAt, 0).Format("2006-01-02 15:04:05")
+			mapFormData["updateTime"] = time.Unix(item.UpdateAt, 0).Format("2006-01-02 15:04:05")
+			mapFormData["id"] = item.Id
 			mapData["formData"] = mapFormData
 			mapData["formId"] = item.FormId
 			mapData["schema"] = item.Schema

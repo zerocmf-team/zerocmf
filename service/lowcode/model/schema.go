@@ -1,9 +1,11 @@
 package model
 
 type ComponentProps struct {
-	Label string   `json:"label"`
-	Name  string   `json:"name"`
-	Rules []SRules `json:"rules,omitempty"`
+	Main   bool     `json:"main,omitempty"`
+	Label  string   `json:"label"`
+	Name   string   `json:"name"`
+	Unique bool     `json:"unique"`
+	Rules  []SRules `json:"rules,omitempty"`
 }
 
 type ComponentsTree struct {
@@ -20,6 +22,11 @@ type Schema struct {
 
 func FindComponents(components []ComponentsTree, targetComponentName string) (result []ComponentsTree) {
 	for _, component := range components {
+
+		if component.ComponentName == "Form" && !component.Props.Main {
+			continue
+		}
+
 		if component.ComponentName == targetComponentName {
 			result = append(result, component)
 		}

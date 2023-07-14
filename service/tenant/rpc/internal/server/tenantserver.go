@@ -26,3 +26,18 @@ func (s *TenantServer) Get(ctx context.Context, in *tenant.CurrentUserReq) (*ten
 	l := logic.NewGetLogic(ctx, s.svcCtx)
 	return l.Get(in)
 }
+
+func (s *TenantServer) RegisterUser(ctx context.Context, in *tenant.RegisterReq) (*tenant.UserReply, error) {
+	l := logic.NewRegisterUserLogic(ctx, s.svcCtx)
+	return l.RegisterUser(in)
+}
+
+func (s *TenantServer) CheckUser(ctx context.Context, in *tenant.CheckUserReq) (*tenant.CheckUserReply, error) {
+	l := logic.NewCheckUserLogic(ctx, s.svcCtx)
+	return l.CheckUser(in)
+}
+
+func (s *TenantServer) RemoveSiteUser(ctx context.Context, in *tenant.RemoveSiteUserReq) (*tenant.RemoveSiteUserReply, error) {
+	l := logic.NewRemoveSiteUserLogic(ctx, s.svcCtx)
+	return l.RemoveSiteUser(in)
+}

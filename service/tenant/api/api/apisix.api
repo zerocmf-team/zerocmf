@@ -1,0 +1,15 @@
+type (
+    apisixReq {
+
+    }
+)
+
+@server(
+    group: app/apisix
+    prefix: /api/v1/app/apisix
+)
+
+service tenant {
+    @handler init
+    get / (apisixReq) returns (Response)
+}

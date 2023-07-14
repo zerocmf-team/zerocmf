@@ -31,6 +31,24 @@ Database:
   Charset: utf8mb4
   Prefix: cmf_
   AuthCode: KFHlk2ubIlMr5ltqaD
+
 Apisix:
-  ApiKey: edd1c9f034335f136f87ad84b625c8f1
+  apiKey: edd1c9f034335f136f87ad84b625c8f1
   Host: localhost
+  Name: user-api
+  upstream:
+    nodes:
+      - host: 192.168.8.169
+        port: 8801
+        weight: 1
+    timeout:
+      connect: 30
+      send: 30
+      read: 30
+    type: roundrobin
+    scheme: http
+    pass_host: pass
+    keepalive_pool:
+      idle_timeout: 60
+      requests: 1000
+      size: 320

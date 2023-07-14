@@ -92,7 +92,8 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 		return
 	}
 
-	roles, err := e.GetRolesForUser(editId)
+	var roles []string
+	roles, err = e.GetRolesForUser(editId)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
@@ -112,14 +113,18 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 
 	alreadyAdd := make([]string, 0)
 	for _, v := range req.RoleIds {
-		if util.ToLowerInArray(v, roles) == false {
-			alreadyAdd = append(alreadyAdd, v)
+		roleId := strconv.Itoa(v)
+		if util.ToLowerInArray(roleId, roles) == false {
+			alreadyAdd = append(alreadyAdd, roleId)
 		}
 	}
 
 	// 如果数据库不存在，则为新增
 	if len(roles) == 0 {
-		alreadyAdd = req.RoleIds
+		alreadyAdd = make([]string, 0)
+		for _, v := range req.RoleIds {
+			alreadyAdd = append(alreadyAdd, strconv.Itoa(v))
+		}
 	}
 
 	// 开始删除策略
@@ -139,7 +144,6 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 	if len(rules) > 0 {
 		e.AddGroupingPolicies(rules)
 	}
-
 	resp.Success("更新成功！", user)
 	return
 }

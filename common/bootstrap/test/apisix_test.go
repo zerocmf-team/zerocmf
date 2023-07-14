@@ -20,7 +20,7 @@ func TestJwt(t *testing.T) {
 	//	"oid":      "1",
 	//}
 
-	token, err := apisix.NewJwt("localhost").GetAuthorizeToken("1")
+	token, err := apisix.NewJwt("localhost").GetAuthorizeToken("1", nil)
 	if err != nil {
 		fmt.Println("err", err)
 	}

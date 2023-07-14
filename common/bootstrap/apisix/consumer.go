@@ -13,7 +13,7 @@ import (
 
 type (
 	consumer struct {
-		apisix
+		Apisix
 	}
 	pluginOption func(p *plugin)
 
@@ -30,7 +30,7 @@ type (
 )
 
 func NewConsumer(apiKey string, host string) (c consumer) {
-	c = consumer{apisix{ApiKey: apiKey, Host: host}}
+	c = consumer{Apisix{ApiKey: apiKey, Host: host}}
 	return
 }
 

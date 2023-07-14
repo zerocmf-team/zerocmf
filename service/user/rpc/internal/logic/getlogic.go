@@ -32,13 +32,30 @@ func (l *GetLogic) Get(in *user.UserRequest) (userReply *user.UserReply, err err
 	db := database.NewGormDb(conf)
 
 	id := in.GetUserId()
+
+	query := "id = ?"
+	var queryArgs interface{} = id
+
+	userLogin := in.GetUserLogin()
+	if userLogin != "" {
+		query = "user_login = ?"
+		queryArgs = userLogin
+	}
+
 	userModel := model.User{}
-	tx := db.Where("id = ?", id).First(&userModel)
+	tx := db.Where(query, queryArgs).First(&userModel)
 	if util.IsDbErr(tx) != nil {
 		err = tx.Error
 		return
 	}
 	userReply = new(user.UserReply)
 	copier.Copy(&userReply, &userModel)
+
+	if userModel.Id == 0 {
+		userReply.ErrorMsg = "该用户不存在或已被删除！"
+	}
+
+	userReply.UserPass = ""
+	userReply.SiteId = in.GetSiteId()
 	return
 }

@@ -1,0 +1,37 @@
+syntax = "v1"
+
+type (
+
+    settingShowReq {
+        Key string `path:"key"`
+    }
+
+    settingSaveReq {
+        Key string `json:"key"`
+        formDataJson string `json:"formDataJson"`
+    }
+)
+
+@server(
+    group: admin/settings
+    middleware: SiteMiddleware,AuthMiddleware
+    prefix: api/v1/admin/settings
+)
+
+service lowcode {
+    @handler Show
+    get /:key (settingShowReq) returns (Response)
+    @handler Store
+    post / (settingSaveReq) returns (Response)
+}
+
+@server(
+    group: app/settings
+    middleware: SiteMiddleware
+    prefix: api/v1/app/settings
+)
+
+service lowcode {
+    @handler Show
+    get /:key (settingShowReq) returns (Response)
+}

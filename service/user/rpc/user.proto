@@ -11,7 +11,8 @@ option go_package = "./user";
 
 message UserRequest {
   string userId = 1;
-  string siteId = 2;
+  string userLogin = 2;
+  string siteId = 3;
 }
 
 message  UserReply {
@@ -40,6 +41,14 @@ message  UserReply {
   string createTime = 24;
   int64 deleteAt = 25;
   int32 userStatus = 26;
+  string siteId = 27;
+  string errorMsg = 28;
+}
+
+message LoginReq {
+  string userLogin = 1;
+  string userPass = 2;
+  string siteId = 3;
 }
 
 // The request message containing the user's name.
@@ -84,6 +93,8 @@ message  siteReply {
 
 service user {
   rpc Get (UserRequest) returns (UserReply) {}
+
+  rpc RamLogin (LoginReq) returns (UserReply) {}
 
   rpc ValidationJwt (OauthRequest) returns (OauthReply) {}
 

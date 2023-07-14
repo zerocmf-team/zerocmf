@@ -24,8 +24,48 @@ type ServiceContext struct {
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	// 设置为默认的db
+	routes := []apisix.Route{
+		{
+			URI:       "/api/v1/portal/admin/*",
+			Name:      "portal-api-admin",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				JWTAuth: &apisix.JWTAuth{
+					Meta: apisix.Meta{
+						Disable: false,
+					},
+				},
+				ProxyRewrite: &apisix.ProxyRewrite{
+					RegexURI: []string{
+						"^/api/v1/portal/admin/(.*)",
+						"/api/v1/portal/$1",
+					},
+				},
+			},
+			Status: 1,
+		},
+		{
+			URI:       "/api/v1/portal/app/*",
+			Name:      "portal-api-app",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				ProxyRewrite: &apisix.ProxyRewrite{
+					RegexURI: []string{
+						"^/api/v1/portal/app/(.*)",
+						"/api/v1/app/$1",
+					},
+				},
+			},
+			Status: 1,
+		},
+	}
 
+	err := c.Apisix.Register(routes)
+	if err != nil {
+		panic(err)
+	}
+
+	// 设置为默认的db
 	// 数据库迁移
 	//model.Migrate(db)
 	data := new(Init.Data).Context()

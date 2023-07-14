@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"zerocmf/common/bootstrap/Init"
 	"zerocmf/service/tenant/api/internal/config"
 	"zerocmf/service/tenant/api/internal/handler"
 	"zerocmf/service/tenant/api/internal/svc"
@@ -19,6 +20,8 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
+
+	Init.SetSalts(c.Database.AuthCode)
 
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()

@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Admin_GetMenus_FullMethodName    = "/admin.admin/getMenus"
 	Admin_AutoMigrate_FullMethodName = "/admin.admin/autoMigrate"
+	Admin_EncryptUid_FullMethodName  = "/admin.admin/EncryptUid"
 )
 
 // AdminClient is the client API for Admin service.
@@ -29,6 +30,7 @@ const (
 type AdminClient interface {
 	GetMenus(ctx context.Context, in *AdminMenuReq, opts ...grpc.CallOption) (*AdminMenuReply, error)
 	AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.CallOption) (*SiteReply, error)
+	EncryptUid(ctx context.Context, in *EncryptUidReq, opts ...grpc.CallOption) (*EncryptUidReply, error)
 }
 
 type adminClient struct {
@@ -57,12 +59,22 @@ func (c *adminClient) AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc
 	return out, nil
 }
 
+func (c *adminClient) EncryptUid(ctx context.Context, in *EncryptUidReq, opts ...grpc.CallOption) (*EncryptUidReply, error) {
+	out := new(EncryptUidReply)
+	err := c.cc.Invoke(ctx, Admin_EncryptUid_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AdminServer is the server API for Admin service.
 // All implementations must embed UnimplementedAdminServer
 // for forward compatibility
 type AdminServer interface {
 	GetMenus(context.Context, *AdminMenuReq) (*AdminMenuReply, error)
 	AutoMigrate(context.Context, *SiteReq) (*SiteReply, error)
+	EncryptUid(context.Context, *EncryptUidReq) (*EncryptUidReply, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -75,6 +87,9 @@ func (UnimplementedAdminServer) GetMenus(context.Context, *AdminMenuReq) (*Admin
 }
 func (UnimplementedAdminServer) AutoMigrate(context.Context, *SiteReq) (*SiteReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AutoMigrate not implemented")
+}
+func (UnimplementedAdminServer) EncryptUid(context.Context, *EncryptUidReq) (*EncryptUidReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EncryptUid not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
 
@@ -125,6 +140,24 @@ func _Admin_AutoMigrate_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_EncryptUid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EncryptUidReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).EncryptUid(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Admin_EncryptUid_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).EncryptUid(ctx, req.(*EncryptUidReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Admin_ServiceDesc is the grpc.ServiceDesc for Admin service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "autoMigrate",
 			Handler:    _Admin_AutoMigrate_Handler,
+		},
+		{
+			MethodName: "EncryptUid",
+			Handler:    _Admin_EncryptUid_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,4 +1,4 @@
-Name: tenant
+Name: tenant-api
 Host: 0.0.0.0
 Port: 8700
 
@@ -43,6 +43,23 @@ Redis:
   Password: ''
 
 Apisix:
-  ApiKey: edd1c9f034335f136f87ad84b625c8f1
+  apiKey: edd1c9f034335f136f87ad84b625c8f1
   Host: localhost
+  Name: tenant-api
+  upstream:
+    nodes:
+      - host: 192.168.8.169
+        port: 8700
+        weight: 1
+    timeout:
+      connect: 30
+      send: 30
+      read: 30
+    type: roundrobin
+    scheme: http
+    pass_host: pass
+    keepalive_pool:
+      idle_timeout: 60
+      requests: 1000
+      size: 320
 

@@ -13,6 +13,7 @@ import (
 )
 
 type (
+	LoginReq          = user.LoginReq
 	Menu              = user.Menu
 	NewEnforceRequest = user.NewEnforceRequest
 	NewEnforcerReply  = user.NewEnforcerReply
@@ -25,6 +26,7 @@ type (
 
 	User interface {
 		Get(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserReply, error)
+		RamLogin(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*UserReply, error)
 		ValidationJwt(ctx context.Context, in *OauthRequest, opts ...grpc.CallOption) (*OauthReply, error)
 		NewEnforce(ctx context.Context, in *NewEnforceRequest, opts ...grpc.CallOption) (*NewEnforcerReply, error)
 		AutoMigrate(ctx context.Context, in *SiteReq, opts ...grpc.CallOption) (*SiteReply, error)
@@ -44,6 +46,11 @@ func NewUser(cli zrpc.Client) User {
 func (m *defaultUser) Get(ctx context.Context, in *UserRequest, opts ...grpc.CallOption) (*UserReply, error) {
 	client := user.NewUserClient(m.cli.Conn())
 	return client.Get(ctx, in, opts...)
+}
+
+func (m *defaultUser) RamLogin(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*UserReply, error) {
+	client := user.NewUserClient(m.cli.Conn())
+	return client.RamLogin(ctx, in, opts...)
 }
 
 func (m *defaultUser) ValidationJwt(ctx context.Context, in *OauthRequest, opts ...grpc.CallOption) (*OauthReply, error) {

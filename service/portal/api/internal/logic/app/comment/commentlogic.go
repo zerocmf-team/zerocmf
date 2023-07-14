@@ -41,15 +41,10 @@ func (l *CommentLogic) Comment(req *types.PostCommentAddReq) (resp types.Respons
 	)
 
 	if userId != "" {
-		tenant, exist := db.Get("tenantId")
-		tenantId := ""
-		if exist {
-			tenantId = tenant.(string)
-		}
 
 		userData, err = userRpc.Get(context.Background(), &user.UserRequest{
-			UserId:   int64(userIdInt),
-			TenantId: tenantId,
+			UserId: userId.(string),
+			SiteId: siteId.(string),
 		})
 
 		if err != nil {

@@ -1,0 +1,18 @@
+syntax = "v1"
+
+type (
+    initReq {
+
+    }
+)
+
+@server(
+    group: admin/schema
+    middleware: SiteMiddleware
+    prefix: api/v1/init
+)
+
+service lowcode {
+    @handler Get
+    get / (initReq) returns (Response)
+}

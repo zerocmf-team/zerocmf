@@ -1,0 +1,58 @@
+syntax = "v1"
+
+type (
+    adminMenuGetReq {
+        plugin string `form:"plugin,optional"`
+    }
+
+    adminMenuShowReq {
+        formId string `path:"formId"`
+    }
+
+    adminMenuSaveReq {
+        id string `json:"id,optional"`
+        ParentId *string `json:"parentId,optional"`
+        FormId *string `json:"formId,optional"`
+        Name string `json:"name"`
+        Icon string `json:"icon,optional"`
+        MenuType int `json:"menuType,optional"`
+        HideInMenu *int `json:"hideInMenu,optional"`
+        Description string `json:"description,optional"`
+        ListOrder *float64 `json:"listOrder,optional"`
+        Status *int `json:"status,optional"`
+    }
+)
+
+@server(
+    group: admin/adminMenu
+    middleware: SiteMiddleware,AuthMiddleware
+    prefix: api/v1/admin/menus
+)
+
+service lowcode {
+    @handler Get
+    get / (adminMenuGetReq) returns (Response)
+
+    @handler Show
+    get /:formId (adminMenuShowReq) returns (Response)
+
+    @handler Store
+    post / (adminMenuSaveReq) returns (Response)
+
+    @handler Edit
+    post /:formId (adminMenuSaveReq) returns (Response)
+
+    @handler Delete
+    delete /:formId (adminMenuShowReq) returns (Response)
+}
+
+    //@server(
+    //    group: app/adminMneu
+    //    middleware: SiteMiddleware
+    //    prefix: api/v1/app/adminMenu
+    //)
+    //
+    //service lowcode {
+    //    @handler Show
+    //    get /: (formShowReq) returns (Response)
+    //}

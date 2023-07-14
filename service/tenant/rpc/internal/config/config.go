@@ -7,5 +7,6 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
+	AdminRpc zrpc.RpcClientConf
 	Database database.Database
 }

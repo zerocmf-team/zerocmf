@@ -43,15 +43,10 @@ func (l *GetLogic) Get(req *types.PostCommentGetReq) (resp types.Response) {
 	userIdInt, _ := strconv.Atoi(userId.(string))
 
 	if userId != "" {
-		tenant, exist := db.Get("tenantId")
-		tenantId := ""
-		if exist {
-			tenantId = tenant.(string)
-		}
 
 		_, err := userRpc.Get(context.Background(), &userclient.UserRequest{
-			UserId:   int64(userIdInt),
-			TenantId: tenantId,
+			UserId: userId.(string),
+			SiteId: siteId.(string),
 		})
 
 		if err != nil {

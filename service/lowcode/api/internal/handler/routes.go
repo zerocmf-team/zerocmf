@@ -4,15 +4,37 @@ package handler
 import (
 	"net/http"
 
+	adminadminMenu "zerocmf/service/lowcode/api/internal/handler/admin/adminMenu"
 	adminform "zerocmf/service/lowcode/api/internal/handler/admin/form"
 	adminformData "zerocmf/service/lowcode/api/internal/handler/admin/formData"
+	adminschema "zerocmf/service/lowcode/api/internal/handler/admin/schema"
+	adminsettings "zerocmf/service/lowcode/api/internal/handler/admin/settings"
+	admintheme "zerocmf/service/lowcode/api/internal/handler/admin/theme"
+	adminthemePage "zerocmf/service/lowcode/api/internal/handler/admin/themePage"
+	appform "zerocmf/service/lowcode/api/internal/handler/app/form"
 	appregion "zerocmf/service/lowcode/api/internal/handler/app/region"
+	appsettings "zerocmf/service/lowcode/api/internal/handler/app/settings"
+	appthemePage "zerocmf/service/lowcode/api/internal/handler/app/themePage"
 	"zerocmf/service/lowcode/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.SiteMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: adminschema.GetHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/init"),
+	)
+
 	server.AddRoutes(
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.SiteMiddleware, serverCtx.AuthMiddleware},
@@ -49,12 +71,31 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.SiteMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/:formId",
+					Handler: appform.ShowHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/app/form"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.SiteMiddleware, serverCtx.AuthMiddleware},
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
 					Path:    "/",
 					Handler: adminformData.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/search",
+					Handler: adminformData.SearchHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
@@ -90,5 +131,159 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/app/region"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.SiteMiddleware, serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/:key",
+					Handler: adminsettings.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: adminsettings.StoreHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/settings"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.SiteMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/:key",
+					Handler: appsettings.ShowHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/app/settings"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.SiteMiddleware, serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: adminadminMenu.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:formId",
+					Handler: adminadminMenu.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: adminadminMenu.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:formId",
+					Handler: adminadminMenu.EditHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:formId",
+					Handler: adminadminMenu.DeleteHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/menus"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.SiteMiddleware, serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: admintheme.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: admintheme.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: admintheme.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: admintheme.EditHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: admintheme.DeleteHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/themes"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.SiteMiddleware, serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/all/:themeKey",
+					Handler: adminthemePage.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: adminthemePage.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: adminthemePage.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: adminthemePage.EditHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: adminthemePage.DeleteHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/theme_page"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.SiteMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/all/:themeKey",
+					Handler: appthemePage.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: appthemePage.ShowHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/app/theme_page"),
 	)
 }

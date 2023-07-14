@@ -1,9 +1,16 @@
 syntax = "v1"
 
 type formDatasReq {
-    formId string `form:"formId,optional"`
+    formId string `form:"formId"`
     current *int `form:"current,optional"`
     pageSize *int `form:"pageSize,optional"`
+}
+
+type formSearchReq {
+    formId string `json:"formId"`
+    searchFieldJson string `json:"searchFieldJson,optional"`
+    current *int `json:"current,optional"`
+    pageSize *int `json:"pageSize,optional"`
 }
 
 type formDataShowReq {
@@ -25,6 +32,9 @@ type formDataSaveReq {
 service lowcode {
     @handler Get
     get / (formDatasReq) returns (Response)
+
+    @handler Search
+    post /search (formSearchReq) returns (Response)
 
     @handler Show
     get /:id (formDataShowReq) returns (Response)

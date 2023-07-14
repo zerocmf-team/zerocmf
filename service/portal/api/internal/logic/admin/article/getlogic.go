@@ -99,7 +99,7 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response) {
 	var pageData data.Paginate
 	pageData, err = post.ListByCategory(db, current, pageSize, queryStr, queryArgs, nil)
 	if err != nil {
-		resp.Error("获取失败！", nil)
+		resp.Error("获取失败！", err.Error())
 		return
 	}
 

@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
+	"zerocmf/common/bootstrap/apisix"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/redis"
 )
@@ -17,8 +18,5 @@ type Config struct {
 	PortalRpc zrpc.RpcClientConf
 	Database  database.Database
 	Redis     redis.Redis
-	Apisix    struct {
-		ApiKey string `json:"apiKey"`
-		Host   string `json:"host"`
-	}
+	Apisix    apisix.Apisix
 }

@@ -49,7 +49,7 @@ type PortalPost struct {
 	ThumbPrevPath       string           `gorm:"-" json:"thumb_prev_path"`
 	PostContent         string           `gorm:"type:longtext;comment:文章内容;NOT NULL" json:"post_content"`
 	PostContentFiltered string           `gorm:"type:longtext;comment:处理过的文章内容;NOT NULL" json:"post_content_filtered"`
-	More                string           `gorm:"type:json;comment:扩展属性,如缩略图。格式为json;NOT NULL" json:"more"`
+	More                string           `gorm:"type:text;comment:扩展属性,如缩略图。格式为json;NOT NULL" json:"more"`
 	MoreJson            More             `gorm:"-" json:"more_json"`
 	Category            []PortalCategory `gorm:"-" json:"category"`
 	Tags                []PostTagResult  `gorm:"-" json:"tags"`
@@ -134,7 +134,7 @@ func NewPost(userRpc user.UserClient) PortalPost {
 }
 
 func (model *PortalPost) AutoMigrate(db *gorm.DB) {
-	db.AutoMigrate(&model)
+	db.AutoMigrate(&PortalPost{})
 	db.AutoMigrate(&PortalCategoryPost{})
 	db.AutoMigrate(&PostLikePost{})
 	db.AutoMigrate(&PostFavoritesPost{})

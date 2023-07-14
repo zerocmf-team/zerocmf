@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"zerocmf/common/bootstrap/Init"
 
 	"zerocmf/service/tenant/rpc/internal/config"
 	"zerocmf/service/tenant/rpc/internal/server"
@@ -23,6 +24,9 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
+
+	Init.SetSalts(c.Database.AuthCode)
+
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {

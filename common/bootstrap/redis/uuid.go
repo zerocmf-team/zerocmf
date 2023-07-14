@@ -30,7 +30,7 @@ func (r Redis) EncryptUid(key string, salt int) (uid int64, err error) {
 	val, valErr := curRedis.Incr(key).Result()
 	if valErr != nil {
 		_, _, line, _ := runtime.Caller(0)
-		fmt.Println("redis err"+strconv.Itoa(line), err.Error())
+		fmt.Println("redis err"+strconv.Itoa(line), valErr.Error())
 		err = valErr
 		return
 	}

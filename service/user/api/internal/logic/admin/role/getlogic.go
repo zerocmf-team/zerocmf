@@ -33,7 +33,6 @@ func (l *GetLogic) Get(req *types.RoleGet) (resp types.Response) {
 	db := c.Config.Database.ManualDb(siteId.(string))
 	r := c.Request
 
-	// todo: add your logic here and delete this line
 	var query []string
 	var queryArgs []interface{}
 
@@ -49,19 +48,37 @@ func (l *GetLogic) Get(req *types.RoleGet) (resp types.Response) {
 		queryArgs = append(queryArgs, "%"+name+"%")
 	}
 
-	var queryStr string
+	var (
+		queryStr string
+		current  int
+		pageSize int
+		err      error
+	)
 	queryStr = strings.Join(query, " AND ")
-	current, pageSize, err := data.NewPaginate(r).Default()
+
+	current, pageSize, err = data.NewPaginate(r).Default()
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
 
-	result, err := new(model.Role).Paginate(db, current, pageSize, queryStr, queryArgs)
-	if err != nil {
-		resp.Error(err.Error(), nil)
-		return
+	if pageSize > 0 {
+		var result data.Paginate
+		result, err = new(model.Role).Paginate(db, current, pageSize, queryStr, queryArgs)
+		if err != nil {
+			resp.Error(err.Error(), nil)
+			return
+		}
+		resp.Success("获取成功！", result)
+	} else {
+		var result []model.Role
+		result, err = new(model.Role).List(db, queryStr, queryArgs)
+		if err != nil {
+			resp.Error(err.Error(), nil)
+			return
+		}
+		resp.Success("获取成功！", result)
 	}
-	resp.Success("获取成功！", result)
+
 	return
 }

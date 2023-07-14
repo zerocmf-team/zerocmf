@@ -85,6 +85,10 @@ func (l *GetLogic) Get() (resp *types.Response) {
 	var resultMenus []model.AdminMenu
 	copier.Copy(&resultMenus, &enforceReply.Menus)
 
+	if len(resultMenus) == 0 {
+		resultMenus = menus
+	}
+
 	results := recursionMenu(resultMenus, 0, "", "")
 	if len(results) == 0 {
 		results = make([]routers, 0)

@@ -26,9 +26,71 @@ type ServiceContext struct {
 	UserRpc        userclient.User
 	PortalRpc      portalclient.Portal
 	AuthMiddleware rest.Middleware
+	Upstream       apisix.Upstream
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+
+	routes := []apisix.Route{
+		{
+			URI:       "/api/oauth/token",
+			Name:      "/api/oauth/token",
+			ServiceID: c.Apisix.Name,
+			Status:    1,
+		},
+		{
+			URI:       "/api/current_user",
+			Name:      "current_user",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				JWTAuth: &apisix.JWTAuth{
+					Meta: apisix.Meta{
+						Disable: false,
+					},
+				},
+			},
+			Status: 1,
+		},
+		{
+			URI:       "/api/v1/tenant/admin/*",
+			Name:      "tenant-api-admin",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				JWTAuth: &apisix.JWTAuth{
+					Meta: apisix.Meta{
+						Disable: false,
+					},
+				},
+				ProxyRewrite: &apisix.ProxyRewrite{
+					RegexURI: []string{
+						"^/api/v1/tenant/admin/(.*)",
+						"/api/v1/admin/$1",
+					},
+				},
+			},
+			Status: 1,
+		},
+		{
+			URI:       "/api/v1/tenant/app/*",
+			Name:      "tenant-api-app",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				ProxyRewrite: &apisix.ProxyRewrite{
+					RegexURI: []string{
+						"^/api/v1/tenant/app/(.*)",
+						"/api/v1/app/$1",
+					},
+				},
+			},
+			Status: 1,
+		},
+	}
+
+	err := c.Apisix.Register(routes)
+	if err != nil {
+		panic(err)
+	}
+
 	// 设置为默认的db
 	db := database.NewGormDb(c.Database)
 	// 数据库迁移

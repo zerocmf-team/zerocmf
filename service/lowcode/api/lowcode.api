@@ -8,8 +8,13 @@ type (
 )
 
 //import "api/site.api"
+import "api/init.api"
 import "api/form.api"
 import "api/formData.api"
 import "api/region.api"
+import "api/settings.api"
+import "api/adminMenu.api"
+import "api/theme.api"
+import "api/themePage.api"
 //import "api/user.api"
 //import "api/role.api"

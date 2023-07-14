@@ -9,6 +9,7 @@ type (
 )
 
 import (
-	"api/user.api"
+	"api/oauth.api"
 	"api/site.api"
+	"api/apisix.api"
 )

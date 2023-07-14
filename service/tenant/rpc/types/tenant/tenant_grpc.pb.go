@@ -19,7 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Tenant_Get_FullMethodName = "/tenant.tenant/Get"
+	Tenant_Get_FullMethodName            = "/tenant.tenant/Get"
+	Tenant_RegisterUser_FullMethodName   = "/tenant.tenant/RegisterUser"
+	Tenant_CheckUser_FullMethodName      = "/tenant.tenant/CheckUser"
+	Tenant_RemoveSiteUser_FullMethodName = "/tenant.tenant/removeSiteUser"
 )
 
 // TenantClient is the client API for Tenant service.
@@ -27,6 +30,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TenantClient interface {
 	Get(ctx context.Context, in *CurrentUserReq, opts ...grpc.CallOption) (*UserReply, error)
+	RegisterUser(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*UserReply, error)
+	CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserReply, error)
+	RemoveSiteUser(ctx context.Context, in *RemoveSiteUserReq, opts ...grpc.CallOption) (*RemoveSiteUserReply, error)
 }
 
 type tenantClient struct {
@@ -46,11 +52,41 @@ func (c *tenantClient) Get(ctx context.Context, in *CurrentUserReq, opts ...grpc
 	return out, nil
 }
 
+func (c *tenantClient) RegisterUser(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*UserReply, error) {
+	out := new(UserReply)
+	err := c.cc.Invoke(ctx, Tenant_RegisterUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tenantClient) CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserReply, error) {
+	out := new(CheckUserReply)
+	err := c.cc.Invoke(ctx, Tenant_CheckUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tenantClient) RemoveSiteUser(ctx context.Context, in *RemoveSiteUserReq, opts ...grpc.CallOption) (*RemoveSiteUserReply, error) {
+	out := new(RemoveSiteUserReply)
+	err := c.cc.Invoke(ctx, Tenant_RemoveSiteUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TenantServer is the server API for Tenant service.
 // All implementations must embed UnimplementedTenantServer
 // for forward compatibility
 type TenantServer interface {
 	Get(context.Context, *CurrentUserReq) (*UserReply, error)
+	RegisterUser(context.Context, *RegisterReq) (*UserReply, error)
+	CheckUser(context.Context, *CheckUserReq) (*CheckUserReply, error)
+	RemoveSiteUser(context.Context, *RemoveSiteUserReq) (*RemoveSiteUserReply, error)
 	mustEmbedUnimplementedTenantServer()
 }
 
@@ -60,6 +96,15 @@ type UnimplementedTenantServer struct {
 
 func (UnimplementedTenantServer) Get(context.Context, *CurrentUserReq) (*UserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedTenantServer) RegisterUser(context.Context, *RegisterReq) (*UserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterUser not implemented")
+}
+func (UnimplementedTenantServer) CheckUser(context.Context, *CheckUserReq) (*CheckUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckUser not implemented")
+}
+func (UnimplementedTenantServer) RemoveSiteUser(context.Context, *RemoveSiteUserReq) (*RemoveSiteUserReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveSiteUser not implemented")
 }
 func (UnimplementedTenantServer) mustEmbedUnimplementedTenantServer() {}
 
@@ -92,6 +137,60 @@ func _Tenant_Get_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Tenant_RegisterUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TenantServer).RegisterUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tenant_RegisterUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TenantServer).RegisterUser(ctx, req.(*RegisterReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Tenant_CheckUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TenantServer).CheckUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tenant_CheckUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TenantServer).CheckUser(ctx, req.(*CheckUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Tenant_RemoveSiteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveSiteUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TenantServer).RemoveSiteUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tenant_RemoveSiteUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TenantServer).RemoveSiteUser(ctx, req.(*RemoveSiteUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Tenant_ServiceDesc is the grpc.ServiceDesc for Tenant service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +201,18 @@ var Tenant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _Tenant_Get_Handler,
+		},
+		{
+			MethodName: "RegisterUser",
+			Handler:    _Tenant_RegisterUser_Handler,
+		},
+		{
+			MethodName: "CheckUser",
+			Handler:    _Tenant_CheckUser_Handler,
+		},
+		{
+			MethodName: "removeSiteUser",
+			Handler:    _Tenant_RemoveSiteUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -32,25 +32,28 @@ type ColumnsProps struct {
 	FieldId       string     `json:"fieldId" bson:"fieldId"`
 	Label         string     `json:"label" bson:"label"`
 	ComponentName string     `json:"componentName" bson:"componentName"`
+	Unique        bool       `json:"unique"`
 	Rules         []SRules   `json:"rules,omitempty" bson:"rules,omitempty"`
 	FieldData     *FieldData `json:"fieldData,omitempty" bson:"fieldData,omitempty"`
 	Options       []Options  `json:"options,omitempty" bson:"options,omitempty"`
 }
 
 type Form struct {
-	Id          primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	ParentId    primitive.ObjectID `bson:"parentId" json:"parentId"`
-	Name        string             `bson:"name" json:"name"`
-	Icon        string             `bson:"icon" json:"icon"`
-	UserId      int64              `bson:"userId" json:"userId"`
-	MenuType    int                `bson:",omitempty" json:"menuType"`
-	HideInMenu  int                `bson:"hideInMenu,omitempty" json:"hideInMenu"`
-	Description string             `bson:"description,omitempty" json:"description"`
-	Schema      string             `bson:"schema,omitempty" json:"schema"`
-	Columns     []ColumnsProps     `bson:"columns" json:"columns"`
-	ListOrder   float64            `bson:"listOrder,omitempty" json:"listOrder"`
-	Status      int                `bson:"status,omitempty" json:"status"`
-	DeleteAt    int64              `bson:"deleteAt,omitempty" json:"deleteAt"`
+	Id       primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	ParentId primitive.ObjectID `bson:"parentId" json:"parentId"`
+	Key      string             `bson:"key" json:"key"`
+	Name     string             `bson:"name" json:"name"`
+	/*Path        string             `bson:"path" json:"path"`
+	Icon        string             `bson:"icon" json:"icon"`*/
+	UserId int64 `bson:"userId" json:"userId"`
+	/*MenuType    int            `bson:",omitempty" json:"menuType"`
+	HideInMenu  int            `bson:"hideInMenu" json:"hideInMenu"`*/
+	Description string         `bson:"description" json:"description"`
+	Schema      string         `bson:"schema,omitempty" json:"schema"`
+	Columns     []ColumnsProps `bson:"columns" json:"columns"`
+	ListOrder   float64        `bson:"listOrder" json:"listOrder"`
+	Status      int            `bson:"status" json:"status"`
+	DeleteAt    int64          `bson:"deleteAt" json:"deleteAt"`
 	model.Time
 }
 
@@ -64,6 +67,7 @@ type Form struct {
 
 type iRouters struct {
 	Id         primitive.ObjectID `json:"id"`
+	ParentId   string             `bson:"parentId" json:"parentId"`
 	Name       string             `json:"name"`
 	Redirect   string             `json:"redirect"`
 	Path       string             `json:"path"`
@@ -80,17 +84,21 @@ func RecursionMenu(menus []Form, parentId primitive.ObjectID) (routes []iRouters
 	for _, v := range menus {
 		if parentId == v.ParentId {
 			result := iRouters{
-				Id:         v.Id,
-				Name:       v.Name,
-				Path:       "/admin/form/" + v.Id.Hex(),
-				Icon:       v.Icon,
-				HideInMenu: v.HideInMenu,
+				Id:   v.Id,
+				Name: v.Name,
+				Path: "/admin/form/" + v.Id.Hex(),
+				//Icon:       v.Icon,
+				//HideInMenu: v.HideInMenu,
 				ListOrder:  v.ListOrder,
 				CreateAt:   v.CreateAt,
 				CreateTime: time.Unix(v.CreateAt, 0).Format(data.TimeLayout),
 			}
-			children := RecursionMenu(menus, v.Id)
 
+			if v.ParentId.IsZero() == false {
+				result.ParentId = v.ParentId.Hex()
+			}
+
+			children := RecursionMenu(menus, v.Id)
 			if len(children) > 0 {
 				result.Redirect = children[0].Path
 			}

@@ -53,17 +53,29 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 		resp.Error(err.Error(), nil)
 		return
 	}
-	roleIds, err := e.GetRolesForUser(userId)
+
+	var roleIds []string
+	roleIds, err = e.GetRolesForUser(userId)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
 	var result struct {
 		model.User
-		RoleIds []string `json:"role_ids"`
+		RoleIds []int `json:"role_ids"`
 	}
 	result.User = user
-	result.RoleIds = roleIds
+
+	result.RoleIds = make([]int, 0)
+
+	for _, v := range roleIds {
+		var roleId int
+		roleId, err = strconv.Atoi(v)
+		if err == nil {
+			result.RoleIds = append(result.RoleIds, roleId)
+		}
+	}
+
 	resp.Success("获取成功！", result)
 	return
 }

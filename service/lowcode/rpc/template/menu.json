@@ -1,0 +1,295 @@
+[
+  {
+    "key": "guide",
+    "name": "设计向导",
+    "menuType": 0,
+    "path": "/guide",
+    "filePath": "/template/guide.json"
+  },
+  {
+    "key": "adminUser",
+    "name": "账号管理",
+    "path": "/adminUser",
+    "routes": [
+      {
+        "key": "role",
+        "name": "角色管理",
+        "path": "/adminUser/role",
+        "routes": [
+          {
+            "key": "list",
+            "name": "角色列表",
+            "path": "/adminUser/role/list",
+            "hideInMenu": 1,
+            "filePath": "/template/admin/role/list.json"
+          },
+          {
+            "key": "add",
+            "name": "添加角色",
+            "path": "/adminUser/role/add",
+            "hideInMenu": 1,
+            "filePath": "/template/admin/role/add.json"
+          },
+          {
+            "key": "edit",
+            "name": "编辑角色",
+            "path": "/adminUser/role/edit/:id",
+            "hideInMenu": 1,
+            "filePath": "/template/admin/role/edit.json"
+          }
+        ]
+      },
+      {
+        "key": "department",
+        "name": "机构部门",
+        "menuType": 0,
+        "path": "/adminUser/department",
+        "filePath": "/template/admin/department.json"
+      },
+      {
+        "key": "user",
+        "name": "管理员",
+        "menuType": 0,
+        "path": "/adminUser/user",
+        "routes": [
+          {
+            "key": "list",
+            "name": "管理员列表",
+            "menuType": 0,
+            "hideInMenu": 1,
+            "path": "/adminUser/user/list",
+            "filePath": "/template/admin/user/list.json"
+          },
+          {
+            "key": "add",
+            "name": "添加管理员",
+            "menuType": 0,
+            "hideInMenu": 1,
+            "path": "/adminUser/user/add",
+            "filePath": "/template/admin/user/add.json"
+          },
+          {
+            "key": "edit",
+            "name": "修改管理员",
+            "menuType": 0,
+            "hideInMenu": 1,
+            "path": "/adminUser/user/edit/:id",
+            "filePath": "/template/admin/user/edit.json"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "settings",
+    "name": "站点设置",
+    "path": "/settings",
+    "routes": [
+      {
+        "key": "siteInfo",
+        "name": "站点信息",
+        "menuType": 0,
+        "path": "/settings/siteInfo",
+        "filePath": "/template/admin/site.json"
+      },
+      {
+        "key": "menu",
+        "name": "菜单设置",
+        "menuType": 0,
+        "path": "/settings/menu",
+        "filePath": "/template/admin/menu.json"
+      }
+    ]
+  },
+  {
+    "key": "portal",
+    "plugin": "portal",
+    "name": "门户管理",
+    "path": "/portal",
+    "menuType": 1,
+    "routes": [
+      {
+        "key": "article",
+        "name": "文章管理",
+        "path": "/portal/article",
+        "menuType": 1,
+        "routes": [
+          {
+            "key": "list",
+            "name": "文章列表",
+            "path": "/portal/article/list",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/Article"
+          },
+          {
+            "key": "add",
+            "name": "添加文章",
+            "path": "/portal/article/add",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/Article/Add"
+          },
+          {
+            "key": "edit",
+            "name": "编辑文章",
+            "path": "/portal/article/edit/:id",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/Article/Edit"
+          }
+        ]
+      },
+      {
+        "key": "category",
+        "name": "分类管理",
+        "path": "/portal/category",
+        "menuType": 1,
+        "routes": [
+          {
+            "key": "list",
+            "name": "分类列表",
+            "path": "/portal/category/list",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/Category"
+          },
+          {
+            "key": "add",
+            "name": "添加分类",
+            "path": "/portal/category/add",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/Category/Add"
+          },
+          {
+            "key": "edit",
+            "name": "编辑分类",
+            "path": "/portal/category/edit/:id",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/Category/Edit"
+          }
+        ]
+      },
+      {
+        "key": "page",
+        "name": "页面管理",
+        "path": "/portal/page",
+        "menuType": 1,
+        "routes": [
+          {
+            "key": "list",
+            "name": "页面列表",
+            "path": "/portal/page/list",
+            "listOrder": 10000,
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/Page"
+          },
+          {
+            "key": "add",
+            "name": "添加页面",
+            "path": "/portal/page/add",
+            "listOrder": 9999,
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/Page/Add"
+          },
+          {
+            "key": "edit",
+            "name": "编辑页面",
+            "path": "/portal/page/edit/:id",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "listOrder": 9998,
+            "component": "/Page/Edit"
+          }
+        ]
+      },
+      {
+        "key": "tag",
+        "name": "标签管理",
+        "path": "/portal/tag",
+        "component": "/Tag",
+        "menuType": 1
+      },
+      {
+        "key": "nav",
+        "name": "导航管理",
+        "path": "/portal/nav",
+        "routes": [
+          {
+            "key": "list",
+            "name": "导航列表",
+            "path": "/portal/nav/list",
+            "hideInMenu": 1,
+            "component": "/Nav"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "theme",
+    "name": "主题风格",
+    "path": "/theme",
+    "menuType": 1,
+    "routes": [
+      {
+        "key": "web",
+        "name": "网站管理",
+        "menuType": 1,
+        "path": "/theme/web",
+        "routes": [
+          {
+            "key": "list",
+            "path": "/theme/web/list",
+            "name": "主题列表",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/theme/web/index"
+          },
+          {
+            "key": "list.page",
+            "path": "/theme/web/page/:key/list",
+            "name": "页面列表",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/theme/web/Page/index"
+          }
+        ]
+      },
+      {
+        "key": "h5",
+        "name": "移动端管理",
+        "menuType": 1,
+        "path": "/theme/h5"
+      },
+      {
+        "key": "mp",
+        "name": "公众号管理",
+        "menuType": 1,
+        "path": "/theme/mp"
+      },
+      {
+        "key": "miniApp",
+        "name": "小程序管理",
+        "menuType": 1,
+        "path": "/theme/miniApp"
+      },
+      {
+        "key": "app",
+        "name": "app管理",
+        "menuType": 1,
+        "path": "/theme/app"
+      }
+    ]
+  },
+  {
+    "key": "plugin",
+    "name": "插件管理",
+    "path": "/plugin",
+    "menuType": 1
+  }
+]

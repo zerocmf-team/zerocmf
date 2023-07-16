@@ -7,27 +7,24 @@
 package data
 
 type Rest struct {
-	Code int         `json:"code"`
-	Msg  string      `json:"msg"`
-	Data interface{} `json:"data"`
+	Code       int         `json:"code"`
+	Msg        string      `json:"msg"`
+	Data       interface{} `json:"data"`
+	StatusCode *int        `json:"-"`
 }
 
 type H map[string]interface{}
 
-func (r *Rest) Success(msg string, data interface{}) (res Rest) {
-	res = Rest{
-		Code: 1,
-		Msg:  msg,
-		Data: data,
-	}
+func (r *Rest) Success(msg string, data interface{}) {
+	r.Code = 1
+	r.Msg = msg
+	r.Data = data
 	return
 }
 
-func (r *Rest) Error(msg string, data interface{}) (res Rest) {
-	res = Rest{
-		Code: 0,
-		Msg:  msg,
-		Data: data,
-	}
+func (r *Rest) Error(msg string, data interface{}) {
+	r.Code = 0
+	r.Msg = msg
+	r.Data = data
 	return
 }

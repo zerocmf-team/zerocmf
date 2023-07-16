@@ -38,12 +38,14 @@ func NewPaginate(req *http.Request) (p *paginate) {
 
 func (page *paginate) Default() (current int, pageSize int, err error) {
 	r := page.Request
-	r.ParseForm()
-	qCurrent := r.Form.Get("current")
+
+	queryParams := r.URL.Query()
+	qCurrent := queryParams.Get("current")
 	if qCurrent == "" {
 		qCurrent = "1"
 	}
-	qPageSize := r.Form.Get("pageSize")
+	qPageSize := queryParams.Get("pageSize")
+
 	if qPageSize == "" {
 		qPageSize = "10"
 	}

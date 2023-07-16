@@ -13,9 +13,9 @@ import (
 
 type ThemePage struct {
 	Id          primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	ThemeKey    string             `bson:"themeKey" json:"themeKey"`
+	Theme       string             `bson:"theme" json:"theme"`
 	IsPublic    int                `bson:"isPublic" json:"isPublic"`
-	Number      string             `bson:"number" json:"number"`
+	Key         string             `bson:"key" json:"key"`
 	Name        string             `bson:"name" json:"name"`
 	Description string             `bson:"description" json:"description"`
 	Type        string             `bson:"type" json:"type"`
@@ -36,14 +36,16 @@ type ThemePage struct {
 func (t *ThemePage) Migrate(db database.MongoDB) (err error) {
 	collection := db.Collection("themePage")
 	themePage := ThemePage{}
-	findErr := db.FindOne(collection, bson.M{"themeKey": "default"}, &themePage)
+	findErr := db.FindOne(collection, bson.M{"theme": "default", "key": "home"}, &themePage)
 	if findErr != nil && !errors.Is(findErr, mongo.ErrNoDocuments) {
 		return findErr
 	}
 
 	if themePage.Id.IsZero() {
-		_, err = db.InsertOne(collection, ThemePage{
-			ThemeKey:  "default",
+		var one *mongo.InsertOneResult
+		one, err = db.InsertOne(collection, ThemePage{
+			Theme:     "default",
+			Key:       "home",
 			Name:      "主页",
 			Type:      "page",
 			UserId:    1,
@@ -55,7 +57,90 @@ func (t *ThemePage) Migrate(db database.MongoDB) (err error) {
 		if err != nil {
 			return err
 		}
+		objectId := one.InsertedID.(primitive.ObjectID)
+		settings := Settings{Key: "portal"}
+
+		err = settings.Show(db, bson.M{"key": "portal"})
+		if err != nil {
+			return err
+		}
+		params := settings.Value
+		params["mainPage"] = objectId
+		_, err = settings.Store(db, params)
+		if err != nil {
+			return err
+		}
 	}
+
+	themePage = ThemePage{}
+	findErr = db.FindOne(collection, bson.M{"theme": "default", "key": "list"}, &themePage)
+	if findErr != nil && !errors.Is(findErr, mongo.ErrNoDocuments) {
+		return findErr
+	}
+
+	if themePage.Id.IsZero() {
+		_, err = db.InsertOne(collection, ThemePage{
+			Theme:     "default",
+			Key:       "list",
+			Name:      "默认列表",
+			Type:      "list",
+			UserId:    1,
+			CreateAt:  time.Now().Unix(),
+			UpdateAt:  time.Now().Unix(),
+			Status:    1,
+			ListOrder: 10000,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	themePage = ThemePage{}
+	findErr = db.FindOne(collection, bson.M{"theme": "default", "key": "article"}, &themePage)
+	if findErr != nil && !errors.Is(findErr, mongo.ErrNoDocuments) {
+		return findErr
+	}
+
+	if themePage.Id.IsZero() {
+		_, err = db.InsertOne(collection, ThemePage{
+			Theme:     "default",
+			Key:       "article",
+			Name:      "默认文章",
+			Type:      "article",
+			UserId:    1,
+			CreateAt:  time.Now().Unix(),
+			UpdateAt:  time.Now().Unix(),
+			Status:    1,
+			ListOrder: 10000,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	themePage = ThemePage{}
+	findErr = db.FindOne(collection, bson.M{"theme": "default", "key": "page"}, &themePage)
+	if findErr != nil && !errors.Is(findErr, mongo.ErrNoDocuments) {
+		return findErr
+	}
+
+	if themePage.Id.IsZero() {
+		_, err = db.InsertOne(collection, ThemePage{
+			Theme:     "default",
+			Key:       "page",
+			Name:      "默认页面",
+			Type:      "page",
+			UserId:    1,
+			CreateAt:  time.Now().Unix(),
+			UpdateAt:  time.Now().Unix(),
+			Status:    1,
+			ListOrder: 10000,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
 	return
 }
 

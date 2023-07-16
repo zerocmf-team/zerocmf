@@ -66,7 +66,7 @@ func save(c *svc.ServiceContext, req *types.ThemePageSaveReq) (resp types.Respon
 		}
 
 		themePage = model.ThemePage{
-			ThemeKey:    req.ThemeKey,
+			Theme:       req.Theme,
 			Name:        req.Name,
 			Description: req.Description,
 			Type:        req.Type,
@@ -93,7 +93,7 @@ func save(c *svc.ServiceContext, req *types.ThemePageSaveReq) (resp types.Respon
 
 	} else {
 
-		themePage.ThemeKey = req.ThemeKey
+		themePage.Theme = req.Theme
 		themePage.Name = req.Name
 		themePage.Description = req.Description
 		themePage.IsPublic = req.IsPublic

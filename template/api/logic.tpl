@@ -1,6 +1,8 @@
 package {{.pkgName}}
 
 import (
+    "net/http"
+    "zerocmf/common/bootstrap/data"
 	{{.imports}}
 )
 
@@ -21,8 +23,8 @@ func New{{.logic}}(header *http.Request, svcCtx *svc.ServiceContext) *{{.logic}}
 	}
 }
 
-func (l *{{.logic}}) {{.function}}({{.request}}) {{.responseType}} {
+func (l *{{.logic}}) {{.function}}({{.request}}) (resp data.Rest) {
 	// todo: add your logic here and delete this line
 
-	{{.returnString}}
+	return
 }

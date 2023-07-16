@@ -6,6 +6,12 @@ type Lowcode struct {
 }
 
 func (l Lowcode) Migrate(db database.MongoDB) (err error) {
+
+	err = new(Settings).Migrate(db)
+	if err != nil {
+		return err
+	}
+
 	err = new(Theme).Migrate(db)
 	if err != nil {
 		return err
@@ -16,9 +22,5 @@ func (l Lowcode) Migrate(db database.MongoDB) (err error) {
 		return err
 	}
 
-	err = new(Settings).Migrate(db)
-	if err != nil {
-		return err
-	}
 	return
 }

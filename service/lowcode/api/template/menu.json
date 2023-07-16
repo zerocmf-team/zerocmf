@@ -231,6 +231,52 @@
     ]
   },
   {
+    "key": "shop",
+    "plugin": "shop",
+    "name": "商城管理",
+    "path": "/shop",
+    "menuType": 1,
+    "routes": [
+      {
+        "key": "order",
+        "name": "订单管理",
+        "path": "/shop/order"
+      },
+      {
+        "key": "goods",
+        "name": "商品管理",
+        "path": "/shop/goods",
+        "routes": [
+          {
+            "key": "list",
+            "name": "商品列表",
+            "path": "/shop/goods/list",
+            "hideInMenu": 1
+          }
+        ]
+      },
+      {
+        "key": "category",
+        "name": "分类管理",
+        "path": "/shop/category"
+      }
+    ]
+  },
+  {
+    "key": "customer",
+    "name": "客户管理",
+    "menuType": 0,
+    "path": "/customer",
+    "routes": [
+      {
+        "key": "user",
+        "name": "客户管理",
+        "menuType": 0,
+        "path": "/customer/user"
+      }
+    ]
+  },
+  {
     "key": "theme",
     "name": "主题风格",
     "path": "/theme",

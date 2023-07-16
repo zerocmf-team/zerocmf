@@ -65,16 +65,16 @@ func (l *ShowLogic) Show(req *types.ThemePageShowReq) (resp types.Response) {
 
 	if page.Id.IsZero() {
 		typ := req.Type
-		themeKey := req.ThemeKey
+		Theme := req.Theme
 
-		if themeKey == "" {
+		if Theme == "" {
 			resp.Error("主题不能为空！", err.Error())
 			return
 		}
 
 		filter = bson.M{
-			"themeKey": themeKey,
-			"key":      typ,
+			"Theme": Theme,
+			"key":   typ,
 		}
 		err = page.Show(db, filter)
 		if err != nil {

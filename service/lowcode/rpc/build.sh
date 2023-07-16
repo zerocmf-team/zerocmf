@@ -8,8 +8,8 @@ GOARCH=amd64
 appPath="$parentDir/rpc/"
 
 cd "$appPath"
-GOOS=$GOOS GOARCH=$GOARCH go build -o main tenant.go
+GOOS=$GOOS GOARCH=$GOARCH go build -o main lowocde.go
 echo "build app finished at $(date +%Y-%m-%d\ %H:%M:%S)"
 cd "$parentDir/../.."
-docker build -t return1996/tenant-rpc:latest -f "$appPath/Dockerfile" .
+docker build -t return1996/lowocde-rpc:latest -f "$appPath/Dockerfile" .
 echo "build dockerfile finished at $(date +%Y-%m-%d\ %H:%M:%S)"

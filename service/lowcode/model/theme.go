@@ -51,6 +51,7 @@ func (t Theme) Migrate(db database.MongoDB) (err error) {
 		if err != nil {
 			return err
 		}
+
 	}
 	return
 }

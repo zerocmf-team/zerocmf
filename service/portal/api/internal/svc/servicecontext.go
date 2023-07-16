@@ -38,7 +38,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 				ProxyRewrite: &apisix.ProxyRewrite{
 					RegexURI: []string{
 						"^/api/v1/portal/admin/(.*)",
-						"/api/v1/portal/$1",
+						"/api/v1/admin/$1",
 					},
 				},
 			},

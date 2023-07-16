@@ -109,7 +109,7 @@ type ThemeSaveReq struct {
 }
 
 type ThemePageListReq struct {
-	ThemeKey string  `path:"themeKey"`
+	Theme string  `path:"Theme"`
 	Name     *string `form:"name,optional"`
 	Type     string  `form:"type,optional"`
 	IsPublic *int    `form:"isPublic,optional"`
@@ -120,13 +120,13 @@ type ThemePageListReq struct {
 
 type ThemePageShowReq struct {
 	Id       string `path:"id"`
-	ThemeKey string `form:"themeKey,optional"`
+	Theme string `form:"Theme,optional"`
 	Type     string `form:"type,optional"`
 }
 
 type ThemePageSaveReq struct {
 	Id             string  `path:"id,optional"`
-	ThemeKey       string  `json:"themeKey"`
+	Theme       string  `json:"Theme"`
 	IsPublic       int     `json:"isPublic,optional"`
 	Name           string  `json:"name"`
 	Alias          string  `json:"alias,optional"`

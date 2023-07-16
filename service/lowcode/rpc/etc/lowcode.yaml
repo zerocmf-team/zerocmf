@@ -1,0 +1,15 @@
+Name: lowcode.rpc
+ListenOn: 0.0.0.0:8601
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: lowcode.rpc
+MongoDB:
+  name: admin
+  Host: localhost
+  dbName: tenant
+  Username: root
+  Password: '123456'
+  Port: 27017
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD

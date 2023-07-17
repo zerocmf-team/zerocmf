@@ -15,16 +15,18 @@ type Rest struct {
 
 type H map[string]interface{}
 
-func (r *Rest) Success(msg string, data interface{}) {
+func (r *Rest) Success(msg string, data interface{}) (resp *Rest) {
 	r.Code = 1
 	r.Msg = msg
 	r.Data = data
+	resp = r
 	return
 }
 
-func (r *Rest) Error(msg string, data interface{}) {
+func (r *Rest) Error(msg string, data interface{}) (resp *Rest) {
 	r.Code = 0
 	r.Msg = msg
 	r.Data = data
+	resp = r
 	return
 }

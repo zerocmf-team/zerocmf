@@ -1,4 +1,4 @@
-package category
+package Categories
 
 import (
 	"context"
@@ -38,15 +38,15 @@ func Save(c *svc.ServiceContext, req *types.CateSaveReq) (resp types.Response) {
 	siteId, _ := c.Get("siteId")
 	db := c.Config.Database.ManualDb(siteId.(string))
 	editId := req.Id
-	portalCategory := model.PortalCategory{}
+	portalCategories := model.PortalCategories{}
 
 	msg := "新增成功！"
 	if editId == 0 {
-		portalCategory.Id = editId
+		portalCategories.Id = editId
 	} else {
 		msg = "更新成功！"
 
-		tx := db.Where("id = ?", editId).First(&portalCategory)
+		tx := db.Where("id = ?", editId).First(&portalCategories)
 
 		if tx.Error != nil {
 			resp.Error(tx.Error.Error(), nil)
@@ -55,20 +55,20 @@ func Save(c *svc.ServiceContext, req *types.CateSaveReq) (resp types.Response) {
 
 		// 新的父级不能等于自己
 		parentId := req.ParentId
-		if portalCategory.Id == parentId {
+		if portalCategories.Id == parentId {
 			resp.Error("非法父级", nil)
 			return
 		}
 	}
-	copier.Copy(&portalCategory, req)
-	portalCategory.Status = req.Status
+	copier.Copy(&portalCategories, req)
+	portalCategories.Status = req.Status
 
-	data, err := portalCategory.Save(db)
+	data, err := portalCategories.Save(db)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
-	alias := portalCategory.Alias
+	alias := portalCategories.Alias
 	if alias != "" {
 
 		if strings.HasPrefix(alias, "/") {
@@ -76,7 +76,7 @@ func Save(c *svc.ServiceContext, req *types.CateSaveReq) (resp types.Response) {
 			sLen := utf8.RuneCountInString(alias)
 			alias = string(aliasRune[1:sLen])
 		}
-		fullUrl := "list/" + strconv.Itoa(portalCategory.Id)
+		fullUrl := "list/" + strconv.Itoa(portalCategories.Id)
 		url := alias
 		// 插入别名
 		route := comModel.Route{

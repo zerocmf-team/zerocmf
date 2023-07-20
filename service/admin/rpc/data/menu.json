@@ -251,26 +251,26 @@
         ]
       },
       {
-        "name": "category",
-        "path": "/:siteId/portal/category",
+        "name": "Categories",
+        "path": "/:siteId/portal/Categories",
         "icon": "",
         "hide_in_menu": 0,
         "children": [
           {
             "name": "list",
-            "path": "/:siteId/portal/category/list",
+            "path": "/:siteId/portal/Categories/list",
             "icon": "",
             "hide_in_menu": 1
           },
           {
             "name": "add",
-            "path": "/:siteId/portal/category/add",
+            "path": "/:siteId/portal/Categories/add",
             "icon": "",
             "hide_in_menu": 1
           },
           {
             "name": "edit",
-            "path": "/:siteId/portal/category/edit/:id",
+            "path": "/:siteId/portal/Categories/edit/:id",
             "icon": "",
             "hide_in_menu": 1
           }

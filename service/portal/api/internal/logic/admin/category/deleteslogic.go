@@ -1,4 +1,4 @@
-package category
+package Categories
 
 import (
 	"context"
@@ -31,8 +31,8 @@ func (l *DeletesLogic) Deletes() (resp types.Response) {
 	r := c.Request
 	r.ParseForm()
 	ids := r.Form["ids[]"]
-	portalCategory := new(model.PortalCategory)
-	err := portalCategory.BatchDelete(db, ids)
+	portalCategories := new(model.PortalCategories)
+	err := portalCategories.BatchDelete(db, ids)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

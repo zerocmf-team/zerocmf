@@ -51,7 +51,7 @@ func (l *SearchLogic) Search(req *types.ArticleSearchReq) (resp types.Response) 
 	}
 
 	post := model.PortalPost{}
-	res, err := post.ListByCategory(database.GormDB{
+	res, err := post.ListByCategories(database.GormDB{
 		Database: c.Config.Database,
 		Db:       db,
 	}, current, pageSize, queryStr, queryArgs, nil)

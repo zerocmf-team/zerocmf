@@ -13,7 +13,7 @@ type (
 )
 
 import (
-	"api/category.api"
+	"api/Categories.api"
 	"api/article.api"
 	"api/theme.api"
 	"api/themeFile.api"

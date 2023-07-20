@@ -79,20 +79,20 @@ func TestPost(t *testing.T) {
 			}
 			err = newPost.Store(db)
 
-			categoryId := 1
+			CategoriesId := 1
 
-			pcp := &model.PortalCategoryPost{}
-			tx := db.Where("post_id = ? AND category_id = ?", newPost.Id, categoryId).First(&pcp)
+			pcp := &model.PortalCategoriesPost{}
+			tx := db.Where("post_id = ? AND Categories_id = ?", newPost.Id, CategoriesId).First(&pcp)
 			if util.IsDbErr(tx) != nil {
 				fmt.Println("db err", tx.Error)
 				return
 			}
 
-			cPost := model.PortalCategoryPost{
-				PostId:     newPost.Id,
-				CategoryId: categoryId,
-				ListOrder:  10000,
-				Status:     1,
+			cPost := model.PortalCategoriesPost{
+				PostId:       newPost.Id,
+				CategoriesId: CategoriesId,
+				ListOrder:    10000,
+				Status:       1,
 			}
 
 			cPost.Id = pcp.Id

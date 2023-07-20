@@ -52,10 +52,10 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response) {
 	query = append(query, "p.post_type = ?")
 	queryArgs = append(queryArgs, postType)
 
-	category := req.Category
-	if category != nil {
+	Categories := req.Categories
+	if Categories != nil {
 		query = append(query, "pc.id = ?")
-		queryArgs = append(queryArgs, category)
+		queryArgs = append(queryArgs, Categories)
 	}
 
 	postStatus := req.PostStatus
@@ -97,7 +97,7 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response) {
 
 	post := model.PortalPost{}
 	var pageData data.Paginate
-	pageData, err = post.ListByCategory(db, current, pageSize, queryStr, queryArgs, nil)
+	pageData, err = post.ListByCategories(db, current, pageSize, queryStr, queryArgs, nil)
 	if err != nil {
 		resp.Error("获取失败！", err.Error())
 		return

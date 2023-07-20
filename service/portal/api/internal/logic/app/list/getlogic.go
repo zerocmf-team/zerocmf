@@ -49,7 +49,7 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 
 	idsArr := strings.Split(ids, ",")
 	for _, v := range idsArr {
-		query = append(query, "cp.category_id = ?")
+		query = append(query, "cp.Categories_id = ?")
 		queryArgs = append(queryArgs, v)
 	}
 
@@ -65,7 +65,7 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 		return
 	}
 
-	data, err := new(model.PortalPost).ListByCategory(database.GormDB{
+	data, err := new(model.PortalPost).ListByCategories(database.GormDB{
 		Database: c.Config.Database,
 		Db:       db,
 	}, current, pageSize, strings.Join(queryRes, " AND "), queryArgs, extra)

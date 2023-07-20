@@ -1,4 +1,4 @@
-package category
+package Categories
 
 import (
 	"context"
@@ -48,7 +48,7 @@ func (l *GetLogic) Get(req *types.CateGetReq) (resp types.Response) {
 
 	queryStr := strings.Join(query, " AND ")
 
-	data, err := new(model.PortalCategory).Index(db, queryStr, queryArgs)
+	data, err := new(model.PortalCategories).Index(db, queryStr, queryArgs)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

@@ -1,4 +1,4 @@
-package category
+package Categories
 
 import (
 	"context"
@@ -29,12 +29,12 @@ func (l *OptionsLogic) Options() (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
 	db := c.Config.Database.ManualDb(siteId.(string))
-	category := model.PortalCategory{}
+	Categories := model.PortalCategories{}
 	var query = []string{"delete_at  = ?"}
 	var queryArgs = []interface{}{0}
 	queryStr := strings.Join(query, " AND ")
 
-	data, err := category.ListWithOptions(db, queryStr, queryArgs)
+	data, err := Categories.ListWithOptions(db, queryStr, queryArgs)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

@@ -4,6 +4,8 @@ package handler
 import (
 	"net/http"
 
+	admincategory "zerocmf/service/shop/api/internal/handler/admin/category"
+	admingoods "zerocmf/service/shop/api/internal/handler/admin/goods"
 	"zerocmf/service/shop/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -15,8 +17,73 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/",
-				Handler: IndexHandler(serverCtx),
+				Handler: admincategory.GetHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/:id",
+				Handler: admincategory.ShowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/",
+				Handler: admincategory.StoreHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/:id",
+				Handler: admincategory.EditHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/:id",
+				Handler: admincategory.DelHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/",
+				Handler: admincategory.BatchDelHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/v1/shop/categories"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.SiteMiddleware, serverCtx.AuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: admingoods.GetHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: admingoods.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: admingoods.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/:id",
+					Handler: admingoods.EditHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: admingoods.DelHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/",
+					Handler: admingoods.BatchDelHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/shop/goods"),
 	)
 }

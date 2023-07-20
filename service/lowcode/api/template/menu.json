@@ -141,34 +141,34 @@
         ]
       },
       {
-        "key": "category",
+        "key": "Categories",
         "name": "分类管理",
-        "path": "/portal/category",
+        "path": "/portal/Categories",
         "menuType": 1,
         "routes": [
           {
             "key": "list",
             "name": "分类列表",
-            "path": "/portal/category/list",
+            "path": "/portal/Categories/list",
             "menuType": 1,
             "hideInMenu": 1,
-            "component": "/Category"
+            "component": "/Categories"
           },
           {
             "key": "add",
             "name": "添加分类",
-            "path": "/portal/category/add",
+            "path": "/portal/Categories/add",
             "menuType": 1,
             "hideInMenu": 1,
-            "component": "/Category/Add"
+            "component": "/Categories/Add"
           },
           {
             "key": "edit",
             "name": "编辑分类",
-            "path": "/portal/category/edit/:id",
+            "path": "/portal/Categories/edit/:id",
             "menuType": 1,
             "hideInMenu": 1,
-            "component": "/Category/Edit"
+            "component": "/Categories/Edit"
           }
         ]
       },
@@ -256,9 +256,9 @@
         ]
       },
       {
-        "key": "category",
+        "key": "Categories",
         "name": "分类管理",
-        "path": "/shop/category"
+        "path": "/shop/Categories"
       }
     ]
   },

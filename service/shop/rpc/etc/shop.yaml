@@ -1,0 +1,21 @@
+Name: shop.rpc
+ListenOn: 0.0.0.0:8080
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: shop.rpc
+
+Database:
+  name: shop
+  Type: mysql
+  Host: localhost
+  Database: zerocmf_shop
+  Username: root
+  Password: '123456'
+  Port: 3306
+  Charset: utf8mb4
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD
+
+Cache:
+  - Host: localhost:6379

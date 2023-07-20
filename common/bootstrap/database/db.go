@@ -8,10 +8,12 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/jinzhu/copier"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
+	"io"
 	"os"
 	"strconv"
 	"time"
@@ -152,10 +154,74 @@ func (db *Database) CreateTable(dbName string) {
 	if tempErr != nil {
 		panic(new(error))
 	}
-
-	_, err := sqlDb.Exec("CREATE DATABASE IF NOT EXISTS `" + dbName + "` CHARACTER set utf8mb4 COLLATE utf8mb4_general_ci")
+	createSql := "CREATE DATABASE IF NOT EXISTS `" + dbName + "` CHARACTER set utf8mb4 COLLATE utf8mb4_general_ci"
+	_, err := sqlDb.Exec(createSql)
 	if err != nil {
 		panic(err)
 	}
 	sqlDb.Close()
+}
+
+/**
+Desc: 获取获取连接串
+Author: daifuyang
+Contact: github.com/daifuyang
+Date: Date: 2023-07-17 14:17:54
+*/
+
+func (db *Database) Dsn(siteId string) (dsn string) {
+	username := db.Username
+	pwd := db.Password
+	host := db.Host
+
+	HOST := os.Getenv("MYSQL_HOST")
+	if HOST != "" {
+		host = HOST
+	}
+
+	port := strconv.Itoa(db.Port)
+	database := db.Database
+
+	if siteId != "" {
+		database = "site_" + siteId + "_" + db.Name
+	}
+
+	dsn = username + ":" + pwd + "@tcp(" + host + ":" + port + ")/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"
+	return
+}
+
+func (db *Database) Migrate(tables []string) {
+	dbName := db.Database
+	db.CreateTable(dbName)
+	open, err := sql.Open("mysql", db.Dsn(""))
+	if err != nil {
+		return
+	}
+	defer open.Close()
+	err = os.Chdir("../model/mysql")
+	if err != nil {
+		fmt.Println("无法打开目标文件夹:", err)
+		return
+	}
+	var file *os.File
+	for _, v := range tables {
+		filename := v + ".sql"
+		file, err = os.Open(filename)
+		if err != nil {
+			fmt.Println("无法打开文件:", err)
+			return
+		}
+		var content []byte
+		content, err = io.ReadAll(file)
+		if err != nil {
+			fmt.Println("读取文件失败:", err)
+			return
+		}
+		sqlStr := string(content)
+		_, err = open.Exec(sqlStr)
+		if err != nil {
+			panic(err)
+		}
+	}
+	defer file.Close()
 }

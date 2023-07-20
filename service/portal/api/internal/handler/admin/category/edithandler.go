@@ -1,4 +1,4 @@
-package category
+package Categories
 
 import (
 	"github.com/go-playground/validator/v10"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/data"
 	cmfValidator "zerocmf/common/bootstrap/validator"
-	"zerocmf/service/portal/api/internal/logic/admin/category"
+	"zerocmf/service/portal/api/internal/logic/admin/Categories"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 )
@@ -43,7 +43,7 @@ func EditHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		domain := scheme + host
 		svcCtx.Config.App.Domain = domain
 		svcCtx.Request = r
-		l := category.NewEditLogic(r.Context(), svcCtx)
+		l := Categories.NewEditLogic(r.Context(), svcCtx)
 		resp := l.Edit(&req)
 		httpx.OkJson(w, resp)
 	}

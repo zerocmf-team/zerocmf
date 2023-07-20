@@ -30,14 +30,14 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 	db := c.Config.Database.ManualDb(siteId.(string))
 	id := req.Id
 
-	portalCategory := new(model.PortalCategory)
-	err := portalCategory.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
+	portalCategories := new(model.PortalCategories)
+	err := portalCategories.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
 
-	resp.Success("获取成功！", portalCategory)
+	resp.Success("获取成功！", portalCategories)
 	return
 
 }

@@ -1,4 +1,4 @@
-package category
+package Categories
 
 import (
 	"context"
@@ -27,10 +27,10 @@ func (l *ListLogic) List() (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
 	db := c.Config.Database.ManualDb(siteId.(string))
-	category := model.PortalCategory{
+	Categories := model.PortalCategories{
 		ParentId: 0,
 	}
-	data, err := category.ListWithTree(db)
+	data, err := Categories.ListWithTree(db)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

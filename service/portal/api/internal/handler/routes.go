@@ -7,7 +7,7 @@ import (
 	adminapp "zerocmf/service/portal/api/internal/handler/admin/app"
 	adminapp_page "zerocmf/service/portal/api/internal/handler/admin/app_page"
 	adminarticle "zerocmf/service/portal/api/internal/handler/admin/article"
-	admincategory "zerocmf/service/portal/api/internal/handler/admin/category"
+	adminCategories "zerocmf/service/portal/api/internal/handler/admin/Categories"
 	adminform "zerocmf/service/portal/api/internal/handler/admin/form"
 	adminnav "zerocmf/service/portal/api/internal/handler/admin/nav"
 	adminnavItem "zerocmf/service/portal/api/internal/handler/admin/navItem"
@@ -16,7 +16,7 @@ import (
 	adminthemeFile "zerocmf/service/portal/api/internal/handler/admin/themeFile"
 	appapp_page "zerocmf/service/portal/api/internal/handler/app/app_page"
 	appbreadcrumb "zerocmf/service/portal/api/internal/handler/app/breadcrumb"
-	appcategory "zerocmf/service/portal/api/internal/handler/app/category"
+	appCategories "zerocmf/service/portal/api/internal/handler/app/Categories"
 	appcomment "zerocmf/service/portal/api/internal/handler/app/comment"
 	appform "zerocmf/service/portal/api/internal/handler/app/form"
 	applist "zerocmf/service/portal/api/internal/handler/app/list"
@@ -37,46 +37,46 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/",
-					Handler: admincategory.GetHandler(serverCtx),
+					Handler: adminCategories.GetHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/list",
-					Handler: admincategory.ListHandler(serverCtx),
+					Handler: adminCategories.ListHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/:id",
-					Handler: admincategory.ShowHandler(serverCtx),
+					Handler: adminCategories.ShowHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/",
-					Handler: admincategory.StoreHandler(serverCtx),
+					Handler: adminCategories.StoreHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/:id",
-					Handler: admincategory.EditHandler(serverCtx),
+					Handler: adminCategories.EditHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/options",
-					Handler: admincategory.OptionsHandler(serverCtx),
+					Handler: adminCategories.OptionsHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
 					Path:    "/:id",
-					Handler: admincategory.DeleteHandler(serverCtx),
+					Handler: adminCategories.DeleteHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodDelete,
 					Path:    "/",
-					Handler: admincategory.DeletesHandler(serverCtx),
+					Handler: adminCategories.DeletesHandler(serverCtx),
 				},
 			}...,
 		),
-		rest.WithPrefix("/api/v1/admin/category"),
+		rest.WithPrefix("/api/v1/admin/Categories"),
 	)
 
 	server.AddRoutes(
@@ -106,10 +106,10 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/:id",
-				Handler: appcategory.TreeListHandler(serverCtx),
+				Handler: appCategories.TreeListHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/v1/app/category/trees"),
+		rest.WithPrefix("/api/v1/app/Categories/trees"),
 	)
 
 	server.AddRoutes(

@@ -36,7 +36,7 @@ func (l *BreadcrumbLogic) Breadcrumb(req *types.OneReq) (resp types.Response) {
 		return
 	}
 
-	breadcrumbs, err := new(model.PortalCategory).GetPrevious(db, id)
+	breadcrumbs, err := new(model.PortalCategories).GetPrevious(db, id)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

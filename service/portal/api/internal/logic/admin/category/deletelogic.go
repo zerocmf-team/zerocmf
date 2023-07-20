@@ -1,4 +1,4 @@
-package category
+package Categories
 
 import (
 	"context"
@@ -36,10 +36,10 @@ func (l *DeleteLogic) Delete(req *types.CateOneReq) (resp types.Response) {
 		return
 	}
 
-	portalCategory := new(model.PortalCategory)
-	portalCategory.Id = id
+	portalCategories := new(model.PortalCategories)
+	portalCategories.Id = id
 
-	err := portalCategory.Delete(db)
+	err := portalCategories.Delete(db)
 
 	if err != nil {
 		resp.Error(err.Error(), nil)

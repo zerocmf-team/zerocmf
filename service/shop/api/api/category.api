@@ -1,6 +1,63 @@
 syntax = "v1"
 
-service shop {
-    @handler Index
-    get /
+type CategoryGetReq {
+    Name string `form:"name,optional"`
+    ParentId int64 `form:"parentId,optional"`
+    ListOrder *float64 `form:"listOrder,optional"`
+    Status *int32 `form:"status,optional"`
+}
+
+type CategoryShowReq {
+    Id int64 `path:"id"`
+}
+
+type CategorySaveReq {
+    Id int64 `path:"id,optional"`
+    ParentId int64 `json:"parentId,optional"`
+    Name string `json:"name"`
+    Icon string `json:"icon,optional"`
+    Desc string `json:"desc,optional"`
+    ListOrder *float64 `json:"listOrder,optional"`
+    Status *int `json:"status,optional"`
+}
+
+type CategoryDelReq {
+
+}
+
+type CategoryBatchDelReq {
+
+}
+
+info(
+    title: "商品管理"
+    desc: "商品管理"
+    author: "daifuyang"
+    email: "1140444693@qq.com"
+)
+
+@server(
+    group: admin/category
+    prefix: api/v1/shop/categories
+    //    middleware: SiteMiddleware,AuthMiddleware
+)
+
+service shop-api {
+    @handler Get
+    get / (CategoryGetReq)
+
+    @handler Show
+    get /:id (CategoryShowReq)
+
+    @handler Store
+    post / (CategorySaveReq)
+
+    @handler Edit
+    post /:id (CategorySaveReq)
+
+    @handler Del
+    delete /:id (CategoryDelReq)
+
+    @handler BatchDel
+    delete / (CategoryBatchDelReq)
 }

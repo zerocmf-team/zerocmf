@@ -41,12 +41,12 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 
 	var result struct {
 		model.PortalPost
-		UserLogin string                 `json:"user_login"`
-		Alias     string                 `json:"alias"`
-		Keywords  []string               `json:"keywords"`
-		Category  []model.PortalCategory `json:"category"`
-		Extends   []model.Extends        `json:"extends"`
-		Slug      string                 `json:"slug"`
+		UserLogin  string                   `json:"user_login"`
+		Alias      string                   `json:"alias"`
+		Keywords   []string                 `json:"keywords"`
+		Categories []model.PortalCategories `json:"Categories"`
+		Extends    []model.Extends          `json:"extends"`
+		Slug       string                   `json:"slug"`
 		model.More
 	}
 
@@ -67,9 +67,9 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 
 	// 获取当前文章全部分类
 	pQueryArgs := []interface{}{id, 0}
-	pCate := model.PortalCategory{}
-	category, err := pCate.FindPostCategory(gormDB, "p.id = ? AND p.delete_at = ?", pQueryArgs)
-	result.Category = category
+	pCate := model.PortalCategories{}
+	Categories, err := pCate.FindPostCategories(gormDB, "p.id = ? AND p.delete_at = ?", pQueryArgs)
+	result.Categories = Categories
 
 	result.Extends = post.MoreJson.Extends
 	result.ExtendsObj = post.MoreJson.ExtendsObj

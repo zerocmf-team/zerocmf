@@ -11,3 +11,24 @@ func (m *default{{.upperStartCamelObject}}Model) withSession(session sqlx.Sessio
 		table:      {{.table}},
 	}
 }
+
+func (m *default{{.upperStartCamelObject}}Model) Where(query string, args ...interface{}) *default{{.upperStartCamelObject}}Model {
+	m.query = query
+	m.queryArgs = args
+	return m
+}
+
+func (m *default{{.upperStartCamelObject}}Model) Limit(limit int32) *default{{.upperStartCamelObject}}Model {
+	m.limit = limit
+	return m
+}
+
+func (m *default{{.upperStartCamelObject}}Model) Offset(offset int32) *default{{.upperStartCamelObject}}Model {
+	m.offset = offset
+	return m
+}
+
+func (m *default{{.upperStartCamelObject}}Model) OrderBy(orderBy string) *default{{.upperStartCamelObject}}Model {
+	m.orderBy = orderBy
+	return m
+}

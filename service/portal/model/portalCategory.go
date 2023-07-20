@@ -15,7 +15,7 @@ import (
 	"zerocmf/common/bootstrap/util"
 )
 
-type PortalCategory struct {
+type PortalCategories struct {
 	Id             int     `json:"id"`
 	ParentId       int     `gorm:"type:bigint(20);comment:父级id;not null" json:"parent_id"`
 	PostCount      int     `gorm:"type:bigint(20);comment:分类文章数;not null" json:"post_count"`
@@ -38,11 +38,11 @@ type PortalCategory struct {
 }
 
 type PortalTree struct {
-	PortalCategory
+	PortalCategories
 	Children []PortalTree `json:"children"`
 }
 
-type categoryOptions struct {
+type CategoriesOptions struct {
 	Id       int    `json:"id"`
 	ParentId int    `gorm:"type:int(11);comment:所属父类id;default:0" json:"parent_id"`
 	Name     string `gorm:"type:varchar(50);comment:路由名称" json:"name"`
@@ -55,20 +55,20 @@ type Breadcrumb struct {
 	Alias string `json:"alias"`
 }
 
-func (model *PortalCategory) AutoMigrate(db *gorm.DB) {
+func (model *PortalCategories) AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&model)
 }
 
-func (model *PortalCategory) recursionByParent(category []PortalCategory, parentId int) []PortalTree {
+func (model *PortalCategories) recursionByParent(Categories []PortalCategories, parentId int) []PortalTree {
 	var tree []PortalTree
-	for _, v := range category {
+	for _, v := range Categories {
 		// 当前子项
 		if parentId == v.ParentId {
 			item := PortalTree{
-				PortalCategory: v,
+				PortalCategories: v,
 			}
 
-			children := model.recursionByParent(category, v.Id)
+			children := model.recursionByParent(Categories, v.Id)
 			item.Children = children
 			tree = append(tree, item)
 		}
@@ -84,18 +84,18 @@ func (model *PortalCategory) recursionByParent(category []PortalCategory, parent
  * @return
  **/
 
-func (model *PortalCategory) Index(db *gorm.DB, query string, queryArgs []interface{}) (data []PortalTree, err error) {
+func (model *PortalCategories) Index(db *gorm.DB, query string, queryArgs []interface{}) (data []PortalTree, err error) {
 	// 获取默认的系统分页
 
-	var category []PortalCategory
-	tx := db.Where(query, queryArgs...).Find(&category)
+	var Categories []PortalCategories
+	tx := db.Where(query, queryArgs...).Find(&Categories)
 	if tx.Error != nil {
 		if !errors.Is(tx.Error, gorm.ErrRecordNotFound) {
 			return
 		}
 	}
 	// 生成树形结构
-	data = model.recursionChildById(category, 0)
+	data = model.recursionChildById(Categories, 0)
 	return data, nil
 }
 
@@ -107,43 +107,43 @@ func (model *PortalCategory) Index(db *gorm.DB, query string, queryArgs []interf
  * @return
  **/
 
-func (model *PortalCategory) List(db *gorm.DB) ([]PortalCategory, error) {
+func (model *PortalCategories) List(db *gorm.DB) ([]PortalCategories, error) {
 	query := []string{"delete_at = ?"}
 	queryArgs := []interface{}{"0"}
 	queryStr := strings.Join(query, " AND ")
-	var category []PortalCategory
-	tx := db.Where(queryStr, queryArgs...).Find(&category)
+	var Categories []PortalCategories
+	tx := db.Where(queryStr, queryArgs...).Find(&Categories)
 	if tx.Error != nil {
 		if !errors.Is(tx.Error, gorm.ErrRecordNotFound) {
-			return category, tx.Error
+			return Categories, tx.Error
 		}
 	}
 
-	for k, v := range category {
+	for k, v := range Categories {
 
-		topCategory := new(PortalCategory)
-		err := topCategory.GetTopCategory(db, v.Id)
+		topCategories := new(PortalCategories)
+		err := topCategories.GetTopCategories(db, v.Id)
 		if err == nil {
-			category[k].TopAlias = topCategory.Alias
-			category[k].PrevPath = util.FileUrl(v.Thumbnail)
+			Categories[k].TopAlias = topCategories.Alias
+			Categories[k].PrevPath = util.FileUrl(v.Thumbnail)
 		}
 
 	}
 
-	return category, nil
+	return Categories, nil
 }
 
-func (model *PortalCategory) recursionParent(category []PortalCategory, id int) (topId int) {
+func (model *PortalCategories) recursionParent(Categories []PortalCategories, id int) (topId int) {
 	topId = id
-	for _, v := range category {
+	for _, v := range Categories {
 		if v.Id == id && v.ParentId > 0 {
-			topId = model.recursionParent(category, v.ParentId)
+			topId = model.recursionParent(Categories, v.ParentId)
 		}
 	}
 	return topId
 }
 
-func (model *PortalCategory) indent(level int) string {
+func (model *PortalCategories) indent(level int) string {
 
 	indent := ""
 	for i := 0; i < level; i++ {
@@ -154,17 +154,17 @@ func (model *PortalCategory) indent(level int) string {
 
 }
 
-func (model *PortalCategory) GetTopId(db *gorm.DB, id int) (int, error) {
+func (model *PortalCategories) GetTopId(db *gorm.DB, id int) (int, error) {
 	tx := db.Where("id = ? AND delete_at = ?", id, 0).First(&model)
 	if tx.Error != nil {
 		return 0, tx.Error
 	}
-	var category []PortalCategory
-	tx = db.Where("delete_at = ?", 0).Find(&category)
+	var Categories []PortalCategories
+	tx = db.Where("delete_at = ?", 0).Find(&Categories)
 	if tx.Error != nil {
 		return 0, tx.Error
 	}
-	topId := model.recursionParent(category, id)
+	topId := model.recursionParent(Categories, id)
 	return topId, nil
 }
 
@@ -176,7 +176,7 @@ func (model *PortalCategory) GetTopId(db *gorm.DB, id int) (int, error) {
  * @return
  **/
 
-func (model *PortalCategory) GetAlias() (url string) {
+func (model *PortalCategories) GetAlias() (url string) {
 	alias := "/" + model.Alias
 	if model.Alias == "" {
 		alias = "/list/" + strconv.Itoa(model.Id)
@@ -192,18 +192,18 @@ func (model *PortalCategory) GetAlias() (url string) {
  * @return
  **/
 
-func (model *PortalCategory) GetPrevious(db *gorm.DB, id int) (breadcrumbs []Breadcrumb, err error) {
+func (model *PortalCategories) GetPrevious(db *gorm.DB, id int) (breadcrumbs []Breadcrumb, err error) {
 	tx := db.Where("id = ? AND delete_at = ?", id, 0).First(&model)
 	if tx.Error != nil {
 		return breadcrumbs, tx.Error
 	}
-	var category []PortalCategory
-	tx = db.Where("delete_at = ?", 0).Order("parent_id asc").Find(&category)
+	var Categories []PortalCategories
+	tx = db.Where("delete_at = ?", 0).Order("parent_id asc").Find(&Categories)
 	if tx.Error != nil {
 		return breadcrumbs, tx.Error
 	}
 
-	breadcrumbs = model.recursionPrevious(category, model.ParentId)
+	breadcrumbs = model.recursionPrevious(Categories, model.ParentId)
 
 	breadcrumbs = append(breadcrumbs, Breadcrumb{
 		Id:    model.Id,
@@ -222,22 +222,22 @@ func (model *PortalCategory) GetPrevious(db *gorm.DB, id int) (breadcrumbs []Bre
  * @return
  **/
 
-func (model *PortalCategory) recursionPrevious(category []PortalCategory, parentId int) (breadcrumbs []Breadcrumb) {
-	for _, v := range category {
+func (model *PortalCategories) recursionPrevious(Categories []PortalCategories, parentId int) (breadcrumbs []Breadcrumb) {
+	for _, v := range Categories {
 		if v.Id == parentId {
 			breadcrumbs = append(breadcrumbs, Breadcrumb{
 				Id:    v.Id,
 				Name:  v.Name,
 				Alias: v.Alias,
 			})
-			childBreadcrumbs := model.recursionPrevious(category, v.ParentId)
+			childBreadcrumbs := model.recursionPrevious(Categories, v.ParentId)
 			breadcrumbs = append(childBreadcrumbs, breadcrumbs...)
 		}
 	}
 	return breadcrumbs
 }
 
-func (model *PortalCategory) Show(db *gorm.DB, query string, queryArgs []interface{}) (err error) {
+func (model *PortalCategories) Show(db *gorm.DB, query string, queryArgs []interface{}) (err error) {
 	result := db.Where(query, queryArgs...).First(&model)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -250,11 +250,11 @@ func (model *PortalCategory) Show(db *gorm.DB, query string, queryArgs []interfa
 	if model.Thumbnail != "" {
 		model.PrevPath = util.FileUrl(model.Thumbnail)
 	}
-	//category.Alias = category.GetAlias()
+	//Categories.Alias = Categories.GetAlias()
 	return
 }
 
-func (model *PortalCategory) Save(db *gorm.DB) (PortalCategory, error) {
+func (model *PortalCategories) Save(db *gorm.DB) (PortalCategories, error) {
 
 	var tx *gorm.DB
 	if model.Id == 0 {
@@ -263,12 +263,12 @@ func (model *PortalCategory) Save(db *gorm.DB) (PortalCategory, error) {
 
 	tx = db.Save(&model)
 	if tx.Error != nil {
-		return PortalCategory{}, tx.Error
+		return PortalCategories{}, tx.Error
 	}
 	return *model, nil
 }
 
-func (model *PortalCategory) GetTopCategory(db *gorm.DB, id int) (err error) {
+func (model *PortalCategories) GetTopCategories(db *gorm.DB, id int) (err error) {
 	var cid int
 	cid, err = model.GetTopId(db, id)
 	if err != nil {
@@ -282,9 +282,9 @@ func (model *PortalCategory) GetTopCategory(db *gorm.DB, id int) (err error) {
 	return
 }
 
-func (model *PortalCategoryPost) Store(db *gorm.DB, pcpPost []PortalCategoryPost) ([]PortalCategoryPost, error) {
+func (model *PortalCategoriesPost) Store(db *gorm.DB, pcpPost []PortalCategoriesPost) ([]PortalCategoriesPost, error) {
 
-	var pcp []PortalCategoryPost
+	var pcp []PortalCategoriesPost
 	result := db.Where("post_id  = ?", model.PostId).Find(&pcp)
 	if result.Error != nil {
 		return pcp, nil
@@ -296,25 +296,25 @@ func (model *PortalCategoryPost) Store(db *gorm.DB, pcpPost []PortalCategoryPost
 
 	for _, v := range pcp {
 		if !model.inArray(v, pcpPost) || len(pcpPost) == 0 {
-			delQuery = append(delQuery, "(post_id = ? and category_id = ?)")
-			delQueryArgs = append(delQueryArgs, v.PostId, v.CategoryId)
+			delQuery = append(delQuery, "(post_id = ? and Categories_id = ?)")
+			delQueryArgs = append(delQueryArgs, v.PostId, v.CategoriesId)
 		}
 
 		// 如果未传参，全部删除
 		if len(pcpPost) == 0 {
-			delQuery = append(delQuery, "(post_id = ? and category_id = ?)")
-			delQueryArgs = append(delQueryArgs, v.PostId, v.CategoryId)
+			delQuery = append(delQuery, "(post_id = ? and Categories_id = ?)")
+			delQueryArgs = append(delQueryArgs, v.PostId, v.CategoriesId)
 		}
 	}
 
-	var toAddPcp []PortalCategoryPost
+	var toAddPcp []PortalCategoriesPost
 
 	// 添加待添加的
 	for _, v := range pcpPost {
 		if !model.inArray(v, pcp) || len(pcp) == 0 {
-			toAddPcp = append(toAddPcp, PortalCategoryPost{
-				PostId:     v.PostId,
-				CategoryId: v.CategoryId,
+			toAddPcp = append(toAddPcp, PortalCategoriesPost{
+				PostId:       v.PostId,
+				CategoriesId: v.CategoriesId,
 			})
 		}
 	}
@@ -322,14 +322,14 @@ func (model *PortalCategoryPost) Store(db *gorm.DB, pcpPost []PortalCategoryPost
 	// 删除要删除的
 	delQueryStr := strings.Join(delQuery, " OR ")
 	if delQueryStr != "" {
-		db.Where(delQueryStr, delQueryArgs...).Delete(&PortalCategoryPost{})
+		db.Where(delQueryStr, delQueryArgs...).Delete(&PortalCategoriesPost{})
 	}
 
 	//添加要添加的
 	if len(toAddPcp) > 0 {
 		result = db.Create(&toAddPcp)
 		if result.Error != nil {
-			return []PortalCategoryPost{}, nil
+			return []PortalCategoriesPost{}, nil
 		}
 	}
 
@@ -341,18 +341,18 @@ func (model *PortalCategoryPost) Store(db *gorm.DB, pcpPost []PortalCategoryPost
 	return pcp, nil
 }
 
-func (model *PortalCategoryPost) inArray(inPost PortalCategoryPost, pcp []PortalCategoryPost) bool {
+func (model *PortalCategoriesPost) inArray(inPost PortalCategoriesPost, pcp []PortalCategoriesPost) bool {
 
 	for _, v := range pcp {
 
-		if inPost.PostId == v.PostId && inPost.CategoryId == v.CategoryId {
+		if inPost.PostId == v.PostId && inPost.CategoriesId == v.CategoriesId {
 			return true
 		}
 	}
 	return false
 }
 
-func (model *PortalCategory) ListWithTree(db *gorm.DB) ([]PortalTree, error) {
+func (model *PortalCategories) ListWithTree(db *gorm.DB) ([]PortalTree, error) {
 
 	tree, err := model.List(db)
 	if err != nil {
@@ -369,21 +369,21 @@ func (model *PortalCategory) ListWithTree(db *gorm.DB) ([]PortalTree, error) {
 	return data, nil
 }
 
-func (model *PortalCategory) recursionChildById(category []PortalCategory, parentId int) []PortalTree {
+func (model *PortalCategories) recursionChildById(Categories []PortalCategories, parentId int) []PortalTree {
 
 	var tree []PortalTree
 
-	for _, v := range category {
+	for _, v := range Categories {
 
 		// 当前子项
 		if parentId == v.ParentId {
 
 			item := PortalTree{
-				PortalCategory: v,
+				PortalCategories: v,
 			}
 
 			if parentId == 0 || v.ParentId > 0 {
-				children := model.recursionChildById(category, v.Id)
+				children := model.recursionChildById(Categories, v.Id)
 				item.Children = children
 			}
 
@@ -396,9 +396,9 @@ func (model *PortalCategory) recursionChildById(category []PortalCategory, paren
 
 }
 
-func (model *PortalCategory) ListWithOptions(db *gorm.DB, query string, queryArgs []interface{}) ([]categoryOptions, error) {
-	var pc []PortalCategory
-	cOptions := make([]categoryOptions, 0)
+func (model *PortalCategories) ListWithOptions(db *gorm.DB, query string, queryArgs []interface{}) ([]CategoriesOptions, error) {
+	var pc []PortalCategories
+	cOptions := make([]CategoriesOptions, 0)
 	tx := db.Where(query, queryArgs...).Find(&pc)
 	if tx.Error != nil {
 		return cOptions, nil
@@ -410,11 +410,11 @@ func (model *PortalCategory) ListWithOptions(db *gorm.DB, query string, queryArg
 	return data, nil
 }
 
-func (model *PortalCategory) recursionOptions(nav []PortalCategory, parentId int, level int) (cOptions []categoryOptions) {
+func (model *PortalCategories) recursionOptions(nav []PortalCategories, parentId int, level int) (cOptions []CategoriesOptions) {
 	nextLevel := level + 1
 	for _, v := range nav {
 		if parentId == v.ParentId {
-			ops := categoryOptions{
+			ops := CategoriesOptions{
 				Id:       v.Id,
 				ParentId: v.ParentId,
 				Name:     v.Name,
@@ -430,7 +430,7 @@ func (model *PortalCategory) recursionOptions(nav []PortalCategory, parentId int
 
 // 获取子集的分类id
 
-func (model *PortalCategory) ChildIds(db *gorm.DB, id int) ([]string, error) {
+func (model *PortalCategories) ChildIds(db *gorm.DB, id int) ([]string, error) {
 	tree, err := model.List(db)
 	if err != nil {
 		return []string{}, nil
@@ -440,12 +440,12 @@ func (model *PortalCategory) ChildIds(db *gorm.DB, id int) ([]string, error) {
 	return ids, nil
 }
 
-func (model *PortalCategory) recursionChild(category []PortalCategory, parentId int) []string {
+func (model *PortalCategories) recursionChild(Categories []PortalCategories, parentId int) []string {
 	var ids []string
-	for _, v := range category {
+	for _, v := range Categories {
 		if parentId == v.ParentId {
 			ids = append(ids, strconv.Itoa(v.Id))
-			childIds := model.recursionChild(category, v.Id)
+			childIds := model.recursionChild(Categories, v.Id)
 
 			ids = append(ids, childIds...)
 		}
@@ -461,16 +461,16 @@ func (model *PortalCategory) recursionChild(category []PortalCategory, parentId 
  * @return
  **/
 
-func (model *PortalCategory) Delete(db *gorm.DB) (err error) {
+func (model *PortalCategories) Delete(db *gorm.DB) (err error) {
 	id := model.Id
 	if id == 0 {
 		err = errors.New("分类id不能为0或空！")
 		return
 	}
 
-	portalCategory := new(PortalCategory)
+	portalCategories := new(PortalCategories)
 
-	err = portalCategory.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
+	err = portalCategories.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
 	if err != nil {
 		return
 	}
@@ -504,7 +504,7 @@ func (model *PortalCategory) Delete(db *gorm.DB) (err error) {
  * @return
  **/
 
-func (model *PortalCategory) BatchDelete(db *gorm.DB, ids []string) (err error) {
+func (model *PortalCategories) BatchDelete(db *gorm.DB, ids []string) (err error) {
 	deleteAt := time.Now().Unix()
 	if err = db.Model(&model).Where("id IN (?)", ids).Updates(map[string]interface{}{"delete_at": deleteAt}).Error; err != nil {
 		return

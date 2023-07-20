@@ -64,13 +64,13 @@ func (l *OptionsUrlsLogic) OptionsUrls() (resp types.Response) {
 
 	queryStr := strings.Join(query, " AND ")
 
-	categoryData, err := new(model.PortalCategory).Index(db, queryStr, queryArgs)
+	CategoriesData, err := new(model.PortalCategories).Index(db, queryStr, queryArgs)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
 
-	cateOptions := recursionTreeOption(categoryData)
+	cateOptions := recursionTreeOption(CategoriesData)
 
 	tree := make([]TreeOption, 0)
 	tree = append(tree, TreeOption{

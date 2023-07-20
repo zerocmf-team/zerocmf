@@ -52,7 +52,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 		postType = 2
 	}
 
-	if postType == 1 && len(req.CategoryIds) == 0 {
+	if postType == 1 && len(req.CategoriesIds) == 0 {
 		resp.Error("分类不能为空！", nil)
 		return
 	}
@@ -133,7 +133,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	var (
 		data struct {
 			model.PortalPost
-			Category []model.PortalCategoryPost `json:"category"`
+			Categories []model.PortalCategoriesPost `json:"Categories"`
 		}
 		postData model.PortalPost
 	)
@@ -169,12 +169,12 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 		}
 	}
 
-	var pcpPost = make([]model.PortalCategoryPost, 0)
+	var pcpPost = make([]model.PortalCategoriesPost, 0)
 
-	pcp := model.PortalCategoryPost{}
+	pcp := model.PortalCategoriesPost{}
 
-	category := model.PortalCategory{}
-	existsCategory, err := category.List(db)
+	Categories := model.PortalCategories{}
+	existsCategories, err := Categories.List(db)
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -185,17 +185,17 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 		return
 	}
 
-	for _, v := range req.CategoryIds {
+	for _, v := range req.CategoriesIds {
 
 		cidInt, _ := strconv.Atoi(v)
 
-		if !inArray(cidInt, existsCategory) {
+		if !inArray(cidInt, existsCategories) {
 			resp.Error("分类参数非法！", nil)
 			return
 		}
 
 		pcp.PostId = postData.Id
-		pcp.CategoryId = cidInt
+		pcp.CategoriesId = cidInt
 		pcpPost = append(pcpPost, pcp)
 	}
 
@@ -205,7 +205,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 		return
 	}
 
-	data.Category = pcpData
+	data.Categories = pcpData
 
 	var tag []int
 	var portalTag model.PortalTag
@@ -242,7 +242,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	return
 }
 
-func inArray(cid int, pc []model.PortalCategory) bool {
+func inArray(cid int, pc []model.PortalCategories) bool {
 	for _, v := range pc {
 		if v.Id == cid {
 			return true

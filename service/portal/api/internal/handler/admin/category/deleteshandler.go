@@ -1,9 +1,9 @@
-package category
+package Categories
 
 import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
-	"zerocmf/service/portal/api/internal/logic/admin/category"
+	"zerocmf/service/portal/api/internal/logic/admin/Categories"
 	"zerocmf/service/portal/api/internal/svc"
 )
 
@@ -19,7 +19,7 @@ func DeletesHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		domain := scheme + host
 		svcCtx.Config.App.Domain = domain
 		svcCtx.Request = r
-		l := category.NewDeletesLogic(r.Context(), svcCtx)
+		l := Categories.NewDeletesLogic(r.Context(), svcCtx)
 		resp := l.Deletes()
 		httpx.OkJson(w, resp)
 	}

@@ -1,4 +1,4 @@
-package category
+package Categories
 
 import (
 	"context"
@@ -28,12 +28,12 @@ func (l *ShowLogic) Show(req *types.CateOneReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
 	db := c.Config.Database.ManualDb(siteId.(string))
-	portalCategory := new(model.PortalCategory)
-	err := portalCategory.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
+	portalCategories := new(model.PortalCategories)
+	err := portalCategories.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
-	resp.Success("获取成功！", portalCategory)
+	resp.Success("获取成功！", portalCategories)
 	return
 }

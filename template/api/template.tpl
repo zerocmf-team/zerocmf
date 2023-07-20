@@ -7,18 +7,22 @@ info (
 	email: "{{.gitEmail}}"
 )
 
-type request {
-	// TODO: add members here and delete this comment
-}
-
-type response {
-	// TODO: add members here and delete this comment
-}
-
 service {{.serviceName}} {
-	@handler GetUser // TODO: set handler name and delete this comment
-	get /users/id/:userId(request) returns(response)
+	@handler Get
+    get / ()
 
-	@handler CreateUser // TODO: set handler name and delete this comment
-	post /users/create(request)
+    @handler Show
+    get /:id ()
+
+    @handler Store
+    post / ()
+
+    @handler Edit
+    post /:id ()
+
+    @handler Delete
+    delete /:id ()
+
+    @handler BatchDelete
+    delete / ()
 }

@@ -1,4 +1,4 @@
-package category
+package Categories
 
 import (
 	"context"
@@ -34,11 +34,11 @@ func (l *TreeListLogic) TreeList(req *types.OneReq) (resp types.Response) {
 		return
 	}
 
-	portalCategory := model.PortalCategory{
+	portalCategories := model.PortalCategories{
 		ParentId: id,
 	}
 
-	trees, err := portalCategory.ListWithTree(db)
+	trees, err := portalCategories.ListWithTree(db)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

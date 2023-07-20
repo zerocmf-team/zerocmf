@@ -54,9 +54,9 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 
 	// 查询文章的所属分类
 	pQueryArgs := []interface{}{id, 0}
-	pCate := model.PortalCategory{}
-	pCates, err := pCate.FindPostCategory(gormDB, "p.id = ? AND p.delete_at = ?", pQueryArgs)
-	post.Category = pCates
+	pCate := model.PortalCategories{}
+	pCates, err := pCate.FindPostCategories(gormDB, "p.id = ? AND p.delete_at = ?", pQueryArgs)
+	post.Categories = pCates
 
 	// 更新访问量 +1
 	postHits := post.PostHits
@@ -91,10 +91,10 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 
 		//// 查询文章的所属分类
 		//prevQueryArgs := []interface{}{id, 0}
-		//prevCate := model.PortalCategory{}
-		//var prevCates []model.PortalCategory
-		//prevCates, err = prevCate.FindPostCategory(db, "p.id = ? AND p.delete_at = ?", prevQueryArgs)
-		//prevPost.Category = prevCates
+		//prevCate := model.PortalCategories{}
+		//var prevCates []model.PortalCategories
+		//prevCates, err = prevCate.FindPostCategories(db, "p.id = ? AND p.delete_at = ?", prevQueryArgs)
+		//prevPost.Categories = prevCates
 
 		// 查询下一篇
 		query = "id > ? AND post_type = ? and delete_at = ?"

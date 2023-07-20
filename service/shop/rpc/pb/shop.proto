@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package shop;
+option go_package = "./shop";
+
+message CategoryGetReq {
+  string Name = 1;
+  int64 ParentId = 2;
+  double ListOrder = 3;
+  int32  Status = 4;
+  int32 Current = 5;
+  int32 PageSize = 6;
+}
+
+message CategoryShowReq {
+  int64   id = 1;
+}
+
+message CategorySaveReq {
+  int64   id = 1;
+  int64   parentId = 2;
+  string  name = 3;
+  string  icon = 4;
+  string  desc = 5;
+  int32   status = 6;
+  double  listOrder = 7;
+}
+
+message CategoryDelReq {
+  int64   id = 1;
+}
+
+
+message CategoryResp {
+  // 创建分类的响应信息
+  int64   id = 1;
+  int64   parentId = 2;
+  string  name = 3;
+  string  path = 4;
+  string  icon = 5;
+  string  desc = 6;
+  int32   status = 7;
+  double  listOrder = 8;
+  int64 createdAt = 9;
+  int64 updatedAt = 10;
+}
+
+message CategoryListResp {
+  repeated CategoryResp data = 1;
+  int64 total = 2;
+}
+
+service CategoryService {
+  rpc CategoryGet(CategoryGetReq) returns(CategoryListResp);
+  rpc CategoryShow(CategoryShowReq) returns(CategoryResp);
+  rpc CategorySave(CategorySaveReq) returns(CategoryResp);
+  rpc CategoryDel(CategoryDelReq) returns(CategoryResp);
+}

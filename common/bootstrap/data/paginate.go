@@ -13,13 +13,44 @@ import (
 
 type Paginate struct {
 	Data     interface{} `bson:"data" json:"data"`
-	Current  int         `bson:"current" json:"current"`
-	PageSize int         `bson:"pageSize" json:"pageSize"`
+	Current  int32       `bson:"current" json:"current"`
+	PageSize int32       `bson:"pageSize" json:"pageSize"`
 	Total    int64       `bson:"total" json:"total"`
 }
 
 type paginate struct {
 	Request *http.Request `json:"-"`
+}
+
+func PaginateQuery(r *http.Request) (current int32, pageSize int32, err error) {
+	queryParams := r.URL.Query()
+	qCurrent := queryParams.Get("current")
+	if qCurrent == "" {
+		qCurrent = "1"
+	}
+	qPageSize := queryParams.Get("pageSize")
+	if qPageSize == "" {
+		qPageSize = "10"
+	}
+
+	cInt, cErr := strconv.Atoi(qCurrent)
+	if cErr != nil {
+		cInt = 1
+	}
+
+	current = int32(cInt)
+
+	psInt, pErr := strconv.Atoi(qPageSize)
+	if pErr != nil {
+		psInt = 10
+	}
+
+	if current <= 0 {
+		current = 1
+	}
+
+	pageSize = int32(psInt)
+	return
 }
 
 func NewPaginate(req *http.Request) (p *paginate) {

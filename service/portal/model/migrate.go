@@ -14,7 +14,7 @@ func Migrate(curDb *gorm.DB) {
 
 	new(Option).AutoMigrate(curDb)
 	new(PortalPost).AutoMigrate(curDb)
-	new(PortalCategory).AutoMigrate(curDb)
+	new(PortalCategories).AutoMigrate(curDb)
 	new(PortalTag).AutoMigrate(curDb)
 	new(Theme).AutoMigrate(curDb)
 	new(Route).AutoMigrate(curDb)

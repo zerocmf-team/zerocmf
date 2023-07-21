@@ -34,7 +34,7 @@ func (l *GetLogic) Get(req *types.CategoryGetReq) (resp data.Rest) {
 	ctx := l.ctx
 	c := l.svcCtx
 
-	current, pageSize, err := data.PaginateQuery(l.header)
+	current, pageSize, err := data.PaginateQueryInt32(l.header)
 	if err != nil {
 		resp.Error("系统错误", nil)
 		return
@@ -43,8 +43,6 @@ func (l *GetLogic) Get(req *types.CategoryGetReq) (resp data.Rest) {
 	categoryClient := categoryservice.NewCategoryService(c.Client)
 	rpcReq := categoryservice.CategoryGetReq{}
 	copier.Copy(&rpcReq, &req)
-	rpcReq.Current = current
-	rpcReq.PageSize = pageSize
 	var category *categoryservice.CategoryListResp
 	category, err = categoryClient.CategoryGet(ctx, &rpcReq)
 	if err != nil {
@@ -52,17 +50,16 @@ func (l *GetLogic) Get(req *types.CategoryGetReq) (resp data.Rest) {
 		return
 	}
 
-	var json interface{} = category
+	var json interface{} = category.GetData()
 
 	if pageSize > 0 {
 		json = data.Paginate{
-			Current:  current,
-			PageSize: pageSize,
+			Current:  int(current),
+			PageSize: int(pageSize),
 			Data:     category.GetData(),
 			Total:    category.GetTotal(),
 		}
 	}
-
 	resp.Success("获取成功", json)
 	return
 }

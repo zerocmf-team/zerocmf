@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"zerocmf/common/bootstrap/data"
+	"zerocmf/service/shop/rpc/client/categoryservice"
 
 	"zerocmf/service/shop/api/internal/svc"
 	"zerocmf/service/shop/api/internal/types"
@@ -29,7 +30,17 @@ func NewDelLogic(header *http.Request, svcCtx *svc.ServiceContext) *DelLogic {
 }
 
 func (l *DelLogic) Del(req *types.CategoryDelReq) (resp data.Rest) {
-	// todo: add your logic here and delete this line
-
+	ctx := l.ctx
+	c := l.svcCtx
+	categoryClient := categoryservice.NewCategoryService(c.Client)
+	rpcReq := categoryservice.CategoryDelReq{
+		Id: req.Id,
+	}
+	category, err := categoryClient.CategoryDel(ctx, &rpcReq)
+	if err != nil {
+		resp.Error("删除失败！", err.Error())
+		return
+	}
+	resp.Success("删除成功！", category)
 	return
 }

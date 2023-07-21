@@ -4,7 +4,13 @@ type CategoryGetReq {
     Name string `form:"name,optional"`
     ParentId int64 `form:"parentId,optional"`
     ListOrder *float64 `form:"listOrder,optional"`
-    Status *int32 `form:"status,optional"`
+    Status *int `form:"status,optional"`
+}
+
+type CategoryTreeDataReq {
+    Name string `form:"name,optional"`
+    Status *int `form:"status,optional"`
+    IgnoreId *int64 `form:"ignoreId,optional"`
 }
 
 type CategoryShowReq {
@@ -22,7 +28,7 @@ type CategorySaveReq {
 }
 
 type CategoryDelReq {
-
+    Id int64 `path:"id"`
 }
 
 type CategoryBatchDelReq {
@@ -38,13 +44,16 @@ info(
 
 @server(
     group: admin/category
-    prefix: api/v1/shop/categories
+    prefix: api/v1/shop/admin/categories
     //    middleware: SiteMiddleware,AuthMiddleware
 )
 
 service shop-api {
     @handler Get
     get / (CategoryGetReq)
+
+    @handler GetTree
+    get /treeData (CategoryTreeDataReq)
 
     @handler Show
     get /:id (CategoryShowReq)

@@ -19,6 +19,28 @@ type ServiceContext struct {
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
+
+	routes := []apisix.Route{
+		{
+			URI:       "/api/v1/shop/admin/*",
+			Name:      "shop-api-admin",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				JWTAuth: &apisix.JWTAuth{
+					Meta: apisix.Meta{
+						Disable: false,
+					},
+				},
+			},
+			Status: 1,
+		},
+	}
+
+	err := c.Apisix.Register(routes)
+	if err != nil {
+		panic(err)
+	}
+
 	data := new(Init.Data).Context()
 	client := zrpc.MustNewClient(c.ShopRpc)
 	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))

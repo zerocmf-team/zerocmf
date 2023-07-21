@@ -41,20 +41,7 @@ func (l *StoreLogic) Store(req *types.CategorySaveReq) (resp data.Rest) {
 		resp.Error("系统出错了", err.Error())
 		return
 	}
-
-	var listOrder float64 = 10000
-	if req.ListOrder != nil {
-		listOrder = *req.ListOrder
-	}
-
-	categoryReq.ListOrder = listOrder
-
-	status := 1
-	if req.Status != nil {
-		status = *req.Status
-	}
-	categoryReq.Status = int32(status)
-
+	
 	var categoryResp *categoryservice.CategoryResp
 	categoryResp, err = categoryClient.CategorySave(ctx, &categoryReq)
 

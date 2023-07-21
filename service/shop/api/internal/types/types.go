@@ -8,6 +8,12 @@ type CategoryGetReq struct {
 	Status    *int     `form:"status,optional"`
 }
 
+type CategoryTreeDataReq struct {
+	Name     string `form:"name,optional"`
+	Status   *int   `form:"status,optional"`
+	IgnoreId *int64 `form:"ignoreId,optional"`
+}
+
 type CategoryShowReq struct {
 	Id int64 `path:"id"`
 }
@@ -23,6 +29,7 @@ type CategorySaveReq struct {
 }
 
 type CategoryDelReq struct {
+	Id int64 `path:"id"`
 }
 
 type CategoryBatchDelReq struct {

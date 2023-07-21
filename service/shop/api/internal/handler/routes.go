@@ -21,6 +21,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
+				Path:    "/treeData",
+				Handler: admincategory.GetTreeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
 				Path:    "/:id",
 				Handler: admincategory.ShowHandler(serverCtx),
 			},
@@ -45,7 +50,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: admincategory.BatchDelHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/v1/shop/categories"),
+		rest.WithPrefix("/api/v1/shop/admin/categories"),
 	)
 
 	server.AddRoutes(

@@ -35,7 +35,7 @@ func (l *GetLogic) Get(req *types.UserAdminRoleList) (resp types.Response) {
 	r := c.Request
 	siteId, _ := c.Get("siteId")
 	// 选择租户表
-	db, err := c.MongoDB(siteId.(string))
+	db, err := c.MongoDB(siteId.(int64))
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

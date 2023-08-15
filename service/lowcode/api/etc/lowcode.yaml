@@ -1,6 +1,7 @@
 Name: lowcode
 Host: 0.0.0.0
 Port: 8600
+Timeout: 10000
 
 MongoDB:
   name: admin

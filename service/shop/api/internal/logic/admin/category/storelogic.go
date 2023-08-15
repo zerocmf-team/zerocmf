@@ -41,15 +41,9 @@ func (l *StoreLogic) Store(req *types.CategorySaveReq) (resp data.Rest) {
 		resp.Error("系统出错了", err.Error())
 		return
 	}
-	
+
 	var categoryResp *categoryservice.CategoryResp
 	categoryResp, err = categoryClient.CategorySave(ctx, &categoryReq)
-
-	if err != nil {
-		resp.Error("系统出错了", err.Error())
-		return
-	}
-
 	if err != nil {
 		resp.Error("系统出错了", err.Error())
 		return

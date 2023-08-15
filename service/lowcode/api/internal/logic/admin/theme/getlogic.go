@@ -29,7 +29,7 @@ func (l *GetLogic) Get(req *types.ThemeListReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
 	// 选择租户表
-	db, err := c.MongoDB(siteId.(string))
+	db, err := c.MongoDB(siteId.(int64))
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
@@ -47,7 +47,15 @@ func (l *GetLogic) Get(req *types.ThemeListReq) (resp types.Response) {
 	}
 
 	var result interface{}
-	result, err = new(model.Theme).List(db, current, pageSize, bson.M{})
+	filter := bson.M{}
+	typ := 0
+	if req.Type != nil {
+		typ = *req.Type
+	}
+
+	filter["type"] = typ
+
+	result, err = new(model.Theme).List(db, current, pageSize, filter)
 	if err != nil {
 		resp.Error("查询失败", err.Error())
 	}

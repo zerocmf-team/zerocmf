@@ -14,6 +14,7 @@ type (
         ParentId *string `json:"parentId,optional"`
         FormId *string `json:"formId,optional"`
         Name string `json:"name"`
+        Path string `json:"path,optional"`
         Icon string `json:"icon,optional"`
         MenuType int `json:"menuType,optional"`
         HideInMenu *int `json:"hideInMenu,optional"`

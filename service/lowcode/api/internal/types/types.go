@@ -83,6 +83,7 @@ type AdminMenuSaveReq struct {
 	ParentId    *string  `json:"parentId,optional"`
 	FormId      *string  `json:"formId,optional"`
 	Name        string   `json:"name"`
+	Path        string   `json:"path,optional"`
 	Icon        string   `json:"icon,optional"`
 	MenuType    int      `json:"menuType,optional"`
 	HideInMenu  *int     `json:"hideInMenu,optional"`
@@ -92,6 +93,7 @@ type AdminMenuSaveReq struct {
 }
 
 type ThemeListReq struct {
+	Type     *int `form:"type,optional"`
 	Current  *int `form:"current,optional"`
 	PageSize *int `form:"pageSize,optional"`
 }
@@ -109,33 +111,36 @@ type ThemeSaveReq struct {
 }
 
 type ThemePageListReq struct {
-	Theme string  `path:"Theme"`
-	Name     *string `form:"name,optional"`
-	Type     string  `form:"type,optional"`
-	IsPublic *int    `form:"isPublic,optional"`
-	Current  *int    `form:"current,optional"`
-	PageSize *int    `form:"pageSize,optional"`
-	Status   *int    `form:"status,optional"`
+	Theme     string  `path:"theme"`
+	ThemeType int     `form:"themeType,optional"`
+	Name      *string `form:"name,optional"`
+	Type      string  `form:"type,optional"`
+	IsPublic  *int    `form:"isPublic,optional"`
+	Current   *int    `form:"current,optional"`
+	PageSize  *int    `form:"pageSize,optional"`
+	Status    *int    `form:"status,optional"`
 }
 
 type ThemePageShowReq struct {
-	Id       string `path:"id"`
-	Theme string `form:"Theme,optional"`
-	Type     string `form:"type,optional"`
+	Id        string `path:"id"`
+	Theme     string `form:"theme,optional"`
+	ThemeType int    `form:"themeType,optional"`
+	Type      string `form:"type,optional"`
 }
 
 type ThemePageSaveReq struct {
 	Id             string  `path:"id,optional"`
-	Theme       string  `json:"Theme"`
+	Theme          string  `path:"theme,optional"`
+	ThemeType      int     `form:"themeType,optional"`
 	IsPublic       int     `json:"isPublic,optional"`
-	Name           string  `json:"name"`
+	Name           string  `json:"name,optional"`
 	Alias          string  `json:"alias,optional"`
 	Description    string  `json:"description,optional"`
 	Schema         string  `json:"schema,optional"`
 	SeoTitle       string  `json:"seoTitle,optional"`
 	SeoKeywords    string  `json:"seoKeywords,optional"`
 	SeoDescription string  `json:"seoDescription,optional"`
-	Type           string  `json:"type"`
+	Type           string  `json:"type,optional"`
 	ListOrder      float64 `json:"listOrder,optional"`
 	Status         *int    `json:"status,optional"`
 }

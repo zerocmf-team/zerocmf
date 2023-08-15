@@ -141,34 +141,34 @@
         ]
       },
       {
-        "key": "Categories",
+        "key": "category",
         "name": "分类管理",
-        "path": "/portal/Categories",
+        "path": "/portal/category",
         "menuType": 1,
         "routes": [
           {
             "key": "list",
             "name": "分类列表",
-            "path": "/portal/Categories/list",
+            "path": "/portal/category/list",
             "menuType": 1,
             "hideInMenu": 1,
-            "component": "/Categories"
+            "component": "/Category/index"
           },
           {
             "key": "add",
             "name": "添加分类",
-            "path": "/portal/Categories/add",
+            "path": "/portal/category/add",
             "menuType": 1,
             "hideInMenu": 1,
-            "component": "/Categories/Add"
+            "component": "/Category/Add"
           },
           {
             "key": "edit",
             "name": "编辑分类",
-            "path": "/portal/Categories/edit/:id",
+            "path": "/portal/category/edit/:id",
             "menuType": 1,
             "hideInMenu": 1,
-            "component": "/Categories/Edit"
+            "component": "/Category/Edit"
           }
         ]
       },
@@ -243,36 +243,39 @@
         "path": "/shop/order"
       },
       {
-        "key": "goods",
+        "key": "product",
         "name": "商品管理",
-        "path": "/shop/goods",
+        "path": "/shop/product",
         "routes": [
           {
             "key": "list",
             "name": "商品列表",
-            "path": "/shop/goods/list",
-            "hideInMenu": 1
+            "path": "/shop/product/list",
+            "hideInMenu": 1,
+            "component": "/product/List"
+          },
+          {
+            "key": "add",
+            "name": "添加商品",
+            "path": "/shop/product/add",
+            "hideInMenu": 1,
+            "component": "/product/Save"
           }
         ]
       },
       {
-        "key": "Categories",
+        "key": "category",
         "name": "分类管理",
-        "path": "/shop/Categories"
-      }
-    ]
-  },
-  {
-    "key": "customer",
-    "name": "客户管理",
-    "menuType": 0,
-    "path": "/customer",
-    "routes": [
-      {
-        "key": "user",
-        "name": "客户管理",
-        "menuType": 0,
-        "path": "/customer/user"
+        "path": "/shop/category",
+        "routes": [
+          {
+            "key": "list",
+            "name": "商品列表",
+            "path": "/shop/category/list",
+            "hideInMenu": 1,
+            "component": "/category/List"
+          }
+        ]
       }
     ]
   },
@@ -322,7 +325,8 @@
         "key": "miniApp",
         "name": "小程序管理",
         "menuType": 1,
-        "path": "/theme/miniApp"
+        "component":"/channel/index",
+        "path": "/theme/miniapp"
       },
       {
         "key": "app",

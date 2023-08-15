@@ -34,7 +34,7 @@ func (l *GetLogic) Get(req *types.FormDatasReq) (resp types.Response) {
 	formId := req.FormId
 	siteId, _ := c.Get("siteId")
 	// 选择租户表
-	db, err := c.MongoDB(siteId.(string))
+	db, err := c.MongoDB(siteId.(int64))
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

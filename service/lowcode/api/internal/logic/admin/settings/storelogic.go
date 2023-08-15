@@ -34,7 +34,7 @@ func save(c *svc.ServiceContext, req *types.SettingSaveReq) (resp types.Response
 
 	siteId, _ := c.Get("siteId")
 	// 选择租户表
-	db, err := c.MongoDB(siteId.(string))
+	db, err := c.MongoDB(siteId.(int64))
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

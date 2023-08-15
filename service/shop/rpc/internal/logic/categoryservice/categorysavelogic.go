@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 	"zerocmf/common/bootstrap/util"
-	"zerocmf/service/shop/model/modelgoods"
+	"zerocmf/service/shop/model"
 
 	"zerocmf/service/shop/rpc/internal/svc"
 	"zerocmf/service/shop/rpc/pb/shop"
@@ -31,7 +31,7 @@ func NewCategorySaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cate
 	}
 }
 
-func (l *CategorySaveLogic) updatePath(db modelgoods.GoodsCategoryModel, id int64, parentId int64) (path string, err error) {
+func (l *CategorySaveLogic) updatePath(db model.ProductCategoryModel, id int64, parentId int64) (path string, err error) {
 	ctx := l.ctx
 
 	idStr := strconv.FormatInt(id, 10)
@@ -43,16 +43,16 @@ func (l *CategorySaveLogic) updatePath(db modelgoods.GoodsCategoryModel, id int6
 	} else {
 		query := "parent_id = ?"
 		queryArgs := []interface{}{parentId}
-		var pageSize int32 = 1
-		var current int32 = 10
-		var parentModel *modelgoods.GoodsCategory
+		pageSize := 1
+		current := 10
+		var parentModel *model.ProductCategory
 		parentModel, err = db.Where(query, queryArgs...).Limit(pageSize).Offset((current - 1) * pageSize).First(ctx)
 		if err != nil {
 			return
 		}
 
-		if !util.IsStringEmpty(parentModel.Path.String) {
-			parentIdPath = parentModel.Path.String + "-"
+		if !util.IsStringEmpty(parentModel.Path) {
+			parentIdPath = parentModel.Path + "-"
 		}
 
 		path = parentIdPath + idStr
@@ -69,24 +69,24 @@ func (l *CategorySaveLogic) CategorySave(in *shop.CategorySaveReq) (*shop.Catego
 	dsn := conf.Database.Dsn("")
 
 	//mysql model调用
-	db := modelgoods.NewGoodsCategoryModel(sqlx.NewMysql(dsn), conf.Cache)
+	db := model.NewProductCategoryModel(sqlx.NewMysql(dsn), conf.Cache)
 
 	id := in.GetId()
 
-	goodsCategory := modelgoods.GoodsCategory{}
+	goodsCategory := model.ProductCategory{}
 	now := time.Now().Unix()
 	// 如果不存在id则是新增
 
 	var (
 		err     error
-		findOne *modelgoods.GoodsCategory
+		findOne *model.ProductCategory
 		path    string
 		insert  sql.Result
 	)
 
 	parentId := in.ParentId
-	if parentId != 0 {
-		_, err = db.FindOne(ctx, parentId)
+	if parentId != nil && *parentId > 0 {
+		_, err = db.FindOne(ctx, *parentId)
 		if err != nil {
 			return nil, err
 		}
@@ -97,14 +97,16 @@ func (l *CategorySaveLogic) CategorySave(in *shop.CategorySaveReq) (*shop.Catego
 		if err != nil {
 			return nil, err
 		}
-		goodsCategory.CreatedAt = sql.NullInt64{
-			Int64: now,
-			Valid: true,
+		goodsCategory.CreatedAt = now
+
+		goodsCategory.UpdatedAt = now
+
+		if in.Status == nil {
+			goodsCategory.Status = 1
 		}
 
-		goodsCategory.UpdatedAt = sql.NullInt64{
-			Int64: now,
-			Valid: true,
+		if in.ListOrder == nil {
+			goodsCategory.ListOrder = 10000
 		}
 
 		insert, err = db.Insert(ctx, &goodsCategory)
@@ -123,12 +125,9 @@ func (l *CategorySaveLogic) CategorySave(in *shop.CategorySaveReq) (*shop.Catego
 			return nil, err
 		}
 
-		goodsCategory.Id = id
+		goodsCategory.ProductCategoryId = id
 
-		goodsCategory.Path = sql.NullString{
-			String: path,
-			Valid:  true,
-		}
+		goodsCategory.Path = path
 
 		err = db.Update(ctx, &goodsCategory)
 
@@ -137,7 +136,7 @@ func (l *CategorySaveLogic) CategorySave(in *shop.CategorySaveReq) (*shop.Catego
 		// 查当前菜单是否存在
 		findOne, err = db.FindOne(ctx, id)
 		if err != nil {
-			if errors.Is(err, modelgoods.ErrNotFound) {
+			if errors.Is(err, model.ErrNotFound) {
 				return nil, errors.New("该分类不存在！")
 			}
 			return nil, err
@@ -152,15 +151,9 @@ func (l *CategorySaveLogic) CategorySave(in *shop.CategorySaveReq) (*shop.Catego
 
 		path, err = l.updatePath(db, id, goodsCategory.ParentId.Int64)
 
-		goodsCategory.Path = sql.NullString{
-			String: path,
-			Valid:  true,
-		}
+		goodsCategory.Path = path
 
-		goodsCategory.UpdatedAt = sql.NullInt64{
-			Int64: now,
-			Valid: true,
-		}
+		goodsCategory.UpdatedAt = now
 
 		err = db.Update(ctx, &goodsCategory)
 		if err != nil {
@@ -170,6 +163,9 @@ func (l *CategorySaveLogic) CategorySave(in *shop.CategorySaveReq) (*shop.Catego
 	}
 
 	resp := shop.CategoryResp{}
-	copier.Copy(&resp, &goodsCategory)
+	err = copier.Copy(&resp, &goodsCategory)
+	if err != nil {
+		return nil, err
+	}
 	return &resp, nil
 }

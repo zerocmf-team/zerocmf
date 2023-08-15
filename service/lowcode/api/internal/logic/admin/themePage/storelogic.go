@@ -3,6 +3,7 @@ package themePage
 import (
 	"context"
 	"errors"
+	"github.com/jinzhu/copier"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -38,27 +39,25 @@ func save(c *svc.ServiceContext, req *types.ThemePageSaveReq) (resp types.Respon
 
 	siteId, _ := c.Get("siteId")
 	// 选择租户表
-	db, err := c.MongoDB(siteId.(string))
+	db, err := c.MongoDB(siteId.(int64))
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
 
-	filter := bson.M{
-		"name": req.Name,
-	}
-
 	collection := db.Collection("themePage")
-
-	themePage := model.ThemePage{}
-	findErr := db.FindOne(collection, filter, &themePage)
-	if findErr != nil && !errors.Is(findErr, mongo.ErrNoDocuments) {
-		resp.Error(findErr.Error(), nil)
-		return
-	}
 
 	// 新增
 	if req.Id == "" {
+		filter := bson.M{
+			"name": req.Name,
+		}
+		themePage := model.ThemePage{}
+		findErr := db.FindOne(collection, filter, &themePage)
+		if findErr != nil && !errors.Is(findErr, mongo.ErrNoDocuments) {
+			resp.Error(findErr.Error(), nil)
+			return
+		}
 
 		if !themePage.Id.IsZero() {
 			resp.Error("该页面已经存在！", nil)
@@ -67,6 +66,7 @@ func save(c *svc.ServiceContext, req *types.ThemePageSaveReq) (resp types.Respon
 
 		themePage = model.ThemePage{
 			Theme:       req.Theme,
+			ThemeType:   req.ThemeType,
 			Name:        req.Name,
 			Description: req.Description,
 			Type:        req.Type,
@@ -93,13 +93,33 @@ func save(c *svc.ServiceContext, req *types.ThemePageSaveReq) (resp types.Respon
 
 	} else {
 
-		themePage.Theme = req.Theme
-		themePage.Name = req.Name
-		themePage.Description = req.Description
-		themePage.IsPublic = req.IsPublic
-		themePage.Type = req.Type
-		themePage.Schema = req.Schema
-		themePage.ListOrder = req.ListOrder
+		var objectId primitive.ObjectID
+		objectId, err = primitive.ObjectIDFromHex(req.Id)
+		if err != nil {
+			resp.Error("非法请求", nil)
+			return
+		}
+
+		filter := bson.M{
+			"_id": objectId,
+		}
+
+		themePage := model.ThemePage{}
+		findErr := db.FindOne(collection, filter, &themePage)
+		if findErr != nil {
+			resp.Error(findErr.Error(), nil)
+			return
+		}
+
+		copier.CopyWithOption(&themePage, &req, copier.Option{IgnoreEmpty: true})
+		//themePage.Theme = req.Theme
+		//themePage.ThemeType = req.ThemeType
+		//themePage.Name = req.Name
+		//themePage.Description = req.Description
+		//themePage.IsPublic = req.IsPublic
+		//themePage.Type = req.Type
+		//themePage.Schema = req.Schema
+		//themePage.ListOrder = req.ListOrder
 		themePage.UserId = 1
 		themePage.CreateAt = time.Now().Unix()
 		themePage.UpdateAt = time.Now().Unix()
@@ -113,7 +133,7 @@ func save(c *svc.ServiceContext, req *types.ThemePageSaveReq) (resp types.Respon
 			resp.Error("更新失败", err.Error())
 			return
 		}
-		resp.Success("获取成功！", themePage)
+		resp.Success("更新成功！", themePage)
 	}
 
 	return

@@ -1,0 +1,51 @@
+syntax = "v1"
+
+type ProductGetReq {
+
+}
+
+type ProductShowReq {
+
+}
+
+type ProductStoreReq {
+
+}
+
+type ProductEditReq {
+
+}
+
+type ProductDelReq {
+
+}
+
+type ProductBatchDelReq {
+
+}
+
+@server(
+    group: admin/product
+    prefix: api/v1/shop/product
+    middleware: SiteMiddleware,AuthMiddleware
+)
+
+service shop-api {
+    @handler Get
+    get / (ProductGetReq)
+
+    @handler Show
+    get /:id (ProductShowReq)
+
+    @handler Store
+    post / (ProductStoreReq)
+
+    @handler Edit
+    post /:id (ProductEditReq)
+
+    @handler Del
+    delete /:id (ProductDelReq)
+
+    @handler BatchDel
+    delete / (ProductBatchDelReq)
+}

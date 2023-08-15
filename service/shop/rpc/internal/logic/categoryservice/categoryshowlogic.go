@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
-	"zerocmf/service/shop/model/modelgoods"
+	"zerocmf/service/shop/model"
 
 	"zerocmf/service/shop/rpc/internal/svc"
 	"zerocmf/service/shop/rpc/pb/shop"
@@ -32,7 +32,7 @@ func (l *CategoryShowLogic) CategoryShow(in *shop.CategoryShowReq) (*shop.Catego
 	conf := c.Config
 	dsn := conf.Database.Dsn("")
 	//mysql model调用
-	db := modelgoods.NewGoodsCategoryModel(sqlx.NewMysql(dsn), conf.Cache)
+	db := model.NewProductCategoryModel(sqlx.NewMysql(dsn), conf.Cache)
 	id := in.GetId()
 
 	one, err := db.FindOne(ctx, id)

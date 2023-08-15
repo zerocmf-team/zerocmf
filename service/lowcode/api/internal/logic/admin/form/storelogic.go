@@ -3,15 +3,16 @@ package form
 import (
 	"context"
 	"encoding/json"
+	"strconv"
+	"time"
+	bsModel "zerocmf/common/bootstrap/model"
+	"zerocmf/service/lowcode/model"
+
 	"github.com/jinzhu/copier"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"strconv"
-	"time"
-	bsModel "zerocmf/common/bootstrap/model"
-	"zerocmf/service/lowcode/model"
 
 	"zerocmf/service/lowcode/api/internal/svc"
 	"zerocmf/service/lowcode/api/internal/types"
@@ -45,7 +46,7 @@ func save(c *svc.ServiceContext, req *types.FormSaveReq) (resp types.Response) {
 	userIdInt, _ := strconv.ParseInt(userId.(string), 10, 64)
 	siteId, _ := c.Get("siteId")
 	// 选择租户表
-	db, err := c.MongoDB(siteId.(string))
+	db, err := c.MongoDB(siteId.(int64))
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
@@ -80,7 +81,6 @@ func save(c *svc.ServiceContext, req *types.FormSaveReq) (resp types.Response) {
 	if req.Id == "" {
 		//新增表单
 		form := model.Form{
-			ParentId:  primitive.ObjectID{},
 			Columns:   columns,
 			UserId:    userIdInt,
 			ListOrder: 10000,

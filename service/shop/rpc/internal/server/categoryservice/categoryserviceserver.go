@@ -27,6 +27,11 @@ func (s *CategoryServiceServer) CategoryGet(ctx context.Context, in *shop.Catego
 	return l.CategoryGet(in)
 }
 
+func (s *CategoryServiceServer) CategoryTree(ctx context.Context, in *shop.CategoryTreeReq) (*shop.CategoryTreeListResp, error) {
+	l := categoryservicelogic.NewCategoryTreeLogic(ctx, s.svcCtx)
+	return l.CategoryTree(in)
+}
+
 func (s *CategoryServiceServer) CategoryShow(ctx context.Context, in *shop.CategoryShowReq) (*shop.CategoryResp, error) {
 	l := categoryservicelogic.NewCategoryShowLogic(ctx, s.svcCtx)
 	return l.CategoryShow(in)

@@ -1,6 +1,7 @@
 syntax = "v1"
 
 type themeListReq {
+    Type *int `form:"type,optional"`
     current *int `form:"current,optional"`
     pageSize *int `form:"pageSize,optional"`
 }

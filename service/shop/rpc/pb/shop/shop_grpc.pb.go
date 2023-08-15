@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	CategoryService_CategoryGet_FullMethodName  = "/shop.CategoryService/CategoryGet"
+	CategoryService_CategoryTree_FullMethodName = "/shop.CategoryService/CategoryTree"
 	CategoryService_CategoryShow_FullMethodName = "/shop.CategoryService/CategoryShow"
 	CategoryService_CategorySave_FullMethodName = "/shop.CategoryService/CategorySave"
 	CategoryService_CategoryDel_FullMethodName  = "/shop.CategoryService/CategoryDel"
@@ -30,6 +31,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CategoryServiceClient interface {
 	CategoryGet(ctx context.Context, in *CategoryGetReq, opts ...grpc.CallOption) (*CategoryListResp, error)
+	CategoryTree(ctx context.Context, in *CategoryTreeReq, opts ...grpc.CallOption) (*CategoryTreeListResp, error)
 	CategoryShow(ctx context.Context, in *CategoryShowReq, opts ...grpc.CallOption) (*CategoryResp, error)
 	CategorySave(ctx context.Context, in *CategorySaveReq, opts ...grpc.CallOption) (*CategoryResp, error)
 	CategoryDel(ctx context.Context, in *CategoryDelReq, opts ...grpc.CallOption) (*CategoryResp, error)
@@ -46,6 +48,15 @@ func NewCategoryServiceClient(cc grpc.ClientConnInterface) CategoryServiceClient
 func (c *categoryServiceClient) CategoryGet(ctx context.Context, in *CategoryGetReq, opts ...grpc.CallOption) (*CategoryListResp, error) {
 	out := new(CategoryListResp)
 	err := c.cc.Invoke(ctx, CategoryService_CategoryGet_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *categoryServiceClient) CategoryTree(ctx context.Context, in *CategoryTreeReq, opts ...grpc.CallOption) (*CategoryTreeListResp, error) {
+	out := new(CategoryTreeListResp)
+	err := c.cc.Invoke(ctx, CategoryService_CategoryTree_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,6 +95,7 @@ func (c *categoryServiceClient) CategoryDel(ctx context.Context, in *CategoryDel
 // for forward compatibility
 type CategoryServiceServer interface {
 	CategoryGet(context.Context, *CategoryGetReq) (*CategoryListResp, error)
+	CategoryTree(context.Context, *CategoryTreeReq) (*CategoryTreeListResp, error)
 	CategoryShow(context.Context, *CategoryShowReq) (*CategoryResp, error)
 	CategorySave(context.Context, *CategorySaveReq) (*CategoryResp, error)
 	CategoryDel(context.Context, *CategoryDelReq) (*CategoryResp, error)
@@ -96,6 +108,9 @@ type UnimplementedCategoryServiceServer struct {
 
 func (UnimplementedCategoryServiceServer) CategoryGet(context.Context, *CategoryGetReq) (*CategoryListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CategoryGet not implemented")
+}
+func (UnimplementedCategoryServiceServer) CategoryTree(context.Context, *CategoryTreeReq) (*CategoryTreeListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CategoryTree not implemented")
 }
 func (UnimplementedCategoryServiceServer) CategoryShow(context.Context, *CategoryShowReq) (*CategoryResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CategoryShow not implemented")
@@ -133,6 +148,24 @@ func _CategoryService_CategoryGet_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(CategoryServiceServer).CategoryGet(ctx, req.(*CategoryGetReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CategoryService_CategoryTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CategoryTreeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CategoryServiceServer).CategoryTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CategoryService_CategoryTree_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CategoryServiceServer).CategoryTree(ctx, req.(*CategoryTreeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -203,6 +236,10 @@ var CategoryService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CategoryService_CategoryGet_Handler,
 		},
 		{
+			MethodName: "CategoryTree",
+			Handler:    _CategoryService_CategoryTree_Handler,
+		},
+		{
 			MethodName: "CategoryShow",
 			Handler:    _CategoryService_CategoryShow_Handler,
 		},
@@ -213,6 +250,223 @@ var CategoryService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CategoryDel",
 			Handler:    _CategoryService_CategoryDel_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "pb/shop.proto",
+}
+
+const (
+	ProductService_ProductSave_FullMethodName = "/shop.ProductService/ProductSave"
+)
+
+// ProductServiceClient is the client API for ProductService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ProductServiceClient interface {
+	ProductSave(ctx context.Context, in *ProductSaveReq, opts ...grpc.CallOption) (*ProductSaveResp, error)
+}
+
+type productServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewProductServiceClient(cc grpc.ClientConnInterface) ProductServiceClient {
+	return &productServiceClient{cc}
+}
+
+func (c *productServiceClient) ProductSave(ctx context.Context, in *ProductSaveReq, opts ...grpc.CallOption) (*ProductSaveResp, error) {
+	out := new(ProductSaveResp)
+	err := c.cc.Invoke(ctx, ProductService_ProductSave_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ProductServiceServer is the server API for ProductService service.
+// All implementations must embed UnimplementedProductServiceServer
+// for forward compatibility
+type ProductServiceServer interface {
+	ProductSave(context.Context, *ProductSaveReq) (*ProductSaveResp, error)
+	mustEmbedUnimplementedProductServiceServer()
+}
+
+// UnimplementedProductServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedProductServiceServer struct {
+}
+
+func (UnimplementedProductServiceServer) ProductSave(context.Context, *ProductSaveReq) (*ProductSaveResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProductSave not implemented")
+}
+func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
+
+// UnsafeProductServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ProductServiceServer will
+// result in compilation errors.
+type UnsafeProductServiceServer interface {
+	mustEmbedUnimplementedProductServiceServer()
+}
+
+func RegisterProductServiceServer(s grpc.ServiceRegistrar, srv ProductServiceServer) {
+	s.RegisterService(&ProductService_ServiceDesc, srv)
+}
+
+func _ProductService_ProductSave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductSaveReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).ProductSave(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_ProductSave_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).ProductSave(ctx, req.(*ProductSaveReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ProductService_ServiceDesc is the grpc.ServiceDesc for ProductService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ProductService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "shop.ProductService",
+	HandlerType: (*ProductServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ProductSave",
+			Handler:    _ProductService_ProductSave_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "pb/shop.proto",
+}
+
+const (
+	ProductAttrService_AttrKeySave_FullMethodName = "/shop.ProductAttrService/AttrKeySave"
+	ProductAttrService_AttrValSave_FullMethodName = "/shop.ProductAttrService/AttrValSave"
+)
+
+// ProductAttrServiceClient is the client API for ProductAttrService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ProductAttrServiceClient interface {
+	AttrKeySave(ctx context.Context, in *ProductAttrKeyReq, opts ...grpc.CallOption) (*ProductAttrKeyResp, error)
+	AttrValSave(ctx context.Context, in *ProductAttrValReq, opts ...grpc.CallOption) (*ProductAttrValResp, error)
+}
+
+type productAttrServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewProductAttrServiceClient(cc grpc.ClientConnInterface) ProductAttrServiceClient {
+	return &productAttrServiceClient{cc}
+}
+
+func (c *productAttrServiceClient) AttrKeySave(ctx context.Context, in *ProductAttrKeyReq, opts ...grpc.CallOption) (*ProductAttrKeyResp, error) {
+	out := new(ProductAttrKeyResp)
+	err := c.cc.Invoke(ctx, ProductAttrService_AttrKeySave_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productAttrServiceClient) AttrValSave(ctx context.Context, in *ProductAttrValReq, opts ...grpc.CallOption) (*ProductAttrValResp, error) {
+	out := new(ProductAttrValResp)
+	err := c.cc.Invoke(ctx, ProductAttrService_AttrValSave_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ProductAttrServiceServer is the server API for ProductAttrService service.
+// All implementations must embed UnimplementedProductAttrServiceServer
+// for forward compatibility
+type ProductAttrServiceServer interface {
+	AttrKeySave(context.Context, *ProductAttrKeyReq) (*ProductAttrKeyResp, error)
+	AttrValSave(context.Context, *ProductAttrValReq) (*ProductAttrValResp, error)
+	mustEmbedUnimplementedProductAttrServiceServer()
+}
+
+// UnimplementedProductAttrServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedProductAttrServiceServer struct {
+}
+
+func (UnimplementedProductAttrServiceServer) AttrKeySave(context.Context, *ProductAttrKeyReq) (*ProductAttrKeyResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AttrKeySave not implemented")
+}
+func (UnimplementedProductAttrServiceServer) AttrValSave(context.Context, *ProductAttrValReq) (*ProductAttrValResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AttrValSave not implemented")
+}
+func (UnimplementedProductAttrServiceServer) mustEmbedUnimplementedProductAttrServiceServer() {}
+
+// UnsafeProductAttrServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ProductAttrServiceServer will
+// result in compilation errors.
+type UnsafeProductAttrServiceServer interface {
+	mustEmbedUnimplementedProductAttrServiceServer()
+}
+
+func RegisterProductAttrServiceServer(s grpc.ServiceRegistrar, srv ProductAttrServiceServer) {
+	s.RegisterService(&ProductAttrService_ServiceDesc, srv)
+}
+
+func _ProductAttrService_AttrKeySave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductAttrKeyReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductAttrServiceServer).AttrKeySave(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductAttrService_AttrKeySave_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductAttrServiceServer).AttrKeySave(ctx, req.(*ProductAttrKeyReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductAttrService_AttrValSave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductAttrValReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductAttrServiceServer).AttrValSave(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductAttrService_AttrValSave_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductAttrServiceServer).AttrValSave(ctx, req.(*ProductAttrValReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ProductAttrService_ServiceDesc is the grpc.ServiceDesc for ProductAttrService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ProductAttrService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "shop.ProductAttrService",
+	HandlerType: (*ProductAttrServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AttrKeySave",
+			Handler:    _ProductAttrService_AttrKeySave_Handler,
+		},
+		{
+			MethodName: "AttrValSave",
+			Handler:    _ProductAttrService_AttrValSave_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

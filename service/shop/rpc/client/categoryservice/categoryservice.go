@@ -13,15 +13,26 @@ import (
 )
 
 type (
-	CategoryDelReq   = shop.CategoryDelReq
-	CategoryGetReq   = shop.CategoryGetReq
-	CategoryListResp = shop.CategoryListResp
-	CategoryResp     = shop.CategoryResp
-	CategorySaveReq  = shop.CategorySaveReq
-	CategoryShowReq  = shop.CategoryShowReq
+	CategoryDelReq       = shop.CategoryDelReq
+	CategoryGetReq       = shop.CategoryGetReq
+	CategoryListResp     = shop.CategoryListResp
+	CategoryResp         = shop.CategoryResp
+	CategorySaveReq      = shop.CategorySaveReq
+	CategoryShowReq      = shop.CategoryShowReq
+	CategoryTreeData     = shop.CategoryTreeData
+	CategoryTreeListResp = shop.CategoryTreeListResp
+	CategoryTreeReq      = shop.CategoryTreeReq
+	ProductAttrKeyReq    = shop.ProductAttrKeyReq
+	ProductAttrKeyResp   = shop.ProductAttrKeyResp
+	ProductAttrValReq    = shop.ProductAttrValReq
+	ProductAttrValResp   = shop.ProductAttrValResp
+	ProductSaveReq       = shop.ProductSaveReq
+	ProductSaveResp      = shop.ProductSaveResp
+	ProductSku           = shop.ProductSku
 
 	CategoryService interface {
 		CategoryGet(ctx context.Context, in *CategoryGetReq, opts ...grpc.CallOption) (*CategoryListResp, error)
+		CategoryTree(ctx context.Context, in *CategoryTreeReq, opts ...grpc.CallOption) (*CategoryTreeListResp, error)
 		CategoryShow(ctx context.Context, in *CategoryShowReq, opts ...grpc.CallOption) (*CategoryResp, error)
 		CategorySave(ctx context.Context, in *CategorySaveReq, opts ...grpc.CallOption) (*CategoryResp, error)
 		CategoryDel(ctx context.Context, in *CategoryDelReq, opts ...grpc.CallOption) (*CategoryResp, error)
@@ -41,6 +52,11 @@ func NewCategoryService(cli zrpc.Client) CategoryService {
 func (m *defaultCategoryService) CategoryGet(ctx context.Context, in *CategoryGetReq, opts ...grpc.CallOption) (*CategoryListResp, error) {
 	client := shop.NewCategoryServiceClient(m.cli.Conn())
 	return client.CategoryGet(ctx, in, opts...)
+}
+
+func (m *defaultCategoryService) CategoryTree(ctx context.Context, in *CategoryTreeReq, opts ...grpc.CallOption) (*CategoryTreeListResp, error) {
+	client := shop.NewCategoryServiceClient(m.cli.Conn())
+	return client.CategoryTree(ctx, in, opts...)
 }
 
 func (m *defaultCategoryService) CategoryShow(ctx context.Context, in *CategoryShowReq, opts ...grpc.CallOption) (*CategoryResp, error) {

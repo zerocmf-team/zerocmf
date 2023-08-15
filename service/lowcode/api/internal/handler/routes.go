@@ -154,7 +154,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.SiteMiddleware},
+			[]rest.Middleware{serverCtx.WxappMiddleware, serverCtx.SiteMiddleware},
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
@@ -240,7 +240,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
-					Path:    "/all/:themeKey",
+					Path:    "/all/:theme",
 					Handler: adminthemePage.GetHandler(serverCtx),
 				},
 				{
@@ -274,7 +274,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
-					Path:    "/all/:themeKey",
+					Path:    "/all/:theme",
 					Handler: appthemePage.GetHandler(serverCtx),
 				},
 				{

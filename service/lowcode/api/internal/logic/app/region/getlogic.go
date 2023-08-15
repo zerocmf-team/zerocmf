@@ -27,7 +27,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 func (l *GetLogic) Get(req *types.RegionGetReq) (resp types.Response) {
 	c := l.svcCtx
 	// 选择租户表
-	db, err := c.MongoDB("tenant")
+	db, err := c.MongoDB()
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

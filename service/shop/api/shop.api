@@ -1,6 +1,6 @@
 syntax = "v1"
 
 import (
-	"api/Category.api"
-	"api/goods.api"
+	"api/category.api"
+	"api/product.api"
 )

@@ -27,7 +27,7 @@ service lowcode {
 
 @server(
     group: app/settings
-    middleware: SiteMiddleware
+    middleware: WxappMiddleware,SiteMiddleware
     prefix: api/v1/app/settings
 )
 

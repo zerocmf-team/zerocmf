@@ -4,12 +4,18 @@ package shop;
 option go_package = "./shop";
 
 message CategoryGetReq {
-  string Name = 1;
-  int64 ParentId = 2;
-  double ListOrder = 3;
-  int32  Status = 4;
-  int32 Current = 5;
-  int32 PageSize = 6;
+  string name = 1;
+  optional int64 parentId = 2;
+  optional double listOrder = 3;
+  optional int32  status = 4;
+  optional int32 current = 5;
+  optional int32 pageSize = 6;
+}
+
+message CategoryTreeReq {
+  string name = 1;
+  optional int32  status = 2;
+  optional int64 ignoreId = 3;
 }
 
 message CategoryShowReq {
@@ -18,18 +24,17 @@ message CategoryShowReq {
 
 message CategorySaveReq {
   int64   id = 1;
-  int64   parentId = 2;
+  optional int64   parentId = 2;
   string  name = 3;
-  string  icon = 4;
-  string  desc = 5;
-  int32   status = 6;
-  double  listOrder = 7;
+  optional string  icon = 4;
+  optional string  desc = 5;
+  optional int32   status = 6;
+  optional double  listOrder = 7;
 }
 
 message CategoryDelReq {
-  int64   id = 1;
+  int64  id = 1;
 }
-
 
 message CategoryResp {
   // 创建分类的响应信息
@@ -43,6 +48,8 @@ message CategoryResp {
   double  listOrder = 8;
   int64 createdAt = 9;
   int64 updatedAt = 10;
+  string createdTime = 11;
+  string updatedTime = 12;
 }
 
 message CategoryListResp {
@@ -50,9 +57,100 @@ message CategoryListResp {
   int64 total = 2;
 }
 
+message CategoryTreeData {
+  int64   productCategoryId = 1;
+  int64   parentId = 2;
+  string  name = 3;
+  string  path = 4;
+  string  icon = 5;
+  string  desc = 6;
+  int32   status = 7;
+  double  listOrder = 8;
+  int64 createdAt = 9;
+  int64 updatedAt = 10;
+  string createdTime = 11;
+  string updatedTime = 12;
+  repeated CategoryTreeData children = 13;
+}
+
+message CategoryTreeListResp {
+  repeated CategoryTreeData data = 1;
+}
+
+// 商品规格
+message ProductSku {
+  optional int64 skuId = 1;
+  string attrsVal = 2;
+  optional string skuCode = 3;
+  optional string skuBarcode = 4;
+  double retailPrice = 5;
+  int64 stock = 6;
+  optional double originalPrice = 7;
+  optional double costPrice = 8;
+  double weight = 9;
+  optional int32 status = 10;
+}
+
+// 保存商品
+message ProductSaveReq {
+  optional int64 productId = 1;
+  string productName = 2;
+  int64 userId = 3;
+  optional string productBarcode = 4;
+  int64 productCategory = 5;
+  optional string mainVideo = 6;
+  optional string explanationVideo = 7;
+  string attributes = 8;
+  double price = 9;
+  string stockUnit = 10;
+  int64 stock = 11;
+  string shareDescription = 12;
+  string productSellingPoint = 13;
+  double originalPrice = 14;
+  double costPrice = 15;
+  int32 hideRemainingStock = 16;
+  int32 deliveryMethod = 17;
+  string productContent = 18;
+  optional int32 status = 19;
+  repeated ProductSku productSku = 20;
+}
+
+message ProductSaveResp {
+  int64 productId = 1;
+  string productName = 2;
+}
+
+message ProductAttrKeyReq {
+  string key = 1;
+}
+
+message ProductAttrKeyResp {
+  int64 attrKeyId = 1;
+  string attributeKey = 2;
+}
+
+message ProductAttrValReq {
+  string value = 1;
+}
+
+message ProductAttrValResp {
+  int64 attrValId = 1;
+  string attributeValue = 2;
+}
+
 service CategoryService {
   rpc CategoryGet(CategoryGetReq) returns(CategoryListResp);
+  rpc CategoryTree(CategoryTreeReq) returns(CategoryTreeListResp);
   rpc CategoryShow(CategoryShowReq) returns(CategoryResp);
   rpc CategorySave(CategorySaveReq) returns(CategoryResp);
   rpc CategoryDel(CategoryDelReq) returns(CategoryResp);
+}
+
+service ProductService {
+  rpc ProductSave(ProductSaveReq) returns(ProductSaveResp);
+}
+
+service ProductAttrService {
+  rpc AttrKeySave(ProductAttrKeyReq) returns(ProductAttrKeyResp);
+  rpc AttrValSave(ProductAttrValReq) returns(ProductAttrValResp);
 }

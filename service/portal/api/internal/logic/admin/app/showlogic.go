@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"net/http"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 
@@ -11,13 +12,16 @@ import (
 type ShowLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
+func NewShowLogic(header *http.Request, svcCtx *svc.ServiceContext) *ShowLogic {
+	ctx := header.Context()
 	return &ShowLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }

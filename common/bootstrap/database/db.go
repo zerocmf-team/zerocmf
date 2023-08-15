@@ -9,18 +9,20 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"strconv"
+	"time"
+
 	"github.com/jinzhu/copier"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"io"
-	"os"
-	"strconv"
-	"time"
 )
 
 type Database struct {
-	Name     string
+	Name     string `json:"Name,optional"`
 	Type     string
 	Host     string
 	Database string
@@ -37,23 +39,47 @@ type GormDB struct {
 	Db       *gorm.DB
 }
 
-func NewGormDb(db Database) (gormDb *gorm.DB) {
+func NewGormDb(db Database, siteIds ...string) (gormDb *gorm.DB) {
 	dbName := db.Database
+	siteId := ""
+	if len(siteId) > 0 {
+		siteId = siteIds[0]
+		dbName = "site_" + siteId + "_" + db.Name
+	}
 	gormDb = db.newConn(dbName)
-	gormDb.Set("siteId", "")
+	gormDb.Set("siteId", siteId)
 	return
 }
 
-func (db *Database) NewConf(siteId string) (conf Database) {
+func CreateGormDb(db Database, siteIds ...string) (gormDb *gorm.DB) {
+	dbName := db.Database
+	siteId := ""
+	if len(siteIds) > 0 {
+		siteId = siteIds[0]
+		dbName = "site_" + siteId + "_" + db.Name
+	}
+
+	if dbName == "" {
+		panic("Database cannot empty")
+	}
+	db.createTable(dbName)
+	gormDb = db.newConn(dbName)
+	gormDb.Set("siteId", siteId)
+	return
+}
+
+func (db *Database) NewConf(siteId int64) (conf Database) {
 	copier.Copy(&conf, &db)
-	if siteId != "" {
-		conf.Database = "site_" + siteId + "_" + db.Name
+	if siteId > 0 {
+		siteIdStr := strconv.FormatInt(siteId, 10)
+		conf.Database = "site_" + siteIdStr + "_" + db.Name
 	}
 	//db.Db = db.newConn(conf.Database)
 	return
 }
 
-func (db *Database) ManualDb(siteId string) (outDb *gorm.DB) {
+func (db *Database) ManualDb(siteIdInt int64) (outDb *gorm.DB) {
+	siteId := strconv.FormatInt(siteIdInt, 10)
 	dbName := "site_" + siteId + "_" + db.Name
 	// 未指定则默认为主库
 	if siteId == "" {
@@ -70,7 +96,7 @@ func (db *Database) newConn(database string) *gorm.DB {
 		panic("Database cannot empty")
 	}
 
-	db.CreateTable(database)
+	//db.createTable(database)
 
 	username := db.Username
 	pwd := db.Password
@@ -120,7 +146,7 @@ func (db *Database) newConn(database string) *gorm.DB {
  * @return
  **/
 
-func (db *Database) CreateTable(dbName string) {
+func (db *Database) createTable(dbName string) {
 
 	database := os.Getenv("MYSQL_DATABASE")
 	if database != "" {
@@ -169,7 +195,7 @@ Contact: github.com/daifuyang
 Date: Date: 2023-07-17 14:17:54
 */
 
-func (db *Database) Dsn(siteId string) (dsn string) {
+func (db *Database) Dsn() (dsn string) {
 	username := db.Username
 	pwd := db.Password
 	host := db.Host
@@ -182,30 +208,35 @@ func (db *Database) Dsn(siteId string) (dsn string) {
 	port := strconv.Itoa(db.Port)
 	database := db.Database
 
-	if siteId != "" {
-		database = "site_" + siteId + "_" + db.Name
-	}
-
 	dsn = username + ":" + pwd + "@tcp(" + host + ":" + port + ")/" + database + "?charset=utf8mb4&parseTime=True&loc=Local"
 	return
 }
 
 func (db *Database) Migrate(tables []string) {
 	dbName := db.Database
-	db.CreateTable(dbName)
-	open, err := sql.Open("mysql", db.Dsn(""))
+	db.createTable(dbName)
+	open, err := sql.Open("mysql", db.Dsn())
 	if err != nil {
 		return
 	}
 	defer open.Close()
-	err = os.Chdir("../model/mysql")
+
+	var wd string
+	wd, err = os.Getwd()
 	if err != nil {
-		fmt.Println("无法打开目标文件夹:", err)
+		fmt.Println("无法获取当前工作目录：", err)
 		return
 	}
+	// 获取上级目录的路径
+	parentDir := filepath.Dir(wd)
+
+	if parentDir == "/" {
+		parentDir = "/app"
+	}
+
 	var file *os.File
 	for _, v := range tables {
-		filename := v + ".sql"
+		filename := parentDir + "/model/mysql/" + v + ".sql"
 		file, err = os.Open(filename)
 		if err != nil {
 			fmt.Println("无法打开文件:", err)

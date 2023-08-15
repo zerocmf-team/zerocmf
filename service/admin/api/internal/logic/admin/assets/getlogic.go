@@ -30,7 +30,7 @@ func (l *GetLogic) Get(req *types.AssetsReq) (resp *types.Response) {
 	resp = new(types.Response)
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	r := c.Request
 	userId, _ := c.Get("userId")
 	query := []string{"user_id = ? AND status = ?"}

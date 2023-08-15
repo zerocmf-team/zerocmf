@@ -28,8 +28,8 @@ func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
 func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	dbConf := c.Config.Database.NewConf(siteId.(string))
-	db := dbConf.ManualDb(siteId.(string))
+	dbConf := c.Config.Database.NewConf(siteId.(int64))
+	db := dbConf.ManualDb(siteId.(int64))
 	id := req.Id
 	if id == "" {
 		resp.Error("id不能为空！", nil)

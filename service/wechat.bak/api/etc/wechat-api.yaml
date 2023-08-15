@@ -1,0 +1,26 @@
+Name: wechat-api
+Host: 0.0.0.0
+Port: 4006
+Timeout: 0
+
+Appid: wxce4c356a74b76720
+Secret: df5cca115cf3db90736952d51a51a4c7
+
+#数据库相关
+Database:
+  Type: mysql
+  Host: localhost
+  Database: zerocmf_wechat
+  Username: root
+  Password: '123456'
+  Port: 3306
+  Charset: utf8mb4
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD
+
+Redis:
+  Enabled: true
+  Host: localhost
+  Database: 0
+  Port: 6379
+  Password: ''

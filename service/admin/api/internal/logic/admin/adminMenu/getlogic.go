@@ -65,7 +65,7 @@ func (l *GetLogic) Get() (resp *types.Response) {
 	var menus []model.AdminMenu
 	siteId, _ := c.Get("siteId")
 
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	tx := db.Where("path <> ?", "").Order("list_order, id").Find(&menus)
 	if tx.RowsAffected == 0 {
 		resp.Error("暂无菜单，请和联系管理员添加！", nil)
@@ -76,7 +76,7 @@ func (l *GetLogic) Get() (resp *types.Response) {
 	rpcMenus := make([]*user.Menu, 0)
 	copier.Copy(&rpcMenus, &menus)
 
-	enforceReply, err := userRpc.NewEnforce(l.ctx, &user.NewEnforceRequest{TenantId: "", UserId: userId.(string), Menus: rpcMenus})
+	enforceReply, err := userRpc.NewEnforce(l.ctx, &user.NewEnforceRequest{SiteId: siteId.(int64), UserId: userId.(string), Menus: rpcMenus})
 	if err != nil {
 		resp.Error("系统出错", err.Error())
 		return

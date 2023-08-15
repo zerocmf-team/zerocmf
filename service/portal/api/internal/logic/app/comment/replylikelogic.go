@@ -2,6 +2,7 @@ package comment
 
 import (
 	"context"
+	"net/http"
 	"strconv"
 	"zerocmf/common/bootstrap/model"
 	"zerocmf/service/portal/api/internal/svc"
@@ -13,13 +14,16 @@ import (
 type ReplyLikeLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewReplyLikeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ReplyLikeLogic {
+func NewReplyLikeLogic(header *http.Request, svcCtx *svc.ServiceContext) *ReplyLikeLogic {
+	ctx := header.Context()
 	return &ReplyLikeLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -28,7 +32,7 @@ func (l *ReplyLikeLogic) ReplyLike(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	id := req.Id
 	if id == 0 {

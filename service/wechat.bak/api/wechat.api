@@ -1,0 +1,14 @@
+syntax = "v1"
+
+// type (
+// 	Response {
+// 		Code int         `json:"code"`
+// 		Msg  string      `json:"msg"`
+// 		Data interface{} `json:"data"`
+// 	}
+// )
+
+import (
+	// "api/gateway.api"
+	"api/partner.api"
+)

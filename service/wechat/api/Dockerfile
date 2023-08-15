@@ -1,3 +1,4 @@
+
 FROM alpine
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
@@ -9,4 +10,4 @@ WORKDIR /app
 COPY service/wechat/api/etc /app/etc
 COPY service/wechat/api/main /app/main
 
-CMD ["./main", "-f", "etc/wechat.yaml"]
+CMD ["./main", "-f", "etc/wechat-api.yaml"]

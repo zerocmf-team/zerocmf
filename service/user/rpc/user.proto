@@ -12,7 +12,7 @@ option go_package = "./user";
 message UserRequest {
   string userId = 1;
   string userLogin = 2;
-  string siteId = 3;
+  int64 siteId = 3;
 }
 
 message  UserReply {
@@ -41,14 +41,14 @@ message  UserReply {
   string createTime = 24;
   int64 deleteAt = 25;
   int32 userStatus = 26;
-  string siteId = 27;
+  int64 siteId = 27;
   string errorMsg = 28;
 }
 
 message LoginReq {
   string userLogin = 1;
   string userPass = 2;
-  string siteId = 3;
+  int64 siteId = 3;
 }
 
 // The request message containing the user's name.
@@ -74,7 +74,7 @@ message menu {
 }
 
 message NewEnforceRequest {
-  string tenantId = 1;
+  int64 siteId = 1;
   string userId = 2;
   repeated menu menus = 3;
 }
@@ -101,5 +101,7 @@ service user {
   rpc NewEnforce(NewEnforceRequest) returns (NewEnforcerReply) {}
 
   rpc autoMigrate(siteReq) returns(siteReply);
+
+  // 保存会员信息
 }
 

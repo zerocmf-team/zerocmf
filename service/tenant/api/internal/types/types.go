@@ -44,6 +44,10 @@ type SiteDomainReq struct {
 type ApisixReq struct {
 }
 
+type MiniappShowReq struct {
+	SiteId int64 `form:"siteId"`
+}
+
 func (r *Response) Success(msg string, data interface{}) {
 	success := new(bsData.Rest).Success(msg, data)
 	copier.Copy(&r, &success)

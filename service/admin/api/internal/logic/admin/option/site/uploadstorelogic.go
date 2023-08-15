@@ -28,7 +28,7 @@ func (l *UploadStoreLogic) UploadStore(req *types.UploadReq) (resp types.Respons
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	maxFiles := req.MaxFiles
 	chunkSize := req.ChunkSize
 	imageMaxFileSize := req.FileTypes.Image.UploadMaxFileSize

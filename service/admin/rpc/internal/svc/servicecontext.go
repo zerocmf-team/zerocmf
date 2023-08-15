@@ -1,21 +1,19 @@
 package svc
 
 import (
-	"gorm.io/gorm"
-	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/redis"
 	"zerocmf/service/admin/rpc/internal/config"
 )
 
 type ServiceContext struct {
 	Config config.Config
-	Db     *gorm.DB
-	Redis  redis.Redis
+	//Db     *gorm.DB
+	Redis redis.Redis
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	curDb := database.NewGormDb(c.Database)
+	//curDb := database.NewGormDb(c.Database)
 	// 数据库迁移
 	//model.Migrate(database.ManualDb("1161514444"))
 
@@ -23,7 +21,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	return &ServiceContext{
 		Config: c,
-		Db:     curDb,
-		Redis:  redis.NewRedis(c.RedisConf),
+		//Db:     curDb,
+		Redis: redis.NewRedis(c.RedisConf),
 	}
 }

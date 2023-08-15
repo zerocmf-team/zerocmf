@@ -30,8 +30,8 @@ func (l *GetListByRoleLogic) GetListByRole(req *types.ListByRoleReq) (resp types
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	dbConf := c.Config.Database.NewConf(siteId.(string))
-	db := dbConf.ManualDb(siteId.(string))
+	dbConf := c.Config.Database.NewConf(siteId.(int64))
+	db := dbConf.ManualDb(siteId.(int64))
 	//pageSize := req.PageSize
 
 	roleIds := strings.Join(req.RoleIds, ",")

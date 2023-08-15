@@ -4,6 +4,7 @@ import (
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
 	"net/http"
+	"strconv"
 	"zerocmf/common/bootstrap/Init"
 	"zerocmf/common/bootstrap/apisix"
 	"zerocmf/common/bootstrap/database"
@@ -15,7 +16,7 @@ import (
 
 type ServiceContext struct {
 	Config  config.Config
-	NewDb   func(siteId ...string) database.GormDB
+	NewDb   func(siteId ...int64) database.GormDB
 	Request *http.Request
 	*Init.Data
 	AuthMiddleware rest.Middleware
@@ -72,10 +73,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 	return &ServiceContext{
 		Config: c,
-		NewDb: func(siteId ...string) (gormDB database.GormDB) {
+		NewDb: func(siteId ...int64) (gormDB database.GormDB) {
 			name := ""
 			if len(siteId) > 0 {
-				name = "site_" + siteId[0] + "_" + c.Name
+				siteIdInt := siteId[0]
+				name = "site_" + strconv.FormatInt(siteIdInt, 10) + "_" + c.Name
 			}
 			c.Database.Database = name
 			db := database.NewGormDb(c.Database)

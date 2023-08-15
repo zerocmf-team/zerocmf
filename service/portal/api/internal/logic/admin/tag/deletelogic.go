@@ -3,24 +3,29 @@ package tag
 import (
 	"context"
 	"errors"
-	"github.com/zeromicro/go-zero/core/logx"
-	"gorm.io/gorm"
+	"net/http"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
+
+	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
 )
 
 type DeleteLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogic {
+func NewDeleteLogic(header *http.Request, svcCtx *svc.ServiceContext) *DeleteLogic {
+	ctx := header.Context()
 	return &DeleteLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -29,7 +34,7 @@ func (l *DeleteLogic) Delete(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	id := req.Id
 
 	var tag model.PortalTag

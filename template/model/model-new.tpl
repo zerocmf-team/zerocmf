@@ -18,12 +18,12 @@ func (m *default{{.upperStartCamelObject}}Model) Where(query string, args ...int
 	return m
 }
 
-func (m *default{{.upperStartCamelObject}}Model) Limit(limit int32) *default{{.upperStartCamelObject}}Model {
+func (m *default{{.upperStartCamelObject}}Model) Limit(limit int) *default{{.upperStartCamelObject}}Model {
 	m.limit = limit
 	return m
 }
 
-func (m *default{{.upperStartCamelObject}}Model) Offset(offset int32) *default{{.upperStartCamelObject}}Model {
+func (m *default{{.upperStartCamelObject}}Model) Offset(offset int) *default{{.upperStartCamelObject}}Model {
 	m.offset = offset
 	return m
 }

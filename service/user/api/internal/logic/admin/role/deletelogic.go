@@ -31,8 +31,8 @@ func (l *DeleteLogic) Delete(req *types.RoleDelete) (resp types.Response) {
 	c := l.svcCtx
 	ids := req.Ids
 	siteId, _ := c.Get("siteId")
-	dbConf := c.Config.Database.NewConf(siteId.(string))
-	db := dbConf.ManualDb(siteId.(string))
+	dbConf := c.Config.Database.NewConf(siteId.(int64))
+	db := dbConf.ManualDb(siteId.(int64))
 	role := model.Role{}
 	e, err := dbConf.NewEnforcer()
 	if err != nil {

@@ -4,10 +4,10 @@ option go_package = "./tenant";
 
 message CurrentUserReq {
   string uid = 1;
-  string siteId = 2;
+  int64 siteId = 2;
 }
 
-message  UserReply {
+message UserReply {
   int64 id = 1;
   int64 uid = 2;
   int64 siteId = 3;
@@ -41,9 +41,46 @@ message removeSiteUserReply {
 
 }
 
+message BindMpReq {
+  int64 siteId = 1;
+  string type = 2;
+  string authorizerAppid = 3;
+  string AuthorizerAccessToken = 4;
+  string AuthorizerRefreshToken = 5;
+  string ExpiresIn = 6;
+}
+
+message BindMpReply {
+  bool status = 1;
+  string msg = 2;
+}
+
+message siteMpReq {
+  int64 siteId = 1;
+}
+
+message siteMpData {
+  int64 siteId = 1;
+  string type = 2;
+  string authAppId = 3;
+}
+
+message siteMpReply {
+  repeated siteMpData data = 1;
+}
+
+message showMpData {
+  int64 siteId = 1;
+  string type = 2;
+  string appId = 3;
+}
+
 service tenant {
   rpc Get (CurrentUserReq) returns (UserReply) {}
   rpc RegisterUser (RegisterReq) returns (UserReply) {}
   rpc CheckUser (CheckUserReq) returns (CheckUserReply) {}
   rpc removeSiteUser (removeSiteUserReq) returns (removeSiteUserReply) {}
+  rpc BindMp (BindMpReq) returns (BindMpReply) {}
+  rpc getSiteMp (siteMpReq) returns (siteMpReply) {}
+  rpc showMp (showMpData) returns (showMpData) {}
 }

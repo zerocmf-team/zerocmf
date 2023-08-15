@@ -2,6 +2,7 @@ package post
 
 import (
 	"context"
+	"net/http"
 	"zerocmf/service/portal/model"
 
 	"zerocmf/service/portal/api/internal/svc"
@@ -13,13 +14,16 @@ import (
 type IsLikeLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewIsLikeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IsLikeLogic {
+func NewIsLikeLogic(header *http.Request, svcCtx *svc.ServiceContext) *IsLikeLogic {
+	ctx := header.Context()
 	return &IsLikeLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -27,7 +31,7 @@ func NewIsLikeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IsLikeLogi
 func (l *IsLikeLogic) IsLike(req *types.OneReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	id := req.Id
 	if id == 0 {

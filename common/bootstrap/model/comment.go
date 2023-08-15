@@ -110,13 +110,13 @@ func (model *Comment) Paginate(db *gorm.DB, current int, pageSize int, query str
 	var comment []Comment
 
 	tx := db.Where(query, queryArgs...).Find(&comment).Count(&total)
-	if err := util.IsDbErr(tx); err != nil {
+	if err = util.IsDbErr(tx); err != nil {
 		return Data, errors.New("数据库连接出错：" + err.Error())
 	}
 
 	tx = db.Where(query, queryArgs...).Limit(pageSize).Offset((current - 1) * pageSize).Order("id desc").Find(&comment)
 
-	if err := util.IsDbErr(tx); err != nil {
+	if err = util.IsDbErr(tx); err != nil {
 		return Data, errors.New("数据库连接出错：" + err.Error())
 	}
 

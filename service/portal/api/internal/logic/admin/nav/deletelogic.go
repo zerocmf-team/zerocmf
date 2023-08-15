@@ -2,6 +2,7 @@ package nav
 
 import (
 	"context"
+	"net/http"
 	"strings"
 	"zerocmf/service/portal/model"
 
@@ -14,13 +15,16 @@ import (
 type DeleteLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogic {
+func NewDeleteLogic(header *http.Request, svcCtx *svc.ServiceContext) *DeleteLogic {
+	ctx := header.Context()
 	return &DeleteLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -28,7 +32,7 @@ func NewDeleteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeleteLogi
 func (l *DeleteLogic) Delete(req *types.NavShowReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	var nav = new(model.Nav)
 	var query = []string{"id = ?"}
 	var queryArgs = []interface{}{req.Id}

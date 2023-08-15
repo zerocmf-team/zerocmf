@@ -141,34 +141,34 @@
         ]
       },
       {
-        "key": "Categories",
+        "key": "category",
         "name": "分类管理",
-        "path": "/portal/Categories",
+        "path": "/portal/category",
         "menuType": 1,
         "routes": [
           {
             "key": "list",
             "name": "分类列表",
-            "path": "/portal/Categories/list",
+            "path": "/portal/category/list",
             "menuType": 1,
             "hideInMenu": 1,
-            "component": "/Categories"
+            "component": "/Category/index"
           },
           {
             "key": "add",
             "name": "添加分类",
-            "path": "/portal/Categories/add",
+            "path": "/portal/category/add",
             "menuType": 1,
             "hideInMenu": 1,
-            "component": "/Categories/Add"
+            "component": "/Category/Add"
           },
           {
             "key": "edit",
             "name": "编辑分类",
-            "path": "/portal/Categories/edit/:id",
+            "path": "/portal/category/edit/:id",
             "menuType": 1,
             "hideInMenu": 1,
-            "component": "/Categories/Edit"
+            "component": "/Category/Edit"
           }
         ]
       },
@@ -231,8 +231,64 @@
     ]
   },
   {
+    "key": "shop",
+    "plugin": "shop",
+    "name": "商城管理",
+    "path": "/shop",
+    "menuType": 1,
+    "routes": [
+      {
+        "key": "order",
+        "name": "订单管理",
+        "path": "/shop/order"
+      },
+      {
+        "key": "product",
+        "name": "商品管理",
+        "path": "/shop/product",
+        "routes": [
+          {
+            "key": "list",
+            "name": "商品列表",
+            "path": "/shop/product/list",
+            "hideInMenu": 1,
+            "component": "/product/List"
+          },
+          {
+            "key": "add",
+            "name": "添加商品",
+            "path": "/shop/product/add",
+            "hideInMenu": 1,
+            "component": "/product/Save"
+          },
+          {
+            "key": "edit",
+            "name": "编辑商品",
+            "path": "/shop/product/edit/:id",
+            "hideInMenu": 1,
+            "component": "/product/Save"
+          }
+        ]
+      },
+      {
+        "key": "category",
+        "name": "分类管理",
+        "path": "/shop/category",
+        "routes": [
+          {
+            "key": "list",
+            "name": "商品列表",
+            "path": "/shop/category/list",
+            "hideInMenu": 1,
+            "component": "/category/List"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "key": "theme",
-    "name": "主题风格",
+    "name": "主题管理",
     "path": "/theme",
     "menuType": 1,
     "routes": [
@@ -261,28 +317,43 @@
         ]
       },
       {
-        "key": "h5",
-        "name": "移动端管理",
+        "key": "wei",
+        "name": "微页面",
         "menuType": 1,
-        "path": "/theme/h5"
-      },
+        "path": "/theme/wei",
+        "routes": [
+          {
+            "key": "list",
+            "path": "/theme/wei/list",
+            "name": "主题列表",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/theme/wei/index"
+          },
+          {
+            "key": "list.page",
+            "path": "/theme/wei/page/:key/list",
+            "name": "页面列表",
+            "menuType": 1,
+            "hideInMenu": 1,
+            "component": "/theme/wei/Page/index"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "channel",
+    "name": "渠道管理",
+    "path": "/channel",
+    "menuType": 1,
+    "routes": [
       {
-        "key": "mp",
-        "name": "公众号管理",
+        "key": "wxapp",
+        "name": "微信小程序",
         "menuType": 1,
-        "path": "/theme/mp"
-      },
-      {
-        "key": "miniApp",
-        "name": "小程序管理",
-        "menuType": 1,
-        "path": "/theme/miniApp"
-      },
-      {
-        "key": "app",
-        "name": "app管理",
-        "menuType": 1,
-        "path": "/theme/app"
+        "component": "/channel/wxapp/index",
+        "path": "/channel/wxapp"
       }
     ]
   },

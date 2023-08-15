@@ -29,7 +29,7 @@ func NewMobileGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MobileG
 func (l *MobileGetLogic) MobileGet() (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	option := model.Option{}
 	mobileSetting := model.MobileLoginSettings{}

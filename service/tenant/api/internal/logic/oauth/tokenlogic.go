@@ -49,6 +49,12 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 			return
 		}
 
+		siteIdInt, err := strconv.ParseInt(siteId, 10, 64)
+		if err != nil {
+			resp.Error("非法站点", nil)
+			return
+		}
+
 		userLogin := req.UserLogin
 		password := req.Password
 
@@ -63,7 +69,7 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 
 		userRpc := c.UserRpc
 		userReply, err := userRpc.RamLogin(l.ctx, &userclient.LoginReq{
-			SiteId:    siteId,
+			SiteId:    siteIdInt,
 			UserLogin: userLogin,
 			UserPass:  util.GetMd5(password),
 		})

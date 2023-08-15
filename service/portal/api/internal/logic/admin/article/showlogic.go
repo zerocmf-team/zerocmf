@@ -2,6 +2,7 @@ package article
 
 import (
 	"context"
+	"net/http"
 	"strconv"
 	"strings"
 	comModel "zerocmf/common/bootstrap/model"
@@ -17,13 +18,16 @@ import (
 type ShowLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
+func NewShowLogic(header *http.Request, svcCtx *svc.ServiceContext) *ShowLogic {
+	ctx := header.Context()
 	return &ShowLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -32,7 +36,7 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	gormDB := c.NewDb(siteId.(string))
+	gormDB := c.NewDb(siteId.(int64))
 	id := req.Id
 
 	query := []string{"id = ?", "delete_at = ?"}
@@ -41,12 +45,12 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 
 	var result struct {
 		model.PortalPost
-		UserLogin  string                   `json:"user_login"`
-		Alias      string                   `json:"alias"`
-		Keywords   []string                 `json:"keywords"`
-		Categories []model.PortalCategories `json:"Categories"`
-		Extends    []model.Extends          `json:"extends"`
-		Slug       string                   `json:"slug"`
+		UserLogin string                 `json:"user_login"`
+		Alias     string                 `json:"alias"`
+		Keywords  []string               `json:"keywords"`
+		Category  []model.PortalCategory `json:"Category"`
+		Extends   []model.Extends        `json:"extends"`
+		Slug      string                 `json:"slug"`
 		model.More
 	}
 
@@ -67,9 +71,9 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 
 	// 获取当前文章全部分类
 	pQueryArgs := []interface{}{id, 0}
-	pCate := model.PortalCategories{}
-	Categories, err := pCate.FindPostCategories(gormDB, "p.id = ? AND p.delete_at = ?", pQueryArgs)
-	result.Categories = Categories
+	pCate := model.PortalCategory{}
+	Category, err := pCate.FindPostCategory(gormDB, "p.id = ? AND p.delete_at = ?", pQueryArgs)
+	result.Category = Category
 
 	result.Extends = post.MoreJson.Extends
 	result.ExtendsObj = post.MoreJson.ExtendsObj

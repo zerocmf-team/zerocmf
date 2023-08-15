@@ -49,7 +49,7 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 	c := l.svcCtx
 	r := c.Request
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	conf := c.Config
 
 	// 验证用户账号密码

@@ -13,6 +13,8 @@ import (
 )
 
 type (
+	Attributes           = shop.Attributes
+	AttributesItem       = shop.AttributesItem
 	CategoryDelReq       = shop.CategoryDelReq
 	CategoryGetReq       = shop.CategoryGetReq
 	CategoryListResp     = shop.CategoryListResp
@@ -22,12 +24,18 @@ type (
 	CategoryTreeData     = shop.CategoryTreeData
 	CategoryTreeListResp = shop.CategoryTreeListResp
 	CategoryTreeReq      = shop.CategoryTreeReq
+	MigrateReply         = shop.MigrateReply
+	MigrateReq           = shop.MigrateReq
 	ProductAttrKeyReq    = shop.ProductAttrKeyReq
 	ProductAttrKeyResp   = shop.ProductAttrKeyResp
 	ProductAttrValReq    = shop.ProductAttrValReq
 	ProductAttrValResp   = shop.ProductAttrValResp
+	ProductGetReq        = shop.ProductGetReq
+	ProductListResp      = shop.ProductListResp
+	ProductResp          = shop.ProductResp
 	ProductSaveReq       = shop.ProductSaveReq
 	ProductSaveResp      = shop.ProductSaveResp
+	ProductShowReq       = shop.ProductShowReq
 	ProductSku           = shop.ProductSku
 
 	ProductAttrService interface {

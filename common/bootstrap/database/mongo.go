@@ -33,12 +33,11 @@ type Mongo struct {
 }
 
 // 连接到MongoDB
-func NewMongoDB(mongoDb Mongo, dbName string) (db MongoDB, err error) {
+func NewMongoDB(mongoDb Mongo, siteId int64) (db MongoDB, err error) {
 
-	if dbName == "" {
-		dbName = mongoDb.DbName
-	} else {
-		dbName = "site_" + dbName
+	dbName := mongoDb.DbName
+	if siteId > 0 {
+		dbName = "site_" + strconv.FormatInt(siteId, 10)
 	}
 
 	clientOptions := mongoDb.newConn()

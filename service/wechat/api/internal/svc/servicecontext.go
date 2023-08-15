@@ -1,50 +1,71 @@
 package svc
 
 import (
-	goRedis "github.com/go-redis/redis"
-	goSessions "github.com/gorilla/sessions"
+	"github.com/zerocmf/wechatEasySdk/wxopen"
 	"github.com/zeromicro/go-zero/rest"
-	"gorm.io/gorm"
-	"net/http"
+	"github.com/zeromicro/go-zero/zrpc"
 	"zerocmf/common/bootstrap/Init"
-	"zerocmf/common/bootstrap/database"
+	"zerocmf/common/bootstrap/apisix"
+	"zerocmf/common/bootstrap/middleware"
 	"zerocmf/common/bootstrap/redis"
-	"zerocmf/common/bootstrap/sessions"
-	weData "zerocmf/service/wechat/api/data"
+	"zerocmf/service/tenant/rpc/tenantclient"
 	"zerocmf/service/wechat/api/internal/config"
-	"zerocmf/service/wechat/api/internal/middleware"
 )
 
 type ServiceContext struct {
-	Config         config.Config
-	Db             *gorm.DB
-	Redis          *goRedis.Client
-	Request        *http.Request
-	ResponseWriter http.ResponseWriter
-	Store          *goSessions.CookieStore
-	WechatMpToken  rest.Middleware
-	weData.MpInfo
+	Config config.Config
+	Redis  redis.Redis
 	*Init.Data
+	TenantRpc                      tenantclient.Tenant
+	ComponentAccessTokenMiddleware rest.Middleware
+	AuthMiddleware                 rest.Middleware
+	SiteMiddleware                 rest.Middleware
+	WxappMiddleware                rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 
-	db := database.NewGormDb(c.Database)
-	// autoMigrate
-	// model.Migrate("")
-	redis := redis.NewRedis(c.Redis)
-	store := sessions.NewStore()
+	wxopen.NewOption(c.Wechat.WxOpen)
 
-	data := new(Init.Data).Context()
-	mpTokenMiddleware := middleware.NewWechatMpTokenMiddleware(data, redis)
-
-	return &ServiceContext{
-		Config:        c,
-		Db:            db,
-		Redis:         redis,
-		Store:         store,
-		WechatMpToken: mpTokenMiddleware.Handle,
-		Data:          data,
+	routes := []apisix.Route{
+		{
+			URI:       "/api/v1/wechat/admin/*",
+			Name:      "wechat-api-admin",
+			ServiceID: c.Apisix.Name,
+			Plugins: apisix.RoutePlugins{
+				JWTAuth: &apisix.JWTAuth{
+					Meta: apisix.Meta{
+						Disable: false,
+					},
+				},
+			},
+			Status: 1,
+		},
+		{
+			URI:       "/api/v1/wechat/*",
+			Name:      "wechat-api",
+			ServiceID: c.Apisix.Name,
+			Status:    1,
+		},
 	}
 
+	err := c.Apisix.Register(routes)
+	if err != nil {
+		panic(err)
+	}
+
+	data := new(Init.Data).Context()
+	redis := redis.NewRedis(c.Redis)
+	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
+
+	return &ServiceContext{
+		Config:                         c,
+		Data:                           data,
+		Redis:                          redis,
+		TenantRpc:                      tenantRpc,
+		ComponentAccessTokenMiddleware: middleware.ComponentAccessTokenMiddleware(data, redis),
+		AuthMiddleware:                 apisix.AuthMiddleware(data, tenantRpc),
+		SiteMiddleware:                 middleware.NewSiteMiddleware(data).Handle,
+		WxappMiddleware:                middleware.NewWxappMiddleware(data, tenantRpc).Handle,
+	}
 }

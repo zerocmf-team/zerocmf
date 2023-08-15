@@ -1,6 +1,6 @@
 Where(query string, args ...interface{}) *default{{.upperStartCamelObject}}Model
-Limit(limit int32) *default{{.upperStartCamelObject}}Model
-Offset(offset int32) *default{{.upperStartCamelObject}}Model
+Limit(limit int) *default{{.upperStartCamelObject}}Model
+Offset(offset int) *default{{.upperStartCamelObject}}Model
 OrderBy(query string) *default{{.upperStartCamelObject}}Model
 First(ctx context.Context) (*{{.upperStartCamelObject}}, error)
 Find(ctx context.Context) ([]*{{.upperStartCamelObject}}, error)

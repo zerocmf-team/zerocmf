@@ -18,7 +18,6 @@ type (
         Theme string `form:"theme,optional"`
         File string `form:"file,optional"`
     }
-
 )
 
 @server(

@@ -2,10 +2,11 @@ package redis
 
 import (
 	"fmt"
-	"github.com/pjebs/optimus-go"
 	"runtime"
 	"strconv"
 	"time"
+
+	"github.com/pjebs/optimus-go"
 )
 
 /*
@@ -22,7 +23,7 @@ func (r Redis) EncryptUid(key string, salt int) (uid int64, err error) {
 	// 设置当天失效时间
 	year, month, day := t1.Date()
 	today := time.Date(year, month, day, 23, 59, 59, 59, time.Local)
-	curRedis := r.client
+	curRedis := r.Client
 	if curRedis == nil {
 		panic("redis 链接失败")
 	}

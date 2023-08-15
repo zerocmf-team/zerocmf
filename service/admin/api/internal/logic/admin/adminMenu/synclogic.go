@@ -27,7 +27,7 @@ func NewSyncLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SyncLogic {
 func (l *SyncLogic) Sync() (resp *types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	model.InitMenus(db)
 	resp.Success("执行成功！", nil)
 	return

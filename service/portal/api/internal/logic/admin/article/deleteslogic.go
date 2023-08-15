@@ -2,6 +2,7 @@ package article
 
 import (
 	"context"
+	"net/http"
 	"time"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -13,13 +14,16 @@ import (
 type DeletesLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewDeletesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeletesLogic {
+func NewDeletesLogic(header *http.Request, svcCtx *svc.ServiceContext) *DeletesLogic {
+	ctx := header.Context()
 	return &DeletesLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -27,8 +31,8 @@ func NewDeletesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeletesLo
 func (l *DeletesLogic) Deletes() (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
-	r := c.Request
+	db := c.Config.Database.ManualDb(siteId.(int64))
+	r := l.header
 	r.ParseForm()
 	ids := r.Form["ids[]"]
 	portalPost := new(model.PortalPost)

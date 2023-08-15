@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"gorm.io/gorm"
 	"strconv"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/admin/model"
@@ -29,13 +30,15 @@ func NewAutoMigrateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AutoM
 func (l *AutoMigrateLogic) AutoMigrate(in *admin.SiteReq) (*admin.SiteReply, error) {
 	c := l.svcCtx
 	dbConf := c.Config.Database
-	dbORM := database.NewGormDb(dbConf)
+	var dbORM *gorm.DB
 	siteId := in.SiteId
 	if siteId > 0 {
 		// todo dsn 初始化
 		siteStr := strconv.FormatInt(siteId, 10)
-		dbORM = dbConf.ManualDb(siteStr)
-		model.Migrate(dbORM)
+		dbORM = database.CreateGormDb(dbConf, siteStr)
+	} else {
+		dbORM = database.CreateGormDb(dbConf)
 	}
+	model.Migrate(dbORM)
 	return &admin.SiteReply{}, nil
 }

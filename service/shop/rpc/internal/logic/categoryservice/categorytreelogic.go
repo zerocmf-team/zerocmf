@@ -2,12 +2,13 @@ package categoryservicelogic
 
 import (
 	"context"
-	"github.com/jinzhu/copier"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"strings"
 	"time"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/shop/model"
+
+	"github.com/jinzhu/copier"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
 	"zerocmf/service/shop/rpc/internal/svc"
 	"zerocmf/service/shop/rpc/pb/shop"
@@ -32,7 +33,7 @@ func NewCategoryTreeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Cate
 func buildTree(categories []*model.ProductCategory, parentId int64) []*shop.CategoryTreeData {
 	var treeData []*shop.CategoryTreeData
 	for _, category := range categories {
-		if category.ParentId.Valid && category.ParentId.Int64 == parentId {
+		if category.ParentId == parentId {
 			item := shop.CategoryTreeData{}
 			copier.Copy(&item, &category)
 			if category.CreatedAt > 0 {
@@ -55,7 +56,8 @@ func (l *CategoryTreeLogic) CategoryTree(in *shop.CategoryTreeReq) (*shop.Catego
 	ctx := l.ctx
 	c := l.svcCtx
 	conf := c.Config
-	dsn := conf.Database.Dsn("")
+	config := conf.Database.NewConf(in.GetSiteId())
+	dsn := config.Dsn()
 	//mysql model调用
 	db := model.NewProductCategoryModel(sqlx.NewMysql(dsn), conf.Cache)
 

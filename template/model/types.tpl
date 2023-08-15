@@ -8,8 +8,8 @@ type (
 		table string
 		query     string
         queryArgs []interface{}
-        limit     int32
-        offset    int32
+        limit     int
+        offset    int
         orderBy   string
 	}
 

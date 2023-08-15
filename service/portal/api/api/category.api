@@ -29,8 +29,8 @@ type (
 
 // 分类相关
 @server(
-    group: admin/Categories
-    prefix: api/v1/admin/Categories
+    group: admin/category
+    prefix: api/v1/admin/category
     middleware: AuthMiddleware
 )
 
@@ -84,8 +84,8 @@ service portal {
 
 // 门户分类树
 @server(
-    group: app/Categories
-    prefix: api/v1/app/Categories/trees
+    group: app/category
+    prefix: api/v1/app/category/trees
 )
 
 service portal {

@@ -1,0 +1,89 @@
+    //微信三方服务商
+
+    syntax = "v1"
+
+    type (
+        fastRegisterWeAppReq {
+            Name string `json:"name"`
+            Code string `json:"code"`
+            CodeType int `json:"code_type"`
+            LegalPersonaWechat string `json:"legal_persona_wechat"`
+            LegalPersonaName string `json:"legal_persona_name"`
+            ComponentPhone string `json:"component_phone,optional"`
+            Pwd string `json:"pwd"`
+        }
+
+        receiveNotifyReq {
+            AppId string  `path:"appId"`
+        }
+
+        loginReq {
+            AppId string `form:"appId"`
+            JsCode string `form:"jsCode"`
+        }
+
+        preAuthReq {
+            redirect string `form:"redirect,optional"`
+        }
+
+        bindMpReq {
+            authCode string `form:"authCode"`
+            typ string `form:"type"`
+        }
+
+    )
+
+    @server(
+        group: wxopen/app/verify
+        prefix: /api/v1/wechat
+    )
+
+    service wechat-api {
+        @handler componentVerifyTicket
+        post /component_verify_ticket
+    }
+
+    @server(
+        group: wxopen/app/receiveNotify
+        prefix: /api/v1/wechat
+    )
+
+    service wechat-api {
+        @handler receiveNotify
+        post /receive_notify/:appId (receiveNotifyReq)
+    }
+
+    @server(
+        group: wxopen/app/fastRegisterWeApp
+        prefix: /api/v1/wechat
+        middleware: ComponentAccessTokenMiddleware
+    )
+
+    service wechat-api {
+        @handler fastRegisterWeApp
+        post /fastRegisterWeApp (fastRegisterWeAppReq)
+    }
+
+    @server(
+        group: wxopen/app/login
+        prefix: /api/v1/wechat
+        middleware: WxappMiddleware,ComponentAccessTokenMiddleware
+    )
+
+    service wechat-api {
+        @handler login
+        get /login (loginReq)
+    }
+
+    @server(
+        group: wxopen/admin
+        prefix: /api/v1/wechat/admin
+        middleware: SiteMiddleware,AuthMiddleware,ComponentAccessTokenMiddleware
+    )
+
+    service wechat-api {
+        @handler preAuth
+        get /preAuth (preAuthReq)
+        @handler bindMp
+        get /bindMp (bindMpReq)
+    }

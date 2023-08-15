@@ -4,6 +4,7 @@ package handler
 import (
 	"net/http"
 
+	adminminiapp "zerocmf/service/tenant/api/internal/handler/admin/miniapp"
 	adminsite "zerocmf/service/tenant/api/internal/handler/admin/site"
 	appapisix "zerocmf/service/tenant/api/internal/handler/app/apisix"
 	appsite "zerocmf/service/tenant/api/internal/handler/app/site"
@@ -103,5 +104,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/api/v1/app/apisix"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/show",
+				Handler: adminminiapp.ShowHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/wxapp/show",
+				Handler: adminminiapp.WxappShowHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api/v1/admin/miniapp"),
 	)
 }

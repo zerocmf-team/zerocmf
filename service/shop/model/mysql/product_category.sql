@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS product_category
 (
     `product_category_id` bigint(20) AUTO_INCREMENT,
-    `parent_id`           bigint(20) COMMENT '父级id',
+    `parent_id`           bigint(20) NOT NULL DEFAULT 0 COMMENT '父级id',
     `path`                varchar(255) COMMENT '层级path' NOT NULL DEFAULT '',
     `name`                varchar(20) COMMENT '分类名称'  NOT NULL DEFAULT '',
     `icon`                varchar(255) COMMENT '分类图标',

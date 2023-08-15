@@ -33,7 +33,8 @@ func (l *CategoryDelLogic) CategoryDel(in *shop.CategoryDelReq) (*shop.CategoryR
 	ctx := l.ctx
 	c := l.svcCtx
 	conf := c.Config
-	dsn := conf.Database.Dsn("")
+	config := conf.Database.NewConf(in.GetSiteId())
+	dsn := config.Dsn()
 	//mysql model调用
 	db := model.NewProductCategoryModel(sqlx.NewMysql(dsn), conf.Cache)
 	id := in.GetId()

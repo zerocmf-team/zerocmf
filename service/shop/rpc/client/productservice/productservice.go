@@ -13,6 +13,8 @@ import (
 )
 
 type (
+	Attributes           = shop.Attributes
+	AttributesItem       = shop.AttributesItem
 	CategoryDelReq       = shop.CategoryDelReq
 	CategoryGetReq       = shop.CategoryGetReq
 	CategoryListResp     = shop.CategoryListResp
@@ -22,15 +24,23 @@ type (
 	CategoryTreeData     = shop.CategoryTreeData
 	CategoryTreeListResp = shop.CategoryTreeListResp
 	CategoryTreeReq      = shop.CategoryTreeReq
+	MigrateReply         = shop.MigrateReply
+	MigrateReq           = shop.MigrateReq
 	ProductAttrKeyReq    = shop.ProductAttrKeyReq
 	ProductAttrKeyResp   = shop.ProductAttrKeyResp
 	ProductAttrValReq    = shop.ProductAttrValReq
 	ProductAttrValResp   = shop.ProductAttrValResp
+	ProductGetReq        = shop.ProductGetReq
+	ProductListResp      = shop.ProductListResp
+	ProductResp          = shop.ProductResp
 	ProductSaveReq       = shop.ProductSaveReq
 	ProductSaveResp      = shop.ProductSaveResp
+	ProductShowReq       = shop.ProductShowReq
 	ProductSku           = shop.ProductSku
 
 	ProductService interface {
+		ProductGet(ctx context.Context, in *ProductGetReq, opts ...grpc.CallOption) (*ProductListResp, error)
+		ProductShow(ctx context.Context, in *ProductShowReq, opts ...grpc.CallOption) (*ProductResp, error)
 		ProductSave(ctx context.Context, in *ProductSaveReq, opts ...grpc.CallOption) (*ProductSaveResp, error)
 	}
 
@@ -43,6 +53,16 @@ func NewProductService(cli zrpc.Client) ProductService {
 	return &defaultProductService{
 		cli: cli,
 	}
+}
+
+func (m *defaultProductService) ProductGet(ctx context.Context, in *ProductGetReq, opts ...grpc.CallOption) (*ProductListResp, error) {
+	client := shop.NewProductServiceClient(m.cli.Conn())
+	return client.ProductGet(ctx, in, opts...)
+}
+
+func (m *defaultProductService) ProductShow(ctx context.Context, in *ProductShowReq, opts ...grpc.CallOption) (*ProductResp, error) {
+	client := shop.NewProductServiceClient(m.cli.Conn())
+	return client.ProductShow(ctx, in, opts...)
 }
 
 func (m *defaultProductService) ProductSave(ctx context.Context, in *ProductSaveReq, opts ...grpc.CallOption) (*ProductSaveResp, error) {

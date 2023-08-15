@@ -55,7 +55,7 @@ func save(req access, c *svc.ServiceContext) (result model.Role, err error) {
 	form := req
 	siteId, _ := c.Get("siteId")
 
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	// 角色信息
 	role := model.Role{
 		Name:     form.Name,
@@ -63,7 +63,7 @@ func save(req access, c *svc.ServiceContext) (result model.Role, err error) {
 		CreateAt: time.Now().Unix(),
 		Status:   1,
 	}
-	adapter := c.Config.Database.NewConf(siteId.(string))
+	adapter := c.Config.Database.NewConf(siteId.(int64))
 	e, err := adapter.NewEnforcer()
 	//	存入casbin
 	if err != nil {

@@ -12,6 +12,6 @@ message  siteReply {
 
 }
 
-service portal {
+service lowcode {
   rpc autoMigrate(siteReq) returns(siteReply);
 }

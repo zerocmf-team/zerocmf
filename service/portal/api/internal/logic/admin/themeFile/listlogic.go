@@ -2,24 +2,29 @@ package themeFile
 
 import (
 	"context"
-	"github.com/zeromicro/go-zero/core/logx"
-	"gorm.io/gorm"
+	"net/http"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
+
+	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
 )
 
 type ListLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
+func NewListLogic(header *http.Request, svcCtx *svc.ServiceContext) *ListLogic {
+	ctx := header.Context()
 	return &ListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -34,7 +39,7 @@ func (l *ListLogic) List(req *types.ListReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	t := req.Type
 	opt := model.Option{}
 

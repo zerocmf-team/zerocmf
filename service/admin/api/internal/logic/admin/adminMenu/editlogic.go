@@ -29,7 +29,7 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 func (l *EditLogic) Edit(req *types.MenuReq) (resp *types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	menu := model.AdminMenu{}
 	id := req.Id
 	if id <= 0 {

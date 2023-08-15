@@ -22,6 +22,16 @@ func NewProductServiceServer(svcCtx *svc.ServiceContext) *ProductServiceServer {
 	}
 }
 
+func (s *ProductServiceServer) ProductGet(ctx context.Context, in *shop.ProductGetReq) (*shop.ProductListResp, error) {
+	l := productservicelogic.NewProductGetLogic(ctx, s.svcCtx)
+	return l.ProductGet(in)
+}
+
+func (s *ProductServiceServer) ProductShow(ctx context.Context, in *shop.ProductShowReq) (*shop.ProductResp, error) {
+	l := productservicelogic.NewProductShowLogic(ctx, s.svcCtx)
+	return l.ProductShow(in)
+}
+
 func (s *ProductServiceServer) ProductSave(ctx context.Context, in *shop.ProductSaveReq) (*shop.ProductSaveResp, error) {
 	l := productservicelogic.NewProductSaveLogic(ctx, s.svcCtx)
 	return l.ProductSave(in)

@@ -41,3 +41,18 @@ func (s *TenantServer) RemoveSiteUser(ctx context.Context, in *tenant.RemoveSite
 	l := logic.NewRemoveSiteUserLogic(ctx, s.svcCtx)
 	return l.RemoveSiteUser(in)
 }
+
+func (s *TenantServer) BindMp(ctx context.Context, in *tenant.BindMpReq) (*tenant.BindMpReply, error) {
+	l := logic.NewBindMpLogic(ctx, s.svcCtx)
+	return l.BindMp(in)
+}
+
+func (s *TenantServer) GetSiteMp(ctx context.Context, in *tenant.SiteMpReq) (*tenant.SiteMpReply, error) {
+	l := logic.NewGetSiteMpLogic(ctx, s.svcCtx)
+	return l.GetSiteMp(in)
+}
+
+func (s *TenantServer) ShowMp(ctx context.Context, in *tenant.ShowMpData) (*tenant.ShowMpData, error) {
+	l := logic.NewShowMpLogic(ctx, s.svcCtx)
+	return l.ShowMp(in)
+}

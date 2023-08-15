@@ -28,3 +28,10 @@ func New{{.upperStartCamelObject}}Model(conn sqlx.SqlConn{{if .withCache}}, c ca
 		default{{.upperStartCamelObject}}Model: new{{.upperStartCamelObject}}Model(conn{{if .withCache}}, c, opts...{{end}}),
 	}
 }
+
+// New{{.upperStartCamelObject}}SessionModel returns a model for the Session database table.
+func New{{.upperStartCamelObject}}SessionModel(conn sqlx.SqlConn, session sqlx.Session{{if .withCache}}, c cache.CacheConf, opts ...cache.Option{{end}}) {{.upperStartCamelObject}}Model {
+	return &custom{{.upperStartCamelObject}}Model{
+		default{{.upperStartCamelObject}}Model: new{{.upperStartCamelObject}}Model(conn{{if .withCache}}, c, opts...{{end}}).withSession(session),
+	}
+}

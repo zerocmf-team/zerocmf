@@ -8,18 +8,19 @@ package redis
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/go-redis/redis"
 	"github.com/zeromicro/go-zero/core/logx"
-	"strconv"
 )
 
 type Redis struct {
-	client   *redis.Client `json:",optional"`
-	Enabled  bool
-	Host     string
-	Database int
-	Password string
-	Port     int
+	*redis.Client `json:",optional"`
+	Enabled       bool
+	Host          string
+	Database      int
+	Password      string
+	Port          int
 }
 
 func NewRedis(database Redis) Redis {
@@ -33,6 +34,6 @@ func NewRedis(database Redis) Redis {
 		logx.Error("redis异常", err.Error())
 	}
 	fmt.Println("redis连接状态：", result)
-	database.client = curRedis
+	database.Client = curRedis
 	return database
 }

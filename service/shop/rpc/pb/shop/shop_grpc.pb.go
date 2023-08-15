@@ -19,6 +19,96 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	ShopService_AutoMigrate_FullMethodName = "/shop.ShopService/AutoMigrate"
+)
+
+// ShopServiceClient is the client API for ShopService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ShopServiceClient interface {
+	AutoMigrate(ctx context.Context, in *MigrateReq, opts ...grpc.CallOption) (*MigrateReply, error)
+}
+
+type shopServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewShopServiceClient(cc grpc.ClientConnInterface) ShopServiceClient {
+	return &shopServiceClient{cc}
+}
+
+func (c *shopServiceClient) AutoMigrate(ctx context.Context, in *MigrateReq, opts ...grpc.CallOption) (*MigrateReply, error) {
+	out := new(MigrateReply)
+	err := c.cc.Invoke(ctx, ShopService_AutoMigrate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ShopServiceServer is the server API for ShopService service.
+// All implementations must embed UnimplementedShopServiceServer
+// for forward compatibility
+type ShopServiceServer interface {
+	AutoMigrate(context.Context, *MigrateReq) (*MigrateReply, error)
+	mustEmbedUnimplementedShopServiceServer()
+}
+
+// UnimplementedShopServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedShopServiceServer struct {
+}
+
+func (UnimplementedShopServiceServer) AutoMigrate(context.Context, *MigrateReq) (*MigrateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AutoMigrate not implemented")
+}
+func (UnimplementedShopServiceServer) mustEmbedUnimplementedShopServiceServer() {}
+
+// UnsafeShopServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ShopServiceServer will
+// result in compilation errors.
+type UnsafeShopServiceServer interface {
+	mustEmbedUnimplementedShopServiceServer()
+}
+
+func RegisterShopServiceServer(s grpc.ServiceRegistrar, srv ShopServiceServer) {
+	s.RegisterService(&ShopService_ServiceDesc, srv)
+}
+
+func _ShopService_AutoMigrate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MigrateReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServiceServer).AutoMigrate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShopService_AutoMigrate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServiceServer).AutoMigrate(ctx, req.(*MigrateReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ShopService_ServiceDesc is the grpc.ServiceDesc for ShopService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ShopService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "shop.ShopService",
+	HandlerType: (*ShopServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AutoMigrate",
+			Handler:    _ShopService_AutoMigrate_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "pb/shop.proto",
+}
+
+const (
 	CategoryService_CategoryGet_FullMethodName  = "/shop.CategoryService/CategoryGet"
 	CategoryService_CategoryTree_FullMethodName = "/shop.CategoryService/CategoryTree"
 	CategoryService_CategoryShow_FullMethodName = "/shop.CategoryService/CategoryShow"
@@ -257,6 +347,8 @@ var CategoryService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
+	ProductService_ProductGet_FullMethodName  = "/shop.ProductService/ProductGet"
+	ProductService_ProductShow_FullMethodName = "/shop.ProductService/ProductShow"
 	ProductService_ProductSave_FullMethodName = "/shop.ProductService/ProductSave"
 )
 
@@ -264,6 +356,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProductServiceClient interface {
+	ProductGet(ctx context.Context, in *ProductGetReq, opts ...grpc.CallOption) (*ProductListResp, error)
+	ProductShow(ctx context.Context, in *ProductShowReq, opts ...grpc.CallOption) (*ProductResp, error)
 	ProductSave(ctx context.Context, in *ProductSaveReq, opts ...grpc.CallOption) (*ProductSaveResp, error)
 }
 
@@ -273,6 +367,24 @@ type productServiceClient struct {
 
 func NewProductServiceClient(cc grpc.ClientConnInterface) ProductServiceClient {
 	return &productServiceClient{cc}
+}
+
+func (c *productServiceClient) ProductGet(ctx context.Context, in *ProductGetReq, opts ...grpc.CallOption) (*ProductListResp, error) {
+	out := new(ProductListResp)
+	err := c.cc.Invoke(ctx, ProductService_ProductGet_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) ProductShow(ctx context.Context, in *ProductShowReq, opts ...grpc.CallOption) (*ProductResp, error) {
+	out := new(ProductResp)
+	err := c.cc.Invoke(ctx, ProductService_ProductShow_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *productServiceClient) ProductSave(ctx context.Context, in *ProductSaveReq, opts ...grpc.CallOption) (*ProductSaveResp, error) {
@@ -288,6 +400,8 @@ func (c *productServiceClient) ProductSave(ctx context.Context, in *ProductSaveR
 // All implementations must embed UnimplementedProductServiceServer
 // for forward compatibility
 type ProductServiceServer interface {
+	ProductGet(context.Context, *ProductGetReq) (*ProductListResp, error)
+	ProductShow(context.Context, *ProductShowReq) (*ProductResp, error)
 	ProductSave(context.Context, *ProductSaveReq) (*ProductSaveResp, error)
 	mustEmbedUnimplementedProductServiceServer()
 }
@@ -296,6 +410,12 @@ type ProductServiceServer interface {
 type UnimplementedProductServiceServer struct {
 }
 
+func (UnimplementedProductServiceServer) ProductGet(context.Context, *ProductGetReq) (*ProductListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProductGet not implemented")
+}
+func (UnimplementedProductServiceServer) ProductShow(context.Context, *ProductShowReq) (*ProductResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProductShow not implemented")
+}
 func (UnimplementedProductServiceServer) ProductSave(context.Context, *ProductSaveReq) (*ProductSaveResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ProductSave not implemented")
 }
@@ -310,6 +430,42 @@ type UnsafeProductServiceServer interface {
 
 func RegisterProductServiceServer(s grpc.ServiceRegistrar, srv ProductServiceServer) {
 	s.RegisterService(&ProductService_ServiceDesc, srv)
+}
+
+func _ProductService_ProductGet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductGetReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).ProductGet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_ProductGet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).ProductGet(ctx, req.(*ProductGetReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_ProductShow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductShowReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).ProductShow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_ProductShow_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).ProductShow(ctx, req.(*ProductShowReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ProductService_ProductSave_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -337,6 +493,14 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "shop.ProductService",
 	HandlerType: (*ProductServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ProductGet",
+			Handler:    _ProductService_ProductGet_Handler,
+		},
+		{
+			MethodName: "ProductShow",
+			Handler:    _ProductService_ProductShow_Handler,
+		},
 		{
 			MethodName: "ProductSave",
 			Handler:    _ProductService_ProductSave_Handler,

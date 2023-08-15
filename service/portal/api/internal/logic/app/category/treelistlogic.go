@@ -1,23 +1,28 @@
-package Categories
+package category
 
 import (
 	"context"
-	"github.com/zeromicro/go-zero/core/logx"
+	"net/http"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type TreeListLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewTreeListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *TreeListLogic {
+func NewTreeListLogic(header *http.Request, svcCtx *svc.ServiceContext) *TreeListLogic {
+	ctx := header.Context()
 	return &TreeListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -26,7 +31,7 @@ func (l *TreeListLogic) TreeList(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	id := req.Id
 
 	if id == 0 {
@@ -34,11 +39,11 @@ func (l *TreeListLogic) TreeList(req *types.OneReq) (resp types.Response) {
 		return
 	}
 
-	portalCategories := model.PortalCategories{
+	PortalCategory := model.PortalCategory{
 		ParentId: id,
 	}
 
-	trees, err := portalCategories.ListWithTree(db)
+	trees, err := PortalCategory.ListWithTree(db)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

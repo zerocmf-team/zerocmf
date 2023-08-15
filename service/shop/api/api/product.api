@@ -1,19 +1,58 @@
 syntax = "v1"
 
 type ProductGetReq {
-
+    ProductName string `form:"productName,optional"`
+    productCategory int64 `form:"productCategory,optional"`
+    Status *int `form:"status,optional"`
 }
 
 type ProductShowReq {
-
+    ProductId int64 `path:"productId"`
 }
 
-type ProductStoreReq {
-
+type ProductSku {
+    SkuId int64 `json:"skuId,optional"`
+    AttrsVal string `json:"attrsVal"`
+    SkuCode string `json:"skuCode,optional"`
+    SkuBarcode string `json:"skuBarcode,optional"`
+    RetailPrice float64 `json:"retailPrice"`
+    Stock *float64 `json:"stock,optional"`
+    OriginalPrice float64 `json:"originalPrice,optional"`
+    CostPrice float64 `json:"costPrice,optional"`
+    Weight float64 `json:"weight,optional"`
+    Status int `json:"status,optional"`
 }
 
-type ProductEditReq {
+type AttributesItem {
+    Name string `json:"name"`
+}
 
+type Attributes {
+    Name string `json:"name"`
+    Items []AttributesItem `json:"items"`
+}
+
+type ProductSaveReq {
+    ProductId int64 `path:"productId,optional"`
+    ProductName string `json:"productName"`
+    ProductBarcode string `json:"productBarcode,optional"`
+    productCategory int64 `json:"productCategory"`
+    ProductThumbnail []string `json:"productThumbnail"`
+    MainVideo string `json:"mainVideo,optional"`
+    ExplanationVideo string `json:"explanationVideo,optional"`
+    Attributes []Attributes `json:"attributes,optional"`
+    Price float64 `json:"price,optional"`
+    StockUnit string `json:"stockUnit,optional"`
+    Stock int64 `json:"stock,optional"`
+    ShareDescription string `json:"shareDescription,optional"`
+    ProductSellingPoint string `json:"productSellingPoint,optional"`
+    OriginalPrice float64 `json:"originalPrice,optional"`
+    CostPrice float64 `json:"costPrice,optional"`
+    PriceNegotiable int `json:"priceNegotiable,optional"`
+    HideRemainingStock int `json:"hideRemainingStock,optional"`
+    ProductContent string `json:"productContent,optional"`
+    Status int `json:"status,optional"`
+    ProductSku []ProductSku `json:"productSku,optional"`
 }
 
 type ProductDelReq {
@@ -26,8 +65,8 @@ type ProductBatchDelReq {
 
 @server(
     group: admin/product
-    prefix: api/v1/shop/product
-    middleware: SiteMiddleware,AuthMiddleware
+    prefix: api/v1/shop/admin/products
+    middleware: AuthMiddleware
 )
 
 service shop-api {
@@ -35,17 +74,34 @@ service shop-api {
     get / (ProductGetReq)
 
     @handler Show
-    get /:id (ProductShowReq)
+    get /:productId (ProductShowReq)
 
     @handler Store
-    post / (ProductStoreReq)
+    post / (ProductSaveReq)
 
     @handler Edit
-    post /:id (ProductEditReq)
+    post /:productId (ProductSaveReq)
 
     @handler Del
     delete /:id (ProductDelReq)
 
     @handler BatchDel
     delete / (ProductBatchDelReq)
+}
+
+@server(
+    group: app/product
+    prefix: api/v1/shop/app/products
+    middleware: WxappMiddleware,SiteMiddleware
+)
+
+service shop-api {
+    @handler Tree
+    get /tree
+
+    @handler Get
+    get /(ProductGetReq)
+
+    @handler Show
+    get /:productId (ProductShowReq)
 }

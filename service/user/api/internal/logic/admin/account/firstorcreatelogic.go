@@ -32,8 +32,8 @@ func (l *FirstOrCreateLogic) FirstOrCreate(req *types.AdminStoreReq) (resp types
 	c := l.svcCtx
 
 	siteId, _ := c.Get("siteId")
-	dbConf := c.Config.Database.NewConf(siteId.(string))
-	db := dbConf.ManualDb(siteId.(string))
+	dbConf := c.Config.Database.NewConf(siteId.(int64))
+	db := dbConf.ManualDb(siteId.(int64))
 
 	form := req
 	if len(form.RoleIds) <= 0 {

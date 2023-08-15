@@ -30,7 +30,7 @@ func (l *DeleteLogic) Delete(req *types.DepOneReq) (resp *types.Response) {
 	resp = new(types.Response)
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	department := model.Department{}
 	id := req.Id
 	if id <= 0 {

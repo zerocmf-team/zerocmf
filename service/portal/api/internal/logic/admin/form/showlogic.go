@@ -2,6 +2,7 @@ package form
 
 import (
 	"context"
+	"net/http"
 	"zerocmf/service/portal/model"
 
 	"zerocmf/service/portal/api/internal/svc"
@@ -13,13 +14,16 @@ import (
 type ShowLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
+func NewShowLogic(header *http.Request, svcCtx *svc.ServiceContext) *ShowLogic {
+	ctx := header.Context()
 	return &ShowLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -27,7 +31,7 @@ func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
 func (l *ShowLogic) Show(req *types.FormShowReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	form := model.Form{}
 	queryArgs := []interface{}{req.Id, 1}
 	err := form.Show(db, "id = ? and status = ?", queryArgs)

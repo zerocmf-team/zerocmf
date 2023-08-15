@@ -2,6 +2,7 @@ package nav
 
 import (
 	"context"
+	"net/http"
 	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/portal/model"
@@ -15,13 +16,16 @@ import (
 type GetLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
+func NewGetLogic(header *http.Request, svcCtx *svc.ServiceContext) *GetLogic {
+	ctx := header.Context()
 	return &GetLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -29,9 +33,9 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 func (l *GetLogic) Get(req *types.NavGetReq) (resp types.Response) {
 
 	c := l.svcCtx
-	r := c.Request
+	r := l.header
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	var nav = new(model.Nav)
 

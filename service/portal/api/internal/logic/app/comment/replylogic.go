@@ -3,6 +3,7 @@ package comment
 import (
 	"context"
 	"github.com/jinzhu/copier"
+	"net/http"
 	"time"
 	"zerocmf/common/bootstrap/model"
 	"zerocmf/service/user/rpc/types/user"
@@ -16,13 +17,16 @@ import (
 type ReplyLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewReplyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ReplyLogic {
+func NewReplyLogic(header *http.Request, svcCtx *svc.ServiceContext) *ReplyLogic {
+	ctx := header.Context()
 	return &ReplyLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -31,7 +35,7 @@ func (l *ReplyLogic) Reply(req *types.PostReplyReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	userRpc := c.UserRpc
 
 	id := req.Id
@@ -47,7 +51,7 @@ func (l *ReplyLogic) Reply(req *types.PostReplyReq) (resp types.Response) {
 
 		userData, err = userRpc.Get(context.Background(), &user.UserRequest{
 			UserId: userId.(string),
-			SiteId: siteId.(string),
+			SiteId: siteId.(int64),
 		})
 
 		if err != nil {
@@ -78,7 +82,7 @@ func (l *ReplyLogic) Reply(req *types.PostReplyReq) (resp types.Response) {
 
 		userData, err = userRpc.Get(context.Background(), &user.UserRequest{
 			UserId: userId.(string),
-			SiteId: siteId.(string),
+			SiteId: siteId.(int64),
 		})
 
 		if err != nil {

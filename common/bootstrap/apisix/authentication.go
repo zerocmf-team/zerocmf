@@ -2,8 +2,6 @@ package apisix
 
 import (
 	"encoding/json"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/zeromicro/go-zero/rest"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,6 +9,9 @@ import (
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/service/tenant/rpc/tenantclient"
 	"zerocmf/service/tenant/rpc/types/tenant"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/zeromicro/go-zero/rest"
 )
 
 type MyCustomClaims struct {
@@ -62,35 +63,49 @@ func AuthMiddleware(context *Init.Data, tenantRpc tenantclient.Tenant) rest.Midd
 				return
 			}
 
-			if loginType == "ram" {
+			var (
+				siteIdInt int64
+				err       error
+			)
 
-				siteId := r.URL.Query().Get("siteId")
+			context.Set("tenantUserId", userId)
+
+			siteId := r.URL.Query().Get("siteId")
+			if loginType == "ram" {
 				if userSiteId != siteId {
-					resp := new(data.Rest).Error("您没有该站点的访问权限！", nil)
+					resp := new(data.Rest).Error("该站点暂无访问权限！", nil)
 					bs, _ := json.Marshal(resp)
 					w.Write(bs)
 					return
 				}
-
-				context.Set("userId", userId)
-				context.Set("loginType", loginType)
-				context.Set("siteId", userSiteId)
-
-			} else {
-				iSiteId, exist := context.Get("siteId")
-				context.Set("userId", userId)
-				if exist && tenantRpc != nil {
-					//根据uid获取当前oid
-					tenantReply, err := tenantRpc.Get(r.Context(), &tenant.CurrentUserReq{Uid: userId, SiteId: iSiteId.(string)})
-					if err != nil {
-						resp := new(data.Rest).Error("系统错误", err.Error())
-						bs, _ := json.Marshal(resp)
-						w.Write(bs)
-						return
-					}
-					userId = strconv.FormatInt(tenantReply.Oid, 10)
-					context.Set("userId", userId)
+				siteIdInt, err = strconv.ParseInt(siteId, 10, 64)
+				if err != nil {
+					resp := new(data.Rest).ToBytes("非法站点！", nil)
+					w.Write(resp)
+					return
 				}
+			} else if siteId != "" && tenantRpc != nil {
+				//根据uid获取当前oid
+				siteIdInt, err = strconv.ParseInt(siteId, 10, 64)
+				tenantReply, replyErr := tenantRpc.Get(r.Context(), &tenant.CurrentUserReq{Uid: userId, SiteId: siteIdInt})
+				if replyErr != nil {
+					resp := new(data.Rest).Error("系统错误", err.Error())
+					bs, _ := json.Marshal(resp)
+					w.Write(bs)
+					return
+				}
+				userId = strconv.FormatInt(tenantReply.Oid, 10)
+				if err != nil {
+					resp := new(data.Rest).ToBytes("非法站点！", nil)
+					w.Write(resp)
+					return
+				}
+
+			}
+			context.Set("userId", userId)
+			context.Set("loginType", loginType)
+			if siteIdInt > 0 {
+				context.Set("siteId", siteIdInt)
 			}
 			next(w, r)
 		}

@@ -3,10 +3,12 @@ package productservicelogic
 import (
 	"context"
 	"database/sql"
-	"github.com/jinzhu/copier"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"encoding/json"
 	"time"
 	"zerocmf/service/shop/model"
+
+	"github.com/jinzhu/copier"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
 	"zerocmf/service/shop/rpc/internal/svc"
 	"zerocmf/service/shop/rpc/pb/shop"
@@ -32,17 +34,29 @@ func (l *ProductSaveLogic) ProductSave(in *shop.ProductSaveReq) (*shop.ProductSa
 
 	ctx := l.ctx
 	c := l.svcCtx
-	conf := c.Config
-	dsn := conf.Database.Dsn("")
+
+	conf := c.Config.Database.NewConf(in.GetSiteId())
+	dsn := conf.Dsn()
 
 	//mysql model调用
 	conn := sqlx.NewMysql(dsn)
+	thumbnail := ""
+
+	productThumbnail := in.GetProductThumbnail()
+	marshal, err := json.Marshal(productThumbnail)
+	if err == nil {
+		thumbnail = string(marshal)
+	}
+
 	product := model.Product{}
-	err := copier.Copy(&product, &in)
+	err = copier.Copy(&product, &in)
 	if err != nil {
 		return nil, err
 	}
 
+	if thumbnail != "" {
+		product.ProductThumbnail = sql.NullString{Valid: true, String: thumbnail}
+	}
 	productSku := in.GetProductSku()
 	// 新增
 	now := time.Now().Unix()
@@ -116,7 +130,27 @@ func (l *ProductSaveLogic) ProductSave(in *shop.ProductSaveReq) (*shop.ProductSa
 			return nil, err
 		}
 	} else {
-
+		product.UpdatedAt = now
+		err = conn.TransactCtx(ctx, func(ctx context.Context, session sqlx.Session) error {
+			productModel := model.NewProductSessionModel(conn, session, c.Config.Cache)
+			var one *model.Product
+			one, err = productModel.Where("product_id = ?", product.ProductId).First(ctx)
+			if err != nil {
+				return err
+			}
+			err = copier.CopyWithOption(&one, &product, copier.Option{IgnoreEmpty: true})
+			if err != nil {
+				return err
+			}
+			err = productModel.Where("product_id = ?", product.ProductId).Update(ctx, &product)
+			if err != nil {
+				return err
+			}
+			return nil
+		})
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	resp := shop.ProductSaveResp{

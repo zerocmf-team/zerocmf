@@ -2,14 +2,15 @@ package colly
 
 import (
 	"fmt"
-	"github.com/gocolly/colly/v2"
-	"gorm.io/gorm"
 	"strings"
 	"testing"
 	"time"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/model"
+
+	"github.com/gocolly/colly/v2"
+	"gorm.io/gorm"
 )
 
 func TestPost(t *testing.T) {
@@ -81,14 +82,14 @@ func TestPost(t *testing.T) {
 
 			CategoriesId := 1
 
-			pcp := &model.PortalCategoriesPost{}
+			pcp := &model.PortalCategoryPost{}
 			tx := db.Where("post_id = ? AND Categories_id = ?", newPost.Id, CategoriesId).First(&pcp)
 			if util.IsDbErr(tx) != nil {
 				fmt.Println("db err", tx.Error)
 				return
 			}
 
-			cPost := model.PortalCategoriesPost{
+			cPost := model.PortalCategoryPost{
 				PostId:       newPost.Id,
 				CategoriesId: CategoriesId,
 				ListOrder:    10000,

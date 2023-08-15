@@ -28,6 +28,17 @@ type User struct {
 	model.Time
 }
 
+type SiteUser struct {
+	Id        int64   `json:"id"`
+	TenantId  int64   `gorm:"type:bigint(20);comment:租户id;not null" json:"tenantId"`
+	SiteId    int64   `gorm:"type:bigint(20);comment:站点id;not null" json:"siteId"`
+	Uid       int64   `gorm:"type:bigint(20);comment:统一站点唯一用户id;not null" json:"uid"`
+	Oid       int64   `gorm:"type:bigint(20);comment:真实站点用户id;not null" json:"oid"`
+	IsOwner   int     `gorm:"type:tinyint(3);comment:是否为站点拥有者;not null" json:"isOwner"`
+	ListOrder float64 `gorm:"type:float;default:10000;comment:排序（越大越靠前）" json:"listOrder" label:"排序"`
+	Status    int     `gorm:"type:tinyint(3);not null;default:1;comment:状态;1:正常;0:禁用" json:"status"`
+}
+
 func (u *User) AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&SiteUser{})

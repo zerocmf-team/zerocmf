@@ -2,6 +2,7 @@ package article
 
 import (
 	"context"
+	"net/http"
 	"strings"
 	"time"
 	"zerocmf/common/bootstrap/data"
@@ -16,22 +17,25 @@ import (
 type GetLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
+func NewGetLogic(header *http.Request, svcCtx *svc.ServiceContext) *GetLogic {
+	ctx := header.Context()
 	return &GetLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
 
 func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response) {
 	c := l.svcCtx
-	r := c.Request
+	r := l.header
 	siteId, _ := c.Get("siteId")
-	db := c.NewDb(siteId.(string))
+	db := c.NewDb(siteId.(int64))
 
 	query := []string{"p.delete_at = ?"}
 	queryArgs := []interface{}{0}
@@ -52,10 +56,10 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response) {
 	query = append(query, "p.post_type = ?")
 	queryArgs = append(queryArgs, postType)
 
-	Categories := req.Categories
-	if Categories != nil {
+	Category := req.Category
+	if Category != nil {
 		query = append(query, "pc.id = ?")
-		queryArgs = append(queryArgs, Categories)
+		queryArgs = append(queryArgs, Category)
 	}
 
 	postStatus := req.PostStatus
@@ -97,7 +101,7 @@ func (l *GetLogic) Get(req *types.ArticleGetReq) (resp types.Response) {
 
 	post := model.PortalPost{}
 	var pageData data.Paginate
-	pageData, err = post.ListByCategories(db, current, pageSize, queryStr, queryArgs, nil)
+	pageData, err = post.ListByCategory(db, current, pageSize, queryStr, queryArgs, nil)
 	if err != nil {
 		resp.Error("获取失败！", err.Error())
 		return

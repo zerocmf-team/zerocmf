@@ -17,3 +17,7 @@ docker push return1996/tenant-api:latest
 docker push return1996/tenant-rpc:latest
 
 docker push return1996/lowcode-api:latest
+
+docker push return1996/shop-rpc:latest
+
+docker push return1996/shop-api:latest

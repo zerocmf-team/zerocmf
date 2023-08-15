@@ -6,7 +6,7 @@ ENV TZ Asia/Shanghai
 
 WORKDIR /app
 
-COPY service/portal/rpc/etc /app/etc
-COPY service/portal/rpc/main /app/main
+COPY service/shop/rpc/etc /app/etc
+COPY service/shop/rpc/main /app/main
 
-CMD ["./main", "-f", "etc/portal.yaml"]
+CMD ["./main", "-f", "etc/shop.yaml"]

@@ -2,23 +2,28 @@ package post
 
 import (
 	"context"
-	"github.com/zeromicro/go-zero/core/logx"
-	"gorm.io/gorm"
+	"net/http"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
+
+	"github.com/zeromicro/go-zero/core/logx"
+	"gorm.io/gorm"
 )
 
 type ShowLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
+func NewShowLogic(header *http.Request, svcCtx *svc.ServiceContext) *ShowLogic {
+	ctx := header.Context()
 	return &ShowLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -27,7 +32,7 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	gormDB := c.NewDb(siteId.(string))
+	gormDB := c.NewDb(siteId.(int64))
 	db := gormDB.Db
 	id := req.Id
 	if id == 0 {
@@ -54,9 +59,9 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 
 	// 查询文章的所属分类
 	pQueryArgs := []interface{}{id, 0}
-	pCate := model.PortalCategories{}
-	pCates, err := pCate.FindPostCategories(gormDB, "p.id = ? AND p.delete_at = ?", pQueryArgs)
-	post.Categories = pCates
+	pCate := model.PortalCategory{}
+	pCates, err := pCate.FindPostCategory(gormDB, "p.id = ? AND p.delete_at = ?", pQueryArgs)
+	post.Category = pCates
 
 	// 更新访问量 +1
 	postHits := post.PostHits
@@ -91,10 +96,10 @@ func (l *ShowLogic) Show(req *types.PostShowReq) (resp types.Response) {
 
 		//// 查询文章的所属分类
 		//prevQueryArgs := []interface{}{id, 0}
-		//prevCate := model.PortalCategories{}
-		//var prevCates []model.PortalCategories
-		//prevCates, err = prevCate.FindPostCategories(db, "p.id = ? AND p.delete_at = ?", prevQueryArgs)
-		//prevPost.Categories = prevCates
+		//prevCate := model.PortalCategory{}
+		//var prevCates []model.PortalCategory
+		//prevCates, err = prevCate.FindPostCategory(db, "p.id = ? AND p.delete_at = ?", prevQueryArgs)
+		//prevPost.Category = prevCates
 
 		// 查询下一篇
 		query = "id > ? AND post_type = ? and delete_at = ?"

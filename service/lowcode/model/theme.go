@@ -13,7 +13,7 @@ import (
 
 type Theme struct {
 	Id          primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Type        int                `json:"type"` // 0=>web;1=>h5;2=>mp;3=>miniApp;4=>app
+	Type        int                `json:"type"` // 0=>web;1=>wei
 	Default     int                `json:"default"`
 	Key         string             `json:"key"`
 	Name        string             `json:"name"`
@@ -32,7 +32,7 @@ type Theme struct {
 func (t Theme) Migrate(db database.MongoDB) (err error) {
 	collection := db.Collection("theme")
 	theme := Theme{}
-	findErr := db.FindOne(collection, bson.M{"default": 1}, &theme)
+	findErr := db.FindOne(collection, bson.M{"type": 0, "default": 1}, &theme)
 	if findErr != nil && !errors.Is(findErr, mongo.ErrNoDocuments) {
 		return findErr
 	}
@@ -52,6 +52,37 @@ func (t Theme) Migrate(db database.MongoDB) (err error) {
 			return err
 		}
 
+		setting := Settings{Key: "portal"}
+		setting.Store(db, bson.M{
+			"theme": "default",
+		})
+
+	}
+
+	theme = Theme{}
+	findErr = db.FindOne(collection, bson.M{"type": 1, "default": 1}, &theme)
+	if findErr != nil && !errors.Is(findErr, mongo.ErrNoDocuments) {
+		return findErr
+	}
+
+	if theme.Id.IsZero() {
+		_, err = db.InsertOne(collection, Theme{
+			Type:     1,
+			Default:  1,
+			Key:      "default",
+			Name:     "默认主题",
+			Version:  "0.0.1",
+			UserId:   1,
+			CreateAt: time.Now().Unix(),
+			UpdateAt: time.Now().Unix(),
+		})
+		if err != nil {
+			return err
+		}
+		setting := Settings{Key: "wei"}
+		setting.Store(db, bson.M{
+			"theme": "default",
+		})
 	}
 	return
 }

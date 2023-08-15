@@ -32,7 +32,7 @@ func (l *GetLogic) Get(req *types.SiteGetReq) (resp types.Response) {
 
 	prefix := c.Config.Database.Prefix
 
-	var result []struct {
+	var result = make([]struct {
 		SiteId     int64   `gorm:"type:bigint(20);comment;站点唯一编号" json:"siteId"`
 		Domain     string  `gorm:"type:varchar(100);comment:站点名称" json:"domain"`
 		Name       string  `gorm:"type:varchar(32);comment:站点名称" json:"name"`
@@ -43,7 +43,7 @@ func (l *GetLogic) Get(req *types.SiteGetReq) (resp types.Response) {
 		CreateAt   int64   `gorm:"type:bigint(20);NOT NULL" json:"createAt"`
 		CreateTime string  `gorm:"-" json:"createTime"`
 		ListOrder  float64 `gorm:"type:float;default:10000;comment:排序（越大越靠前）" json:"listOrder" label:"排序"`
-	}
+	}, 0)
 
 	current, pageSize, err := data.NewPaginate(r).Default()
 

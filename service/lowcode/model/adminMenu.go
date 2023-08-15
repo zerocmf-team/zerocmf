@@ -10,13 +10,15 @@ package model
 import (
 	"context"
 	"errors"
+	"fmt"
+	"time"
+	"zerocmf/common/bootstrap/data"
+	"zerocmf/common/bootstrap/database"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"time"
-	"zerocmf/common/bootstrap/data"
-	"zerocmf/common/bootstrap/database"
 )
 
 /**
@@ -163,6 +165,7 @@ func (rest *AdminMenu) Save(db database.MongoDB, filter bson.M) (err error) {
 		rest.CreateAt = time.Now().Unix()
 		rest.UpdateAt = time.Now().Unix()
 		one, oneErr := db.InsertOne(collection, &rest)
+		fmt.Println(one, oneErr)
 		if oneErr != nil {
 			err = oneErr
 			return

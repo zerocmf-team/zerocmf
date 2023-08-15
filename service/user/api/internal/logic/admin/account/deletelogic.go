@@ -35,7 +35,7 @@ func (l *DeleteLogic) Delete(req *types.OneReq) (resp types.Response) {
 
 	siteIdInt, _ := strconv.ParseInt(siteId.(string), 10, 64)
 
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	tenantRpc := c.TenantRpc
 

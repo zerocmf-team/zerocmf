@@ -2,10 +2,12 @@ package nav
 
 import (
 	"context"
-	"github.com/jinzhu/copier"
-	"gorm.io/gorm"
+	"net/http"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/model"
+
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -16,13 +18,16 @@ import (
 type EditLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
+func NewEditLogic(header *http.Request, svcCtx *svc.ServiceContext) *EditLogic {
+	ctx := header.Context()
 	return &EditLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -30,7 +35,7 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 func (l *EditLogic) Edit(req *types.NavSaveReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	nav := model.Nav{}
 	copier.Copy(&nav, &req)
 	var tx *gorm.DB

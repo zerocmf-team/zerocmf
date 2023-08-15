@@ -30,7 +30,7 @@ func (l *GetLogic) Get(req *types.ListReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	r := c.Request
 
 	var query []string

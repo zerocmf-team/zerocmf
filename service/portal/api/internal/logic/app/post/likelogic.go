@@ -2,24 +2,29 @@ package post
 
 import (
 	"context"
-	"github.com/zeromicro/go-zero/core/logx"
+	"net/http"
 	"strconv"
 	comModel "zerocmf/common/bootstrap/model"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type LikeLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewLikeLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LikeLogic {
+func NewLikeLogic(header *http.Request, svcCtx *svc.ServiceContext) *LikeLogic {
+	ctx := header.Context()
 	return &LikeLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -28,7 +33,7 @@ func (l *LikeLogic) Like(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	id := req.Id
 	if id == 0 {

@@ -1,6 +1,7 @@
 Name: tenant-api
 Host: 0.0.0.0
 Port: 8700
+Timeout: 5000
 
 Database:
   Name: tenant
@@ -34,6 +35,27 @@ portalRpc:
     Hosts:
       - 127.0.0.1:2379
     Key: portal.rpc
+
+LowcodeRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: lowcode.rpc
+
+ShopRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: shop.rpc
+
+TenantRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: tenant.rpc
 
 Redis:
   Enabled: true

@@ -2,6 +2,7 @@ package breadcrumb
 
 import (
 	"context"
+	"net/http"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
@@ -12,13 +13,16 @@ import (
 type BreadcrumbLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewBreadcrumbLogic(ctx context.Context, svcCtx *svc.ServiceContext) *BreadcrumbLogic {
+func NewBreadcrumbLogic(header *http.Request, svcCtx *svc.ServiceContext) *BreadcrumbLogic {
+	ctx := header.Context()
 	return &BreadcrumbLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -27,7 +31,7 @@ func (l *BreadcrumbLogic) Breadcrumb(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	id := req.Id
 
@@ -36,7 +40,7 @@ func (l *BreadcrumbLogic) Breadcrumb(req *types.OneReq) (resp types.Response) {
 		return
 	}
 
-	breadcrumbs, err := new(model.PortalCategories).GetPrevious(db, id)
+	breadcrumbs, err := new(model.PortalCategory).GetPrevious(db, id)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

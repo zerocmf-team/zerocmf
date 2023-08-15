@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/Init"
 	"zerocmf/common/bootstrap/apisix"
-	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/admin/api/internal/config"
 	"zerocmf/service/tenant/rpc/tenantclient"
 	"zerocmf/service/user/rpc/userclient"
@@ -44,6 +43,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			},
 			Status: 1,
 		},
+		{
+			URI:       "/public/*",
+			Name:      "public",
+			ServiceID: c.Apisix.Name,
+			Status:    1,
+		},
 	}
 
 	err := c.Apisix.Register(routes)
@@ -51,14 +56,14 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		panic(err)
 	}
 
-	db := database.NewGormDb(c.Database)
+	//db := database.NewGormDb(c.Database)
 	data := new(Init.Data).Context()
 	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 
 	return &ServiceContext{
-		Config:         c,
-		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
-		Db:             db,
+		Config:  c,
+		UserRpc: userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
+		//Db:             db,
 		Data:           data,
 		AuthMiddleware: apisix.AuthMiddleware(data, tenantRpc),
 	}

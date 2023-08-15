@@ -13,12 +13,18 @@ import (
 )
 
 type (
+	BindMpReply         = tenant.BindMpReply
+	BindMpReq           = tenant.BindMpReq
 	CheckUserReply      = tenant.CheckUserReply
 	CheckUserReq        = tenant.CheckUserReq
 	CurrentUserReq      = tenant.CurrentUserReq
 	RegisterReq         = tenant.RegisterReq
 	RemoveSiteUserReply = tenant.RemoveSiteUserReply
 	RemoveSiteUserReq   = tenant.RemoveSiteUserReq
+	ShowMpData          = tenant.ShowMpData
+	SiteMpData          = tenant.SiteMpData
+	SiteMpReply         = tenant.SiteMpReply
+	SiteMpReq           = tenant.SiteMpReq
 	UserReply           = tenant.UserReply
 
 	Tenant interface {
@@ -26,6 +32,9 @@ type (
 		RegisterUser(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*UserReply, error)
 		CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserReply, error)
 		RemoveSiteUser(ctx context.Context, in *RemoveSiteUserReq, opts ...grpc.CallOption) (*RemoveSiteUserReply, error)
+		BindMp(ctx context.Context, in *BindMpReq, opts ...grpc.CallOption) (*BindMpReply, error)
+		GetSiteMp(ctx context.Context, in *SiteMpReq, opts ...grpc.CallOption) (*SiteMpReply, error)
+		ShowMp(ctx context.Context, in *ShowMpData, opts ...grpc.CallOption) (*ShowMpData, error)
 	}
 
 	defaultTenant struct {
@@ -57,4 +66,19 @@ func (m *defaultTenant) CheckUser(ctx context.Context, in *CheckUserReq, opts ..
 func (m *defaultTenant) RemoveSiteUser(ctx context.Context, in *RemoveSiteUserReq, opts ...grpc.CallOption) (*RemoveSiteUserReply, error) {
 	client := tenant.NewTenantClient(m.cli.Conn())
 	return client.RemoveSiteUser(ctx, in, opts...)
+}
+
+func (m *defaultTenant) BindMp(ctx context.Context, in *BindMpReq, opts ...grpc.CallOption) (*BindMpReply, error) {
+	client := tenant.NewTenantClient(m.cli.Conn())
+	return client.BindMp(ctx, in, opts...)
+}
+
+func (m *defaultTenant) GetSiteMp(ctx context.Context, in *SiteMpReq, opts ...grpc.CallOption) (*SiteMpReply, error) {
+	client := tenant.NewTenantClient(m.cli.Conn())
+	return client.GetSiteMp(ctx, in, opts...)
+}
+
+func (m *defaultTenant) ShowMp(ctx context.Context, in *ShowMpData, opts ...grpc.CallOption) (*ShowMpData, error) {
+	client := tenant.NewTenantClient(m.cli.Conn())
+	return client.ShowMp(ctx, in, opts...)
 }

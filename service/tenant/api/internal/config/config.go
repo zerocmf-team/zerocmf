@@ -13,10 +13,13 @@ type Config struct {
 	App struct {
 		Domain string `json:",optional"`
 	}
-	AdminRpc  zrpc.RpcClientConf
-	UserRpc   zrpc.RpcClientConf
-	PortalRpc zrpc.RpcClientConf
-	Database  database.Database
-	Redis     redis.Redis
-	Apisix    apisix.Apisix
+	AdminRpc   zrpc.RpcClientConf
+	UserRpc    zrpc.RpcClientConf
+	PortalRpc  zrpc.RpcClientConf
+	LowcodeRpc zrpc.RpcClientConf
+	TenantRpc  zrpc.RpcClientConf
+	ShopRpc    zrpc.RpcClientConf
+	Database   database.Database
+	Redis      redis.Redis
+	Apisix     apisix.Apisix
 }

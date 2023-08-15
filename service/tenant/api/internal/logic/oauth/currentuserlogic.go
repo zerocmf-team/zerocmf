@@ -2,15 +2,15 @@ package oauth
 
 import (
 	"context"
-	"github.com/jinzhu/copier"
-	"gorm.io/gorm"
 	"strconv"
-	"strings"
 	"zerocmf/service/tenant/api/internal/svc"
 	"zerocmf/service/tenant/api/internal/types"
 	"zerocmf/service/tenant/model"
-	model2 "zerocmf/service/user/model"
+	userModel "zerocmf/service/user/model"
 	"zerocmf/service/user/rpc/userclient"
+
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -31,24 +31,23 @@ func NewCurrentUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Curre
 
 func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 	c := l.svcCtx
-	r := c.Request
+	tenantUserId, _ := c.Get("tenantUserId")
 	userId, _ := c.Get("userId")
 	loginType, _ := c.Get("loginType")
+	siteId, exist := c.Get("siteId")
 
 	userRpc := c.UserRpc
 
 	var userModel struct {
-		model2.User
-		SiteId    string `json:"site_id"`
+		userModel.User
+		SiteId    int64  `json:"site_id"`
 		LoginType string `json:"login_type"`
 	}
 
 	if loginType == "ram" {
-		siteId, _ := c.Get("siteId")
-
 		userReply, err := userRpc.Get(l.ctx, &userclient.UserRequest{
 			UserId: userId.(string),
-			SiteId: siteId.(string),
+			SiteId: siteId.(int64),
 		})
 
 		if err != nil {
@@ -70,8 +69,7 @@ func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 	}
 
 	db := c.Db
-	r.ParseForm()
-	siteId := strings.Join(r.Form["siteId"], "")
+
 	user := model.User{}
 
 	tx := db.Where("uid = ?", userId).First(&user)
@@ -84,7 +82,7 @@ func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 		return
 	}
 
-	if siteId != "" {
+	if exist {
 		var siteUser struct {
 			SiteId int64 `gorm:"type:bigint(20);comment;站点唯一编号" json:"siteId"`
 			Oid    int64 `gorm:"type:bigint(20);comment:真实站点用户id;not null" json:"oid"`
@@ -93,7 +91,7 @@ func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 		prefix := c.Config.Database.Prefix
 		tx = db.Select("s.site_id,su.oid,su.is_owner,su.list_order").Table(prefix+"site s").Joins("left join "+prefix+"site_user su on s.site_id = su.site_id").
 			Joins("inner join "+prefix+"user u on u.uid = su.uid").
-			Where("s.site_id = ? AND u.uid = ? AND s.delete_at = ?", siteId, userId, 0).Scan(&siteUser)
+			Where("s.site_id = ? AND u.uid = ? AND s.delete_at = ?", siteId, tenantUserId, 0).Scan(&siteUser)
 
 		if tx.Error != nil {
 			resp.Error("该用户不存在或已被删除！", nil)
@@ -107,7 +105,7 @@ func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 
 		userReply, err := userRpc.Get(l.ctx, &userclient.UserRequest{
 			UserId: strconv.FormatInt(siteUser.Oid, 10),
-			SiteId: siteId,
+			SiteId: siteId.(int64),
 		})
 
 		if err != nil {

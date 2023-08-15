@@ -35,8 +35,8 @@ func (l *EditLogic) Edit(req *types.AdminSaveReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
 
-	dbConf := c.Config.Database.NewConf(siteId.(string))
-	db := dbConf.ManualDb(siteId.(string))
+	dbConf := c.Config.Database.NewConf(siteId.(int64))
+	db := dbConf.ManualDb(siteId.(int64))
 
 	if len(req.RoleIds) <= 0 {
 		resp.Error("至少选择一项角色！", nil)

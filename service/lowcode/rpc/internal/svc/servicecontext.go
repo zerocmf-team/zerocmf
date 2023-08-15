@@ -7,18 +7,18 @@ import (
 
 type ServiceContext struct {
 	Config  config.Config
-	MongoDB func(dbName ...string) (db database.MongoDB, err error)
+	MongoDB func(dbName ...int64) (db database.MongoDB, err error)
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config: c,
-		MongoDB: func(dbName ...string) (db database.MongoDB, err error) {
-			name := ""
+		MongoDB: func(dbName ...int64) (db database.MongoDB, err error) {
+			var siteId int64 = 0
 			if len(dbName) > 0 {
-				name = dbName[0]
+				siteId = dbName[0]
 			}
-			db, err = database.NewMongoDB(c.MongoDB, name)
+			db, err = database.NewMongoDB(c.MongoDB, siteId)
 			return
 		},
 	}

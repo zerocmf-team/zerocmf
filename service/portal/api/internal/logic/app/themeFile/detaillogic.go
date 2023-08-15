@@ -2,6 +2,7 @@ package themeFile
 
 import (
 	"context"
+	"net/http"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
@@ -12,13 +13,16 @@ import (
 type DetailLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogic {
+func NewDetailLogic(header *http.Request, svcCtx *svc.ServiceContext) *DetailLogic {
+	ctx := header.Context()
 	return &DetailLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -44,7 +48,7 @@ func (l *DetailLogic) Detail(req *types.ThemeFileDetailReq) (resp *types.Respons
 	queryArgs := []interface{}{theme, file}
 
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	data, err := new(model.ThemeFile).Show(db, query, queryArgs)
 

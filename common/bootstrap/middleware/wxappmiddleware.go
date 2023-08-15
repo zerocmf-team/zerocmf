@@ -27,15 +27,19 @@ func (m *WxappMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		tenantRpc := m.TenantRpc
 		r.ParseForm()
 		appId := strings.Join(r.Form["appId"], "")
-		showResult, err := tenantRpc.ShowMp(r.Context(), &tenantclient.ShowMpData{
-			AppId: appId,
-		})
-		if err != nil {
-			new(data.Rest).ToBytes("rpc服务错误！", err.Error())
-			return
+		if appId != "" {
+			showResult, err := tenantRpc.ShowMp(r.Context(), &tenantclient.ShowMpData{
+				AppId: appId,
+			})
+			if err != nil {
+				new(data.Rest).ToBytes("rpc服务错误！", err.Error())
+				return
+			}
+			siteId := showResult.GetSiteId()
+			if siteId > 0 {
+				m.Set("siteId", siteId)
+			}
 		}
-		siteId := showResult.GetSiteId()
-		m.Set("siteId", siteId)
 		next(w, r)
 	}
 }

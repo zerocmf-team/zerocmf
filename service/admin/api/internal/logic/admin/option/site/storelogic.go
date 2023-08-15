@@ -36,7 +36,7 @@ func (l *StoreLogic) Store(req *types.OptionReq) (resp types.Response) {
 
 	siteInfoValue, _ := json.Marshal(siteInfo)
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	tx := db.Model(&model.Option{}).Where("option_name = ?", "site_info").Update("option_value", string(siteInfoValue))
 	if tx.Error != nil {
 		resp.Error("系统出错："+tx.Error.Error(), nil)

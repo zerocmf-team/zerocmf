@@ -2,6 +2,7 @@ package post
 
 import (
 	"context"
+	"net/http"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
@@ -12,13 +13,16 @@ import (
 type IsFavoriteLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewIsFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IsFavoriteLogic {
+func NewIsFavoriteLogic(header *http.Request, svcCtx *svc.ServiceContext) *IsFavoriteLogic {
+	ctx := header.Context()
 	return &IsFavoriteLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -26,7 +30,7 @@ func NewIsFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IsFavo
 func (l *IsFavoriteLogic) IsFavorite(req *types.OneReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	id := req.Id
 	if id == 0 {
 		resp.Error("id不能为空", nil)

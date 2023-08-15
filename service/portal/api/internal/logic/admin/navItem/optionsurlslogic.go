@@ -2,6 +2,7 @@ package navItem
 
 import (
 	"context"
+	"net/http"
 	"strconv"
 	"strings"
 	"zerocmf/service/portal/model"
@@ -15,13 +16,16 @@ import (
 type OptionsUrlsLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewOptionsUrlsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *OptionsUrlsLogic {
+func NewOptionsUrlsLogic(header *http.Request, svcCtx *svc.ServiceContext) *OptionsUrlsLogic {
+	ctx := header.Context()
 	return &OptionsUrlsLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -57,20 +61,20 @@ func (l *OptionsUrlsLogic) OptionsUrls() (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	query := []string{"delete_at = ?"}
 	queryArgs := []interface{}{"0"}
 
 	queryStr := strings.Join(query, " AND ")
 
-	CategoriesData, err := new(model.PortalCategories).Index(db, queryStr, queryArgs)
+	CategoryData, err := new(model.PortalCategory).Index(db, queryStr, queryArgs)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
 
-	cateOptions := recursionTreeOption(CategoriesData)
+	cateOptions := recursionTreeOption(CategoryData)
 
 	tree := make([]TreeOption, 0)
 	tree = append(tree, TreeOption{

@@ -9,7 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"os"
-	"strconv"
 	"time"
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/lowcode/model"
@@ -52,9 +51,8 @@ func (l *AutoMigrateLogic) AutoMigrate(in *lowcode.SiteReq) (reply *lowcode.Site
 
 	c := l.svcCtx
 	siteId := in.GetSiteId()
-	siteIdStr := strconv.FormatInt(siteId, 10)
 	// 选择租户表
-	db, err := c.MongoDB(siteIdStr)
+	db, err := c.MongoDB(siteId)
 	if err != nil {
 		return
 	}

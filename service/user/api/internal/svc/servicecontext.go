@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"zerocmf/common/bootstrap/Init"
 	"zerocmf/common/bootstrap/apisix"
-	"zerocmf/common/bootstrap/database"
 	"zerocmf/service/admin/rpc/adminclient"
 	"zerocmf/service/tenant/rpc/tenantclient"
 	"zerocmf/service/user/api/internal/config"
@@ -70,7 +69,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		panic(err)
 	}
 
-	db := database.NewGormDb(c.Database)
+	//db := database.NewGormDb(c.Database)
 	// 设置为默认的db
 	// 数据库迁
 	//model.Migrate(db)
@@ -78,8 +77,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	data := new(Init.Data).Context()
 	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 	return &ServiceContext{
-		Config:         c,
-		Db:             db,
+		Config: c,
+		//Db:             db,
 		Data:           data,
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		AdminRpc:       adminclient.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),

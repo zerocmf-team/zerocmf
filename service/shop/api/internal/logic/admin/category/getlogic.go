@@ -41,7 +41,10 @@ func (l *GetLogic) Get(req *types.CategoryGetReq) (resp data.Rest) {
 	}
 
 	categoryClient := categoryservice.NewCategoryService(c.Client)
-	rpcReq := categoryservice.CategoryGetReq{}
+	rpcReq := categoryservice.CategoryGetReq{
+		Current:  &current,
+		PageSize: &pageSize,
+	}
 	copier.Copy(&rpcReq, &req)
 	var category *categoryservice.CategoryListResp
 	category, err = categoryClient.CategoryGet(ctx, &rpcReq)

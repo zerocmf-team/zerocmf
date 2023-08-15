@@ -7,6 +7,10 @@ info (
 	email: "{{.gitEmail}}"
 )
 
+typ GetReq {
+
+}
+
 service {{.serviceName}} {
 	@handler Get
     get / ()

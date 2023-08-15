@@ -3,7 +3,9 @@ package site
 import (
 	"context"
 	"zerocmf/service/admin/rpc/adminclient"
+	"zerocmf/service/lowcode/rpc/lowcodeclient"
 	"zerocmf/service/portal/rpc/portalclient"
+	"zerocmf/service/shop/rpc/pb/shop"
 	"zerocmf/service/tenant/model"
 	"zerocmf/service/user/rpc/userclient"
 
@@ -49,6 +51,14 @@ func (l *AutoMigrateLogic) AutoMigrate(req *types.SiteShowReq) (resp types.Respo
 	})
 
 	c.PortalRpc.AutoMigrate(context, &portalclient.SiteReq{
+		SiteId: siteId,
+	})
+
+	c.LowcodeRpc.AutoMigrate(context, &lowcodeclient.SiteReq{
+		SiteId: siteId,
+	})
+
+	c.ShopRpc.AutoMigrate(context, &shop.MigrateReq{
 		SiteId: siteId,
 	})
 

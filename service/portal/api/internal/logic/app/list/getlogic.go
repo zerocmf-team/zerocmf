@@ -2,6 +2,7 @@ package list
 
 import (
 	"context"
+	"net/http"
 	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/database"
@@ -16,13 +17,16 @@ import (
 type GetLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
+func NewGetLogic(header *http.Request, svcCtx *svc.ServiceContext) *GetLogic {
+	ctx := header.Context()
 	return &GetLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -31,8 +35,8 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
-	r := c.Request
+	db := c.Config.Database.ManualDb(siteId.(int64))
+	r := l.header
 
 	extra := map[string]string{}
 
@@ -49,7 +53,7 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 
 	idsArr := strings.Split(ids, ",")
 	for _, v := range idsArr {
-		query = append(query, "cp.Categories_id = ?")
+		query = append(query, "cp.Category_id = ?")
 		queryArgs = append(queryArgs, v)
 	}
 
@@ -65,7 +69,7 @@ func (l *GetLogic) Get(req *types.PostListReq) (resp types.Response) {
 		return
 	}
 
-	data, err := new(model.PortalPost).ListByCategories(database.GormDB{
+	data, err := new(model.PortalPost).ListByCategory(database.GormDB{
 		Database: c.Config.Database,
 		Db:       db,
 	}, current, pageSize, strings.Join(queryRes, " AND "), queryArgs, extra)

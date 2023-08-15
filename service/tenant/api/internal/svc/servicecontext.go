@@ -10,9 +10,13 @@ import (
 	"zerocmf/common/bootstrap/database"
 	"zerocmf/common/bootstrap/redis"
 	"zerocmf/service/admin/rpc/adminclient"
+	"zerocmf/service/lowcode/rpc/lowcodeclient"
 	"zerocmf/service/portal/rpc/portalclient"
+	"zerocmf/service/shop/rpc/client/shopservice"
+	"zerocmf/service/shop/rpc/pb/shop"
 	"zerocmf/service/tenant/api/internal/config"
 	"zerocmf/service/tenant/model"
+	"zerocmf/service/tenant/rpc/tenantclient"
 	"zerocmf/service/user/rpc/userclient"
 )
 
@@ -25,6 +29,9 @@ type ServiceContext struct {
 	AdminRpc       adminclient.Admin
 	UserRpc        userclient.User
 	PortalRpc      portalclient.Portal
+	LowcodeRpc     lowcodeclient.Lowcode
+	TenantRpc      tenantclient.Tenant
+	ShopRpc        shop.ShopServiceClient
 	AuthMiddleware rest.Middleware
 	Upstream       apisix.Upstream
 }
@@ -95,18 +102,22 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	db := database.NewGormDb(c.Database)
 	// 数据库迁移
 	model.Migrate(db)
-
 	data := new(Init.Data).Context()
+	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 	return &ServiceContext{
 		Config: c,
 		Db:     db,
 		Redis: func() redis.Redis {
 			return redis.NewRedis(c.Redis)
 		},
+
 		Data:           data,
 		AdminRpc:       adminclient.NewAdmin(zrpc.MustNewClient(c.AdminRpc)),
 		UserRpc:        userclient.NewUser(zrpc.MustNewClient(c.UserRpc)),
 		PortalRpc:      portalclient.NewPortal(zrpc.MustNewClient(c.PortalRpc)),
-		AuthMiddleware: apisix.AuthMiddleware(data, nil),
+		LowcodeRpc:     lowcodeclient.NewLowcode(zrpc.MustNewClient(c.LowcodeRpc)),
+		TenantRpc:      tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc)),
+		ShopRpc:        shopservice.NewShopService(zrpc.MustNewClient(c.ShopRpc)),
+		AuthMiddleware: apisix.AuthMiddleware(data, tenantRpc),
 	}
 }

@@ -1,6 +1,7 @@
 syntax = "v1"
 
 type CategoryGetReq {
+    SiteId int64 `form:"siteId"`
     Name string `form:"name,optional"`
     ParentId int64 `form:"parentId,optional"`
     ListOrder *float64 `form:"listOrder,optional"`
@@ -8,16 +9,19 @@ type CategoryGetReq {
 }
 
 type CategoryTreeDataReq {
+    SiteId int64 `form:"siteId"`
     Name string `form:"name,optional"`
     Status *int `form:"status,optional"`
     IgnoreId *int64 `form:"ignoreId,optional"`
 }
 
 type CategoryShowReq {
+    SiteId int64 `form:"siteId"`
     Id int64 `path:"id"`
 }
 
 type CategorySaveReq {
+    SiteId int64 `form:"siteId"`
     Id int64 `path:"id,optional"`
     ParentId int64 `json:"parentId,optional"`
     Name string `json:"name"`
@@ -28,11 +32,12 @@ type CategorySaveReq {
 }
 
 type CategoryDelReq {
+    SiteId int64 `form:"siteId"`
     Id int64 `path:"id"`
 }
 
 type CategoryBatchDelReq {
-
+    SiteId int64 `form:"siteId"`
 }
 
 info(
@@ -45,7 +50,7 @@ info(
 @server(
     group: admin/category
     prefix: api/v1/shop/admin/categories
-    //    middleware: SiteMiddleware,AuthMiddleware
+    middleware: AuthMiddleware
 )
 
 service shop-api {

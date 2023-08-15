@@ -16,6 +16,7 @@ func (m *default{{.upperStartCamelObject}}Model) Update(ctx context.Context, {{i
 // 根据条件进行查询一条数据
 func (m *default{{.upperStartCamelObject}}Model) First(ctx context.Context) (*{{.upperStartCamelObject}}, error) {
 	query := m.query
+
 	queryArgs := m.queryArgs
 	orderBy := m.orderBy
 	var resp {{.upperStartCamelObject}}
@@ -28,12 +29,9 @@ func (m *default{{.upperStartCamelObject}}Model) First(ctx context.Context) (*{{
 	// 排序
     if orderBy != "" {
         sql += fmt.Sprintf(" ORDER BY %s", orderBy)
-        if orderBy != "" {
-            sql += fmt.Sprintf(" %s", orderBy)
-        }
     }
 
-	sql += " limit 1"
+	sql += " AND deleted_at = 0 limit 1"
 
 	err := m.QueryRowNoCacheCtx(ctx, &resp, sql, queryArgs...)
 	switch err {
@@ -57,15 +55,14 @@ func (m *default{{.upperStartCamelObject}}Model) Find(ctx context.Context) ([]*{
 	sql := fmt.Sprintf("select %s from %s", {{.lowerStartCamelObject}}Rows, m.table)
 
 	if query != "" {
-    	sql += " where " + query
+    	sql += " where " + query + " AND deleted_at = 0"
+    }else {
+        sql += " where deleted_at = 0"
     }
 
 	// 排序
 	if orderBy != "" {
 		sql += fmt.Sprintf(" ORDER BY %s", orderBy)
-		if orderBy != "" {
-			sql += fmt.Sprintf(" %s", orderBy)
-		}
 	}
 
 	limit := m.limit

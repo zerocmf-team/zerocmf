@@ -4,12 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"github.com/jinzhu/copier"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"strconv"
 	"time"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/shop/model"
+
+	"github.com/jinzhu/copier"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
 	"zerocmf/service/shop/rpc/internal/svc"
 	"zerocmf/service/shop/rpc/pb/shop"
@@ -66,7 +67,8 @@ func (l *CategorySaveLogic) CategorySave(in *shop.CategorySaveReq) (*shop.Catego
 	ctx := l.ctx
 	c := l.svcCtx
 	conf := c.Config
-	dsn := conf.Database.Dsn("")
+	config := conf.Database.NewConf(in.GetSiteId())
+	dsn := config.Dsn()
 
 	//mysql model调用
 	db := model.NewProductCategoryModel(sqlx.NewMysql(dsn), conf.Cache)
@@ -120,7 +122,7 @@ func (l *CategorySaveLogic) CategorySave(in *shop.CategorySaveReq) (*shop.Catego
 			return nil, err
 		}
 
-		path, err = l.updatePath(db, id, goodsCategory.ParentId.Int64)
+		path, err = l.updatePath(db, id, goodsCategory.ParentId)
 		if err != nil {
 			return nil, err
 		}
@@ -149,7 +151,7 @@ func (l *CategorySaveLogic) CategorySave(in *shop.CategorySaveReq) (*shop.Catego
 
 		goodsCategory = *findOne
 
-		path, err = l.updatePath(db, id, goodsCategory.ParentId.Int64)
+		path, err = l.updatePath(db, id, goodsCategory.ParentId)
 
 		goodsCategory.Path = path
 

@@ -5,7 +5,6 @@ import (
 	"errors"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
-	"strconv"
 	"zerocmf/service/admin/model"
 
 	"zerocmf/service/admin/rpc/internal/svc"
@@ -31,12 +30,8 @@ func NewGetMenusLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetMenus
 func (l *GetMenusLogic) GetMenus(in *admin.AdminMenuReq) (*admin.AdminMenuReply, error) {
 
 	c := l.svcCtx
-
 	siteId := in.GetSiteId()
-
-	siteIdStr := strconv.FormatInt(siteId, 10)
-
-	db := c.Config.Database.ManualDb(siteIdStr)
+	db := c.Config.Database.ManualDb(siteId)
 
 	// 获取全部菜单信息
 	var menus []model.AdminMenu

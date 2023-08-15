@@ -13,12 +13,12 @@ type (
 )
 
 import (
-	"api/Categories.api"
+	"api/category.api"
 	"api/article.api"
 	"api/theme.api"
 	"api/themeFile.api"
 	"api/tag.api"
-	"api/Route.api"
+	"api/route.api"
 	"api/nav.api"
 	"api/navItem.api"
 	"api/comment.api"

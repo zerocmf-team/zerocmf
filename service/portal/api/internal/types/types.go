@@ -44,7 +44,7 @@ type ArticleGetReq struct {
 	Title      string `form:"post_title,optional"`
 	PostType   string `form:"post_type,optional"`
 	PostStatus *int   `form:"post_status,optional"`
-	Categories   *int   `form:"Categories,optional"`
+	Category   *int   `form:"category,optional"`
 	StartTime  string `form:"start_time,optional"`
 	EndTime    string `form:"end_time,optional"`
 }
@@ -66,7 +66,7 @@ type Path struct {
 
 type ArticleSaveReq struct {
 	Id             int       `path:"id,optional"`
-	CategoriesIds    []string  `json:"Categories_ids,optional"`
+	CategoryIds    []string  `json:"category_ids,optional"`
 	PostType       int       `json:"post_type,optional"`
 	Alias          string    `json:"alias,optional"`
 	PostTitle      string    `json:"post_title,optional"`

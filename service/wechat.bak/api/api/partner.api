@@ -1,0 +1,20 @@
+//微信三方服务商
+
+syntax = "v1"
+
+/* type componentVerifyTicketReq {
+    AppId string `xml:"AppId"`
+    CreateTime int64 `xml:"CreateTime"`
+    InfoType string `xml:InfoType"`
+    ComponentVerifyTicket string `xml:ComponentVerifyTicket`
+} */
+
+@server(
+    group: thirdPart/verify
+    prefix: /api/v1/wechat
+)
+
+service wechat-api {
+    @handler Get
+    get /component_verify_ticket
+}

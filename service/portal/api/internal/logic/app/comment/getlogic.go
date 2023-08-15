@@ -2,25 +2,30 @@ package comment
 
 import (
 	"context"
-	"github.com/zeromicro/go-zero/core/logx"
+	"net/http"
 	"strconv"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/model"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/user/rpc/userclient"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type GetLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
+func NewGetLogic(header *http.Request, svcCtx *svc.ServiceContext) *GetLogic {
+	ctx := header.Context()
 	return &GetLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -29,8 +34,8 @@ func (l *GetLogic) Get(req *types.PostCommentGetReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
-	r := c.Request
+	db := c.Config.Database.ManualDb(siteId.(int64))
+	r := l.header
 	userRpc := c.UserRpc
 
 	topicId := req.Id
@@ -46,7 +51,7 @@ func (l *GetLogic) Get(req *types.PostCommentGetReq) (resp types.Response) {
 
 		_, err := userRpc.Get(context.Background(), &userclient.UserRequest{
 			UserId: userId.(string),
-			SiteId: siteId.(string),
+			SiteId: siteId.(int64),
 		})
 
 		if err != nil {

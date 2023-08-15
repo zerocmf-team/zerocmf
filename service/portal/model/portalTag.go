@@ -8,10 +8,11 @@ package model
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/util"
+
+	"gorm.io/gorm"
 )
 
 // 标签内容
@@ -38,7 +39,7 @@ type PostTagResult struct {
 	Name string `gorm:"->" json:"name"`
 }
 
-func (model PortalTag) AutoMigrate(db *gorm.DB) {
+func (model *PortalTag) AutoMigrate(db *gorm.DB) {
 	db.AutoMigrate(&model)
 	db.AutoMigrate(&PortalTagPost{})
 }
@@ -78,7 +79,7 @@ func (model *PortalTag) Show(db *gorm.DB, query string, queryArgs []interface{})
 	return tag, nil
 }
 
-func (model PortalTag) FirstOrSave(db *gorm.DB) (PortalTag, error) {
+func (model *PortalTag) FirstOrSave(db *gorm.DB) (PortalTag, error) {
 	// 新建
 	if model.Id == 0 {
 		tx := db.Create(&model)
@@ -99,11 +100,11 @@ func (model PortalTag) FirstOrSave(db *gorm.DB) (PortalTag, error) {
 			return PortalTag{}, tx.Error
 		}
 	}
-	return model, nil
+	return *model, nil
 
 }
 
-func (model PortalTag) Save(db *gorm.DB, postId int) error {
+func (model *PortalTag) Save(db *gorm.DB, postId int) error {
 	var count int64
 	db.Where("post_id = ?", postId).Find(&PortalTagPost{}).Group("post_id").Count(&count)
 	db.Where("id = ?", model.Id).First(&model)
@@ -156,7 +157,9 @@ func (model *PortalTagPost) FirstOrSave(db *gorm.DB, kId []int) error {
 	}
 	// 统计当前标签文章数
 	for _, v := range kId {
-		err := PortalTag{Id: v}.Save(db, postId)
+		portal := new(PortalTag)
+		portal.Id = v
+		err := portal.Save(db, postId)
 		if err != nil {
 			return err
 		}

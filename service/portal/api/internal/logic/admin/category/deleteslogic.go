@@ -1,7 +1,8 @@
-package Categories
+package category
 
 import (
 	"context"
+	"net/http"
 	"zerocmf/service/portal/model"
 
 	"zerocmf/service/portal/api/internal/svc"
@@ -13,13 +14,16 @@ import (
 type DeletesLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewDeletesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeletesLogic {
+func NewDeletesLogic(header *http.Request, svcCtx *svc.ServiceContext) *DeletesLogic {
+	ctx := header.Context()
 	return &DeletesLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -27,12 +31,12 @@ func NewDeletesLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DeletesLo
 func (l *DeletesLogic) Deletes() (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
-	r := c.Request
+	db := c.Config.Database.ManualDb(siteId.(int64))
+	r := l.header
 	r.ParseForm()
 	ids := r.Form["ids[]"]
-	portalCategories := new(model.PortalCategories)
-	err := portalCategories.BatchDelete(db, ids)
+	PortalCategory := new(model.PortalCategory)
+	err := PortalCategory.BatchDelete(db, ids)
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return

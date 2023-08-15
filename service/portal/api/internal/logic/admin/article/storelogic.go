@@ -4,8 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/jinzhu/copier"
-	"gorm.io/gorm"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -13,6 +12,9 @@ import (
 	comModel "zerocmf/common/bootstrap/model"
 	"zerocmf/service/portal/model"
 	"zerocmf/service/user/rpc/types/user"
+
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -23,13 +25,16 @@ import (
 type StoreLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic {
+func NewStoreLogic(header *http.Request, svcCtx *svc.ServiceContext) *StoreLogic {
+	ctx := header.Context()
 	return &StoreLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -43,7 +48,7 @@ func (l *StoreLogic) Store(req *types.ArticleSaveReq) (resp types.Response) {
 func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response) {
 
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	userRpc := c.UserRpc
 	id := req.Id
 
@@ -52,7 +57,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 		postType = 2
 	}
 
-	if postType == 1 && len(req.CategoriesIds) == 0 {
+	if postType == 1 && len(req.CategoryIds) == 0 {
 		resp.Error("分类不能为空！", nil)
 		return
 	}
@@ -113,7 +118,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 
 	userReply, err := userRpc.Get(context.Background(), &user.UserRequest{
 		UserId: userId.(string),
-		SiteId: siteId.(string),
+		SiteId: siteId.(int64),
 	})
 
 	if err != nil {
@@ -133,7 +138,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	var (
 		data struct {
 			model.PortalPost
-			Categories []model.PortalCategoriesPost `json:"Categories"`
+			Category []model.PortalCategoryPost `json:"Category"`
 		}
 		postData model.PortalPost
 	)
@@ -169,12 +174,12 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 		}
 	}
 
-	var pcpPost = make([]model.PortalCategoriesPost, 0)
+	var pcpPost = make([]model.PortalCategoryPost, 0)
 
-	pcp := model.PortalCategoriesPost{}
+	pcp := model.PortalCategoryPost{}
 
-	Categories := model.PortalCategories{}
-	existsCategories, err := Categories.List(db)
+	Category := model.PortalCategory{}
+	existsCategory, err := Category.List(db)
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -185,17 +190,17 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 		return
 	}
 
-	for _, v := range req.CategoriesIds {
+	for _, v := range req.CategoryIds {
 
 		cidInt, _ := strconv.Atoi(v)
 
-		if !inArray(cidInt, existsCategories) {
+		if !inArray(cidInt, existsCategory) {
 			resp.Error("分类参数非法！", nil)
 			return
 		}
 
 		pcp.PostId = postData.Id
-		pcp.CategoriesId = cidInt
+		pcp.CategoryId = cidInt
 		pcpPost = append(pcpPost, pcp)
 	}
 
@@ -205,7 +210,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 		return
 	}
 
-	data.Categories = pcpData
+	data.Category = pcpData
 
 	var tag []int
 	var portalTag model.PortalTag
@@ -242,7 +247,7 @@ func save(c *svc.ServiceContext, req *types.ArticleSaveReq) (resp types.Response
 	return
 }
 
-func inArray(cid int, pc []model.PortalCategories) bool {
+func inArray(cid int, pc []model.PortalCategory) bool {
 	for _, v := range pc {
 		if v.Id == cid {
 			return true

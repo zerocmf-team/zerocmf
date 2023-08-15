@@ -11,6 +11,7 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"gorm.io/gorm"
+	"net/http"
 	"strconv"
 	"strings"
 	"zerocmf/common/bootstrap/Init"
@@ -89,4 +90,29 @@ func ToLowerInArray(search string, target interface{}) bool {
 	}
 
 	return false
+}
+
+func Host(r *http.Request) (domain string) {
+	// 获取请求头域名
+	scheme := "http://"
+	if r.Header.Get("Scheme") == "https" {
+		scheme = "https://"
+	}
+	host := r.Host
+	domain = scheme + host
+	return
+}
+
+func RemoveDuplicates(arr []string) []string {
+	uniqueMap := make(map[string]bool)
+	uniqueArr := []string{}
+
+	for _, str := range arr {
+		if !uniqueMap[str] {
+			uniqueMap[str] = true
+			uniqueArr = append(uniqueArr, str)
+		}
+	}
+
+	return uniqueArr
 }

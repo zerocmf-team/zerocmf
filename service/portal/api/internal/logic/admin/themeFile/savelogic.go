@@ -2,23 +2,28 @@ package themeFile
 
 import (
 	"context"
-	"github.com/zeromicro/go-zero/core/logx"
+	"net/http"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type SaveLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveLogic {
+func NewSaveLogic(header *http.Request, svcCtx *svc.ServiceContext) *SaveLogic {
+	ctx := header.Context()
 	return &SaveLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -28,7 +33,7 @@ func (l *SaveLogic) Save(req *types.ThemeFileSaveReq) (resp types.Response) {
 	c := l.svcCtx
 	id := req.Id
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	more := req.More
 

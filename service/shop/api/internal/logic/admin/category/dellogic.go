@@ -34,7 +34,8 @@ func (l *DelLogic) Del(req *types.CategoryDelReq) (resp data.Rest) {
 	c := l.svcCtx
 	categoryClient := categoryservice.NewCategoryService(c.Client)
 	rpcReq := categoryservice.CategoryDelReq{
-		Id: req.Id,
+		SiteId: req.SiteId,
+		Id:     req.Id,
 	}
 	category, err := categoryClient.CategoryDel(ctx, &rpcReq)
 	if err != nil {

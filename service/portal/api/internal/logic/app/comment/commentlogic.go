@@ -3,6 +3,7 @@ package comment
 import (
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
+	"net/http"
 	"strconv"
 	"time"
 	"zerocmf/common/bootstrap/model"
@@ -14,13 +15,16 @@ import (
 type CommentLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CommentLogic {
+func NewCommentLogic(header *http.Request, svcCtx *svc.ServiceContext) *CommentLogic {
+	ctx := header.Context()
 	return &CommentLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -28,7 +32,7 @@ func NewCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CommentLo
 func (l *CommentLogic) Comment(req *types.PostCommentAddReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	userRpc := c.UserRpc
 
 	topicId := req.Id
@@ -44,7 +48,7 @@ func (l *CommentLogic) Comment(req *types.PostCommentAddReq) (resp types.Respons
 
 		userData, err = userRpc.Get(context.Background(), &user.UserRequest{
 			UserId: userId.(string),
-			SiteId: siteId.(string),
+			SiteId: siteId.(int64),
 		})
 
 		if err != nil {

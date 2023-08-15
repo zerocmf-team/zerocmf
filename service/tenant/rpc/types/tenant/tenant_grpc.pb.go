@@ -23,6 +23,9 @@ const (
 	Tenant_RegisterUser_FullMethodName   = "/tenant.tenant/RegisterUser"
 	Tenant_CheckUser_FullMethodName      = "/tenant.tenant/CheckUser"
 	Tenant_RemoveSiteUser_FullMethodName = "/tenant.tenant/removeSiteUser"
+	Tenant_BindMp_FullMethodName         = "/tenant.tenant/BindMp"
+	Tenant_GetSiteMp_FullMethodName      = "/tenant.tenant/getSiteMp"
+	Tenant_ShowMp_FullMethodName         = "/tenant.tenant/showMp"
 )
 
 // TenantClient is the client API for Tenant service.
@@ -33,6 +36,9 @@ type TenantClient interface {
 	RegisterUser(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*UserReply, error)
 	CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserReply, error)
 	RemoveSiteUser(ctx context.Context, in *RemoveSiteUserReq, opts ...grpc.CallOption) (*RemoveSiteUserReply, error)
+	BindMp(ctx context.Context, in *BindMpReq, opts ...grpc.CallOption) (*BindMpReply, error)
+	GetSiteMp(ctx context.Context, in *SiteMpReq, opts ...grpc.CallOption) (*SiteMpReply, error)
+	ShowMp(ctx context.Context, in *ShowMpData, opts ...grpc.CallOption) (*ShowMpData, error)
 }
 
 type tenantClient struct {
@@ -79,6 +85,33 @@ func (c *tenantClient) RemoveSiteUser(ctx context.Context, in *RemoveSiteUserReq
 	return out, nil
 }
 
+func (c *tenantClient) BindMp(ctx context.Context, in *BindMpReq, opts ...grpc.CallOption) (*BindMpReply, error) {
+	out := new(BindMpReply)
+	err := c.cc.Invoke(ctx, Tenant_BindMp_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tenantClient) GetSiteMp(ctx context.Context, in *SiteMpReq, opts ...grpc.CallOption) (*SiteMpReply, error) {
+	out := new(SiteMpReply)
+	err := c.cc.Invoke(ctx, Tenant_GetSiteMp_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tenantClient) ShowMp(ctx context.Context, in *ShowMpData, opts ...grpc.CallOption) (*ShowMpData, error) {
+	out := new(ShowMpData)
+	err := c.cc.Invoke(ctx, Tenant_ShowMp_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TenantServer is the server API for Tenant service.
 // All implementations must embed UnimplementedTenantServer
 // for forward compatibility
@@ -87,6 +120,9 @@ type TenantServer interface {
 	RegisterUser(context.Context, *RegisterReq) (*UserReply, error)
 	CheckUser(context.Context, *CheckUserReq) (*CheckUserReply, error)
 	RemoveSiteUser(context.Context, *RemoveSiteUserReq) (*RemoveSiteUserReply, error)
+	BindMp(context.Context, *BindMpReq) (*BindMpReply, error)
+	GetSiteMp(context.Context, *SiteMpReq) (*SiteMpReply, error)
+	ShowMp(context.Context, *ShowMpData) (*ShowMpData, error)
 	mustEmbedUnimplementedTenantServer()
 }
 
@@ -105,6 +141,15 @@ func (UnimplementedTenantServer) CheckUser(context.Context, *CheckUserReq) (*Che
 }
 func (UnimplementedTenantServer) RemoveSiteUser(context.Context, *RemoveSiteUserReq) (*RemoveSiteUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveSiteUser not implemented")
+}
+func (UnimplementedTenantServer) BindMp(context.Context, *BindMpReq) (*BindMpReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BindMp not implemented")
+}
+func (UnimplementedTenantServer) GetSiteMp(context.Context, *SiteMpReq) (*SiteMpReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSiteMp not implemented")
+}
+func (UnimplementedTenantServer) ShowMp(context.Context, *ShowMpData) (*ShowMpData, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ShowMp not implemented")
 }
 func (UnimplementedTenantServer) mustEmbedUnimplementedTenantServer() {}
 
@@ -191,6 +236,60 @@ func _Tenant_RemoveSiteUser_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Tenant_BindMp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BindMpReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TenantServer).BindMp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tenant_BindMp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TenantServer).BindMp(ctx, req.(*BindMpReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Tenant_GetSiteMp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SiteMpReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TenantServer).GetSiteMp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tenant_GetSiteMp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TenantServer).GetSiteMp(ctx, req.(*SiteMpReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Tenant_ShowMp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ShowMpData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TenantServer).ShowMp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Tenant_ShowMp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TenantServer).ShowMp(ctx, req.(*ShowMpData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Tenant_ServiceDesc is the grpc.ServiceDesc for Tenant service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -213,6 +312,18 @@ var Tenant_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "removeSiteUser",
 			Handler:    _Tenant_RemoveSiteUser_Handler,
+		},
+		{
+			MethodName: "BindMp",
+			Handler:    _Tenant_BindMp_Handler,
+		},
+		{
+			MethodName: "getSiteMp",
+			Handler:    _Tenant_GetSiteMp_Handler,
+		},
+		{
+			MethodName: "showMp",
+			Handler:    _Tenant_ShowMp_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

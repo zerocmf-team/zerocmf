@@ -29,7 +29,7 @@ func (l *GetAllMenusLogic) GetAllMenus() (resp *types.Response) {
 	c := l.svcCtx
 	var menus []model.AdminMenu
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	tx := db.Where("path <> ?", "").Order("list_order, id").Find(&menus)
 	if tx.RowsAffected == 0 {
 		resp.Error("暂无菜单，请和联系管理员添加！", nil)

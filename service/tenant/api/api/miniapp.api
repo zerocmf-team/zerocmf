@@ -1,9 +1,18 @@
-syntax = "v1"
-
-info(
-    title: "type title here"
-    desc: "type desc here"
-    author: "type author here"
-    email: "type email here"
-    version: "type version here"
+type (
+    miniappShowReq {
+        siteId int64 `form:"siteId"`
+    }
 )
+
+@server(
+    group: admin/miniapp
+    prefix: /api/v1/admin/miniapp
+)
+
+service tenant {
+    @handler Show
+    get /show(miniappShowReq) returns (Response)
+
+    @handler wxappShow
+    get /wxapp/show(miniappShowReq) returns (Response)
+}

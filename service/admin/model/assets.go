@@ -31,6 +31,7 @@ type Assets struct {
 	RemarkName string `gorm:"type:varchar(100);not null;comment:文件名" json:"remark_name"`
 	FileName   string `gorm:"type:varchar(100);not null;comment:文件名" json:"file_name"`
 	FilePath   string `gorm:"type:varchar(100);not null;comment:文件路径" json:"file_path"`
+	Resolution string `gorm:"type:varchar(32);not null;comment:分辨率" json:"resolution"`
 	FileMd5    string `gorm:"type:varchar(32);not null;comment:文件md5值" json:"file_md5"`
 	FileSha1   string `gorm:"type:varchar(40);not null;comment:文件sha1值" json:"file_sha1"`
 	PrevPath   string `gorm:"-" json:"prev_path"` // 前台预览地址

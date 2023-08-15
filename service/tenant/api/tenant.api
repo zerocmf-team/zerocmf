@@ -12,4 +12,5 @@ import (
 	"api/oauth.api"
 	"api/site.api"
 	"api/apisix.api"
+	"api/miniapp.api"
 )

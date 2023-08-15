@@ -2,7 +2,7 @@ Name: portal.rpc
 ListenOn: 127.0.0.1:9002
 Etcd:
   Hosts:
-  - 127.0.0.1:2379
+    - 127.0.0.1:2379
   Key: portal.rpc
 Database:
   name: portal

@@ -34,8 +34,8 @@ func (l *StoreLogic) Store(req *types.AdminStoreReq) (resp types.Response) {
 	//tenantRpc := c.TenantRpc
 
 	siteId, _ := c.Get("siteId")
-	dbConf := c.Config.Database.NewConf(siteId.(string))
-	db := dbConf.ManualDb(siteId.(string))
+	dbConf := c.Config.Database.NewConf(siteId.(int64))
+	db := dbConf.ManualDb(siteId.(int64))
 
 	//siteIdInt, _ := strconv.ParseInt(siteId.(string), 10, 64)
 

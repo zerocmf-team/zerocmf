@@ -14,4 +14,5 @@ func Migrate(curDb *gorm.DB) {
 	new(User).AutoMigrate(curDb)
 	new(Role).AutoMigrate(curDb)
 	new(Department).AutoMigrate(curDb)
+	new(Member).AutoMigrate(curDb)
 }

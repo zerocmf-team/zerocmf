@@ -2,12 +2,14 @@ package app_page
 
 import (
 	"context"
-	"github.com/jinzhu/copier"
-	"gorm.io/gorm"
+	"net/http"
 	"time"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
+
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -15,13 +17,16 @@ import (
 type StoreLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic {
+func NewStoreLogic(header *http.Request, svcCtx *svc.ServiceContext) *StoreLogic {
+	ctx := header.Context()
 	return &StoreLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -29,7 +34,7 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 func (l *StoreLogic) Store(req *types.AppPageSaveReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	resp = savePage(db, req, 0)
 	return
 }

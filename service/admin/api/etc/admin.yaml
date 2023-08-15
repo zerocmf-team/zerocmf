@@ -4,18 +4,19 @@ Port: 8800
 Timeout: 30000
 MaxBytes: 1073741824
 
+Etcd:
+  Key: rpcServer
+  Hosts:
+    - 127.0.0.1:2379
+
 UserRpc:
   Timeout: 30000
   Etcd:
-    Hosts:
-      - 127.0.0.1:2379
     Key: user.rpc
 
 TenantRpc:
   Timeout: 30000
   Etcd:
-    Hosts:
-      - 127.0.0.1:2379
     Key: tenant.rpc
 
 Database:

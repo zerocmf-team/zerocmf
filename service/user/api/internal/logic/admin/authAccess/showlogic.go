@@ -30,13 +30,13 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	id := req.Id
 	if id == "" {
 		resp.Error("角色id不能为空！", nil)
 	}
 
-	adapter := c.Config.Database.NewConf(siteId.(string))
+	adapter := c.Config.Database.NewConf(siteId.(int64))
 	e, err := adapter.NewEnforcer()
 	if err != nil {
 		return

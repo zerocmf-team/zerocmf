@@ -51,7 +51,7 @@ type (
 
 	ProductCategory struct {
 		ProductCategoryId int64          `db:"product_category_id"`
-		ParentId          sql.NullInt64  `db:"parent_id"`  // 父级id
+		ParentId          int64          `db:"parent_id"`  // 父级id
 		Path              string         `db:"path"`       // 层级path
 		Name              string         `db:"name"`       // 分类名称
 		Icon              sql.NullString `db:"icon"`       // 分类图标
@@ -158,9 +158,6 @@ func (m *defaultProductCategoryModel) First(ctx context.Context) (*ProductCatego
 	// 排序
 	if orderBy != "" {
 		sql += fmt.Sprintf(" ORDER BY %s", orderBy)
-		if orderBy != "" {
-			sql += fmt.Sprintf(" %s", orderBy)
-		}
 	}
 
 	sql += " AND deleted_at = 0 limit 1"
@@ -195,9 +192,6 @@ func (m *defaultProductCategoryModel) Find(ctx context.Context) ([]*ProductCateg
 	// 排序
 	if orderBy != "" {
 		sql += fmt.Sprintf(" ORDER BY %s", orderBy)
-		if orderBy != "" {
-			sql += fmt.Sprintf(" %s", orderBy)
-		}
 	}
 
 	limit := m.limit

@@ -2,10 +2,12 @@ package form
 
 import (
 	"context"
-	"github.com/jinzhu/copier"
+	"net/http"
 	"time"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/model"
+
+	"github.com/jinzhu/copier"
 
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
@@ -16,13 +18,16 @@ import (
 type StoreLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic {
+func NewStoreLogic(header *http.Request, svcCtx *svc.ServiceContext) *StoreLogic {
+	ctx := header.Context()
 	return &StoreLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -30,7 +35,7 @@ func NewStoreLogic(ctx context.Context, svcCtx *svc.ServiceContext) *StoreLogic 
 func (l *StoreLogic) Store(req *types.FormSubmitReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	form := model.Form{}
 	tx := db.Where("id", req.FormId).First(&form)

@@ -2,6 +2,7 @@ package list
 
 import (
 	"context"
+	"net/http"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
@@ -12,13 +13,16 @@ import (
 type ShowLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewShowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ShowLogic {
+func NewShowLogic(header *http.Request, svcCtx *svc.ServiceContext) *ShowLogic {
+	ctx := header.Context()
 	return &ShowLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -27,17 +31,17 @@ func (l *ShowLogic) Show(req *types.OneReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	id := req.Id
 
-	portalCategories := new(model.PortalCategories)
-	err := portalCategories.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
+	PortalCategory := new(model.PortalCategory)
+	err := PortalCategory.Show(db, "id = ? and delete_at = ?", []interface{}{id, 0})
 	if err != nil {
 		resp.Error(err.Error(), nil)
 		return
 	}
 
-	resp.Success("获取成功！", portalCategories)
+	resp.Success("获取成功！", PortalCategory)
 	return
 
 }

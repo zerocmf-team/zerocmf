@@ -35,7 +35,7 @@ func (l *CurrentUserLogic) CurrentUser() (resp types.Response) {
 	c := l.svcCtx
 	userId, _ := c.Get("userId")
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	user := model.User{}
 	tx := db.Where("id = ? and user_type = 1", userId).First(&user)

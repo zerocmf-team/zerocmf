@@ -11,10 +11,11 @@ import (
 )
 
 type ServiceContext struct {
-	Config         config.Config
-	Client         zrpc.Client
-	SiteMiddleware rest.Middleware
-	AuthMiddleware rest.Middleware
+	Config          config.Config
+	Client          zrpc.Client
+	SiteMiddleware  rest.Middleware
+	AuthMiddleware  rest.Middleware
+	WxappMiddleware rest.Middleware
 	*Init.Data
 }
 
@@ -34,6 +35,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 			},
 			Status: 1,
 		},
+		{
+			URI:       "/api/v1/shop/app/*",
+			Name:      "shop-api-app",
+			ServiceID: c.Apisix.Name,
+			Status:    1,
+		},
 	}
 
 	err := c.Apisix.Register(routes)
@@ -45,9 +52,11 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	client := zrpc.MustNewClient(c.ShopRpc)
 	tenantRpc := tenantclient.NewTenant(zrpc.MustNewClient(c.TenantRpc))
 	return &ServiceContext{
-		Config:         c,
-		Client:         client,
-		AuthMiddleware: apisix.AuthMiddleware(data, tenantRpc),
-		SiteMiddleware: middleware.NewSiteMiddleware(data).Handle,
+		Config:          c,
+		Client:          client,
+		Data:            data,
+		AuthMiddleware:  apisix.AuthMiddleware(data, tenantRpc),
+		SiteMiddleware:  middleware.NewSiteMiddleware(data).Handle,
+		WxappMiddleware: middleware.NewWxappMiddleware(data, tenantRpc).Handle,
 	}
 }

@@ -36,7 +36,7 @@ func (l *WxappStoreLogic) WxappStore(req *types.WxAppReq) (resp types.Response) 
 	}
 	wxappSettingValue, _ := json.Marshal(wxappSetting)
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	tx := db.Model(&model.Option{}).Where("option_name = ?", "wxapp_login_setting").Update("option_value", string(wxappSettingValue))
 	if tx.Error != nil {
 		resp.Error("系统出错："+tx.Error.Error(), nil)

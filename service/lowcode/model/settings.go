@@ -90,3 +90,47 @@ func (t *Settings) Store(db database.MongoDB, params bson.M) (saveData bson.M, e
 	}
 	return
 }
+
+func (t *Settings) Update(db database.MongoDB, params bson.M) (saveData bson.M, err error) {
+
+	collection := db.Collection("settings")
+	// 新增
+	filter := bson.M{
+		"key": t.Key,
+	}
+	result := Settings{}
+	err = db.FindOne(collection, filter, &result)
+	if err != nil {
+		if !errors.Is(err, mongo.ErrNoDocuments) {
+			return
+		}
+	}
+
+	if result.Id.IsZero() {
+		saveData = bson.M{
+			"key":   t.Key,
+			"value": params,
+		}
+		//var one *mongo.InsertOneResult
+		_, err = db.InsertOne(collection, &saveData)
+		if err != nil {
+			return
+		}
+	} else {
+		value := result.Value
+		for k, v := range params {
+			value[k] = v
+		}
+		saveData = bson.M{
+			"key":   t.Key,
+			"value": value,
+		}
+		_, err = db.UpdateOne(collection, filter, bson.M{
+			"$set": saveData,
+		})
+		if err != nil {
+			return
+		}
+	}
+	return
+}

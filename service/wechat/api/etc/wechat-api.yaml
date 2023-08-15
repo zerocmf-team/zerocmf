@@ -1,0 +1,66 @@
+Name: wechat-api
+Host: 0.0.0.0
+Port: 4006
+Timeout: 0
+
+Appid: wxce4c356a74b76720
+Secret: df5cca115cf3db90736952d51a51a4c7
+
+TenantRpc:
+  Timeout: 30000
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: tenant.rpc
+
+#数据库相关
+Database:
+  Type: mysql
+  Host: localhost
+  Database: zerocmf_wechat
+  Username: root
+  Password: "123456"
+  Port: 3306
+  Charset: utf8mb4
+  Prefix: cmf_
+  AuthCode: KFHlk2ubIlMr5ltqaD
+
+Apisix:
+  apiKey: edd1c9f034335f136f87ad84b625c8f1
+  Host: localhost
+  Name: wechat-api
+  upstream:
+    nodes:
+      - host: 192.168.8.169
+        port: 4006
+        weight: 1
+    timeout:
+      connect: 30
+      send: 30
+      read: 30
+    type: roundrobin
+    scheme: http
+    pass_host: pass
+    keepalive_pool:
+      idle_timeout: 60
+      requests: 1000
+      size: 320
+
+Redis:
+  Enabled: true
+  Host: localhost
+  Database: 0
+  Port: 6379
+  Password: ''
+
+
+Wechat:
+  WxOpen:
+    component_appid: wx9e0be873b96a47c0
+    component_secret: 1dde9237d31fc4b7f02f283d6a196636
+    aeskey: "codecloud2023codecloud2023codecloud20232023="
+    v3key: "codecloud2021codecloud2021codecl"
+    redirect_url: "/theme/miniApp/auth_redirect"
+    gateway_host: "https://api.mch.weixin.qq.com"
+    app_cert_path: "data/wechatPem"
+    wechatpay_serial: "2259A28AEB2228F27053BE552835A1B6F2D6681F"

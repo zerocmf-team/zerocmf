@@ -3,10 +3,12 @@ package themeFile
 import (
 	"context"
 	"errors"
-	"gorm.io/gorm"
+	"net/http"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 	"zerocmf/service/portal/model"
+
+	"gorm.io/gorm"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -14,13 +16,16 @@ import (
 type ListLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListLogic {
+func NewListLogic(header *http.Request, svcCtx *svc.ServiceContext) *ListLogic {
+	ctx := header.Context()
 	return &ListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -39,7 +44,7 @@ func (l *ListLogic) List(req *types.ThemeFileListReq) (resp types.Response) {
 	queryArgs := []interface{}{theme, isPublic}
 
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	data, err := new(model.ThemeFile).List(db, query, queryArgs)
 

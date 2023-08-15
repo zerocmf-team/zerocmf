@@ -29,7 +29,7 @@ func NewWxappGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *WxappGet
 func (l *WxappGetLogic) WxappGet() (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	option := model.Option{}
 	wxappSetting := model.WxappLoginSettings{}
 	tx := db.Where("option_name = ?", "wxapp_login_setting").First(&option)

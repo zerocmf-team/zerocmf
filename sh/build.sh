@@ -100,3 +100,45 @@ echo "build app finished at $(date +%Y-%m-%d\ %H:%M:%S)" > build.log
 cd "$homeDir" || exit 0
 docker build -t return1996/lowcode-api:latest -f "$appPath/Dockerfile" .
 echo "build dockerfile finished at $(date +%Y-%m-%d\ %H:%M:%S)" >> build.log
+
+echo "--------$appPath--------"
+
+appPath="$serviceDir/lowcode/rpc"
+cd "$appPath" || exit 0
+GOOS=$GOOS GOARCH=$GOARCH go build -o main lowcode.go
+echo "build app finished at $(date +%Y-%m-%d\ %H:%M:%S)" > build.log
+cd "$homeDir" || exit 0
+docker build -t return1996/lowcode-rpc:latest -f "$appPath/Dockerfile" .
+echo "build dockerfile finished at $(date +%Y-%m-%d\ %H:%M:%S)" >> build.log
+
+echo "--------$appPath--------"
+
+appPath="$serviceDir/shop/api"
+cd "$appPath" || exit 0
+GOOS=$GOOS GOARCH=$GOARCH go build -o main shop.go
+echo "build app finished at $(date +%Y-%m-%d\ %H:%M:%S)" > build.log
+cd "$homeDir" || exit 0
+docker build -t return1996/shop-api:latest -f "$appPath/Dockerfile" .
+echo "build dockerfile finished at $(date +%Y-%m-%d\ %H:%M:%S)" >> build.log
+
+echo "--------$appPath--------"
+
+appPath="$serviceDir/shop/rpc"
+cd "$appPath" || exit 0
+GOOS=$GOOS GOARCH=$GOARCH go build -o main shop.go
+echo "build app finished at $(date +%Y-%m-%d\ %H:%M:%S)" > build.log
+cd "$homeDir" || exit 0
+docker build -t return1996/shop-rpc:latest -f "$appPath/Dockerfile" .
+echo "build dockerfile finished at $(date +%Y-%m-%d\ %H:%M:%S)" >> build.log
+
+echo "--------$appPath--------"
+
+appPath="$serviceDir/wechat/api"
+cd "$appPath" || exit 0
+GOOS=$GOOS GOARCH=$GOARCH go build -o main wechat.go
+echo "build app finished at $(date +%Y-%m-%d\ %H:%M:%S)" > build.log
+cd "$homeDir" || exit 0
+docker build -t return1996/wechat-api:latest -f "$appPath/Dockerfile" .
+echo "build dockerfile finished at $(date +%Y-%m-%d\ %H:%M:%S)" >> build.log
+
+echo "--------$appPath--------"

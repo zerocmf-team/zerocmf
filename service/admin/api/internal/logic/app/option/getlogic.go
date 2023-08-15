@@ -29,7 +29,7 @@ func NewGetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetLogic {
 func (l *GetLogic) Get() (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	option := model.Option{}
 	tx := db.Where("option_name = ?", "site_info").First(&option) // 查询
 	if tx.Error != nil && tx.Error != gorm.ErrRecordNotFound {

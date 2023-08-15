@@ -2,6 +2,7 @@ package list
 
 import (
 	"context"
+	"net/http"
 	"strings"
 	"zerocmf/common/bootstrap/data"
 	"zerocmf/common/bootstrap/database"
@@ -16,22 +17,25 @@ import (
 type SearchLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewSearchLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchLogic {
+func NewSearchLogic(header *http.Request, svcCtx *svc.ServiceContext) *SearchLogic {
+	ctx := header.Context()
 	return &SearchLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
 
 func (l *SearchLogic) Search(req *types.ArticleSearchReq) (resp types.Response) {
 	c := l.svcCtx
-	r := c.Request
+	r := l.header
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	keywords := req.Keywords
 
 	if strings.TrimSpace(keywords) == "" {
@@ -51,7 +55,7 @@ func (l *SearchLogic) Search(req *types.ArticleSearchReq) (resp types.Response) 
 	}
 
 	post := model.PortalPost{}
-	res, err := post.ListByCategories(database.GormDB{
+	res, err := post.ListByCategory(database.GormDB{
 		Database: c.Config.Database,
 		Db:       db,
 	}, current, pageSize, queryStr, queryArgs, nil)

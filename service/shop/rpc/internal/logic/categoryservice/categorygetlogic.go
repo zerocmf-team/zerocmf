@@ -32,8 +32,11 @@ func (l *CategoryGetLogic) CategoryGet(in *shop.CategoryGetReq) (*shop.CategoryL
 	ctx := l.ctx
 	c := l.svcCtx
 	conf := c.Config
-	dsn := conf.Database.Dsn("")
-	//mysql model调用
+
+	config := conf.Database.NewConf(in.GetSiteId())
+
+	dsn := config.Dsn()
+
 	db := model.NewProductCategoryModel(sqlx.NewMysql(dsn), conf.Cache)
 
 	current := in.GetCurrent()

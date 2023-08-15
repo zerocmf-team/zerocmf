@@ -51,7 +51,7 @@ func (l *TokenLogic) Token(req *types.TokenReq) (resp types.Response) {
 	c := l.svcCtx
 	u := c.Request
 	siteId, _ := c.Get("siteId")
-gormDB := c.Config.Database.ManualDb(siteId.(string))
+gormDB := c.Config.Database.ManualDb(siteId.(int64))
 
 	// 验证用户账号密码
 	user := model.User{}

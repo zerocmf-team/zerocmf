@@ -3,6 +3,7 @@ package theme
 import (
 	"context"
 	"encoding/json"
+	"net/http"
 	"time"
 	"zerocmf/common/bootstrap/util"
 	"zerocmf/service/portal/model"
@@ -16,13 +17,16 @@ import (
 type InitLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewInitLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InitLogic {
+func NewInitLogic(header *http.Request, svcCtx *svc.ServiceContext) *InitLogic {
+	ctx := header.Context()
 	return &InitLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -31,7 +35,7 @@ func (l *InitLogic) Init(req *types.InitReq) (resp types.Response) {
 
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 
 	theme := model.Theme{
 		Name:      req.Theme,

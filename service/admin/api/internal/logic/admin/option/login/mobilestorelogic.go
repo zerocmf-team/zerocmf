@@ -36,7 +36,7 @@ func (l *MobileStoreLogic) MobileStore(req *types.MobileLoginReq) (resp types.Re
 	}
 	mobileSettingValue, _ := json.Marshal(mobileSetting)
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	tx := db.Model(&model.Option{}).Where("option_name = ?", "mobile_login_setting").Update("option_value", string(mobileSettingValue))
 	if tx.Error != nil {
 		resp.Error("系统出错："+tx.Error.Error(), nil)

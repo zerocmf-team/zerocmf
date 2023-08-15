@@ -55,10 +55,12 @@ type (
 		UserId              int64           `db:"userId"`                // 创建人
 		Attributes          string          `db:"attributes"`            // 规格属性选项
 		ProductBarcode      string          `db:"product_barcode"`       // 商品条码，不可为空
-		ProductCategory     sql.NullInt64   `db:"product_category"`      // 商品分类
+		ProductCategory     int64           `db:"product_category"`      // 商品分类
+		ProductThumbnail    sql.NullString  `db:"product_thumbnail"`     // 商品缩略图
 		MainVideo           sql.NullString  `db:"main_video"`            // 主图视频，存储视频的URL或文件路径
 		ExplanationVideo    sql.NullString  `db:"explanation_video"`     // 讲解视频，存储视频的URL或文件路径
 		Price               float64         `db:"price"`                 // 商品售价
+		PriceNegotiable     sql.NullInt64   `db:"price_negotiable"`      // 价格面议
 		StockUnit           sql.NullString  `db:"stock_unit"`            // 库存单位
 		Stock               sql.NullInt64   `db:"stock"`                 // 库存
 		ShareDescription    sql.NullString  `db:"share_description"`     // 分享描述，用于在分享时显示的商品描述
@@ -138,8 +140,8 @@ func (m *defaultProductModel) FindOne(ctx context.Context, productId int64) (*Pr
 func (m *defaultProductModel) Insert(ctx context.Context, data *Product) (sql.Result, error) {
 	productProductIdKey := fmt.Sprintf("%s%v", cacheProductProductIdPrefix, data.ProductId)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (json sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, productRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.ProductName, data.UserId, data.Attributes, data.ProductBarcode, data.ProductCategory, data.MainVideo, data.ExplanationVideo, data.Price, data.StockUnit, data.Stock, data.ShareDescription, data.ProductSellingPoint, data.OriginalPrice, data.CostPrice, data.HideRemainingStock, data.DeliveryMethod, data.ProductContent, data.Status, data.CreatedAt, data.UpdatedAt, data.DeletedAt)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, productRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.ProductName, data.UserId, data.Attributes, data.ProductBarcode, data.ProductCategory, data.ProductThumbnail, data.MainVideo, data.ExplanationVideo, data.Price, data.PriceNegotiable, data.StockUnit, data.Stock, data.ShareDescription, data.ProductSellingPoint, data.OriginalPrice, data.CostPrice, data.HideRemainingStock, data.DeliveryMethod, data.ProductContent, data.Status, data.CreatedAt, data.UpdatedAt, data.DeletedAt)
 	}, productProductIdKey)
 	return ret, err
 }
@@ -148,7 +150,7 @@ func (m *defaultProductModel) Update(ctx context.Context, data *Product) error {
 	productProductIdKey := fmt.Sprintf("%s%v", cacheProductProductIdPrefix, data.ProductId)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (json sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `product_id` = ?", m.table, productRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.ProductName, data.UserId, data.Attributes, data.ProductBarcode, data.ProductCategory, data.MainVideo, data.ExplanationVideo, data.Price, data.StockUnit, data.Stock, data.ShareDescription, data.ProductSellingPoint, data.OriginalPrice, data.CostPrice, data.HideRemainingStock, data.DeliveryMethod, data.ProductContent, data.Status, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.ProductId)
+		return conn.ExecCtx(ctx, query, data.ProductName, data.UserId, data.Attributes, data.ProductBarcode, data.ProductCategory, data.ProductThumbnail, data.MainVideo, data.ExplanationVideo, data.Price, data.PriceNegotiable, data.StockUnit, data.Stock, data.ShareDescription, data.ProductSellingPoint, data.OriginalPrice, data.CostPrice, data.HideRemainingStock, data.DeliveryMethod, data.ProductContent, data.Status, data.CreatedAt, data.UpdatedAt, data.DeletedAt, data.ProductId)
 	}, productProductIdKey)
 	return err
 }
@@ -169,9 +171,6 @@ func (m *defaultProductModel) First(ctx context.Context) (*Product, error) {
 	// 排序
 	if orderBy != "" {
 		sql += fmt.Sprintf(" ORDER BY %s", orderBy)
-		if orderBy != "" {
-			sql += fmt.Sprintf(" %s", orderBy)
-		}
 	}
 
 	sql += " AND deleted_at = 0 limit 1"
@@ -206,9 +205,6 @@ func (m *defaultProductModel) Find(ctx context.Context) ([]*Product, error) {
 	// 排序
 	if orderBy != "" {
 		sql += fmt.Sprintf(" ORDER BY %s", orderBy)
-		if orderBy != "" {
-			sql += fmt.Sprintf(" %s", orderBy)
-		}
 	}
 
 	limit := m.limit

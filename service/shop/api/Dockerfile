@@ -6,7 +6,7 @@ ENV TZ Asia/Shanghai
 
 WORKDIR /app
 
-COPY service/lowcode/api/etc /app/etc
-COPY service/lowcode/api/main /app/main
+COPY service/shop/api/etc /app/etc
+COPY service/shop/api/main /app/main
 
-CMD ["./main", "-f", "etc/lowcode.yaml"]
+CMD ["./main", "-f", "etc/shop-api.yaml"]

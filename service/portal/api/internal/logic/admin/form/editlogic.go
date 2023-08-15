@@ -2,6 +2,7 @@ package form
 
 import (
 	"context"
+	"net/http"
 	"zerocmf/service/portal/api/internal/svc"
 	"zerocmf/service/portal/api/internal/types"
 
@@ -11,13 +12,16 @@ import (
 type EditLogic struct {
 	logx.Logger
 	ctx    context.Context
+	header *http.Request
 	svcCtx *svc.ServiceContext
 }
 
-func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
+func NewEditLogic(header *http.Request, svcCtx *svc.ServiceContext) *EditLogic {
+	ctx := header.Context()
 	return &EditLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
+		header: header,
 		svcCtx: svcCtx,
 	}
 }
@@ -25,7 +29,7 @@ func NewEditLogic(ctx context.Context, svcCtx *svc.ServiceContext) *EditLogic {
 func (l *EditLogic) Edit(req *types.FormSaveReq) (resp types.Response) {
 	c := l.svcCtx
 	siteId, _ := c.Get("siteId")
-	db := c.Config.Database.ManualDb(siteId.(string))
+	db := c.Config.Database.ManualDb(siteId.(int64))
 	resp = saveForm(db, req, 1)
 	return
 }
